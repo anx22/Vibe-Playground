@@ -27,3 +27,7 @@
 |E-021|Vibe Space = **live Pentagon/radar as the heartpiece** (not a pro control)       |The radar is the toy you vibe with; attract/repel springs the vector + spread cloud |
 |E-022|Steering = **live-reflow, no regenerate**; new batch only on explicit Iterate     |Predictable, no jank; maps 1:1 to Explore→Steer→Iterate→Commit                       |
 |E-023|First build = **Vite + React + TS**, Engine behind an interface (`Engine`)        |Keeps client-side MVP; LLM/embedding step plugs in later without a rewrite          |
+|E-024|Output = **the vibe itself** (evocative world-collision, scene-like); palette/typo/mood co-generated but secondary|"Vibe is king" — the Leitwert/scene is the deliverable, not a prompt/render/system export|
+|E-025|Object metaphor = **functional grounding** (pulls the axis vector, shapes output)  |Not decorative; the metaphor is a real coherence + output lever (strongest hebel)    |
+|E-026|Input = **natural-language briefing** (idea/product/direction); an **LLM orchestrates** brief→vibe|No keyword→axis lexicon; the user briefs, the model interprets and steers the space  |
+|E-027|Vibe Card floor = **Leitwert + Mood + Typo-trio**; 3-tone palette is **additive**  |Resolves PROJECT.md vs E-015; palette stays generated but is not the minimum         |

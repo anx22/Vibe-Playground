@@ -73,9 +73,14 @@ Everything collapses into **attract (+) / repel (−)**:
 
 ## Minimum Output per Direction (Vibe Card)
 
-- Leitwert (the compound word)
+**The vibe is the deliverable** — the Leitwert/scene is the product; the rest is co-generated and additive (E-024).
+
+Floor (E-027):
+- Leitwert (the evocative world-collision)
 - Mood modifier
 - Typography trio: Display font / Body font / Data font (with roles)
+
+Additive (generated, not part of the floor):
 - 3-tone palette derived from axis vector
 
 ## Primary User
