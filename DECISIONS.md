@@ -22,3 +22,8 @@
 |E-016|MVP = **Studio loop with Engine A** (client-side, no LLM)                        |Deterministic, debuggable, no infra risk in v1                                      |
 |E-017|Simple-mode default lens = **Auto/mixed** (= A in MVP)                           |Neutral label; B/C blend in later without breaking the contract                     |
 |E-018|First success metric = **subjective quality in Lab** (auto-signals supporting)   |Right for the sharpening phase; add user-side metric later                          |
+|E-019|Design language = **Duolingo × Pro** (playful, chunky, tactile — but elevated)   |Max fun while vibing, pro standards; "chunky/rounded but less kiddie" (NOW risk)     |
+|E-020|Engine visibility = **Simple default**, lens = Auto/mixed; Advanced is offered    |Pros land in the clean loop; machinery unfolds on demand, not a hard mode switch    |
+|E-021|Vibe Space = **live Pentagon/radar as the heartpiece** (not a pro control)       |The radar is the toy you vibe with; attract/repel springs the vector + spread cloud |
+|E-022|Steering = **live-reflow, no regenerate**; new batch only on explicit Iterate     |Predictable, no jank; maps 1:1 to Explore→Steer→Iterate→Commit                       |
+|E-023|First build = **Vite + React + TS**, Engine behind an interface (`Engine`)        |Keeps client-side MVP; LLM/embedding step plugs in later without a rewrite          |
