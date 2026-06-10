@@ -38,8 +38,31 @@ persona (C)     triad / contrast / …
 
 Add a new mixing idea, world source, or composition as a registry entry in `src/lab/methods.ts` —
 single engines, 2-/3-/N-way blends and experiments all show side by side, each scored on
-**coherence · diversity · novelty**. LLM-gated methods are registered but skipped until a key + proxy
-are wired. Briefings drive the run (offline keyword stand-in for the LLM orchestration, E-026).
+**coherence · diversity · novelty**. LLM-gated methods activate via the "LLM aktiv" toggle once the
+gateway proxy is reachable. Briefings drive the run (offline keyword stand-in for the LLM
+orchestration, E-026).
+
+## LLM layer — Vercel AI Gateway (E-029)
+
+One key for every model, **no per-provider token management**. A thin serverless proxy (`api/`) holds
+the key and talks to the gateway via the AI SDK; the key is **never client-side**.
+
+```
+src/llm/      schema (zod, shared) · client (fetchers, graceful offline fallback)
+api/          health · render (scene, E-028) · seeds (B) · persona (C) · batch
+api/_lib/     gateway (model registry · caching:'auto' · model fallbacks · in-instance cache) · prompts
+```
+
+- **Caching:** `providerOptions.gateway.caching: 'auto'` adds Anthropic `cache_control` automatically;
+  plus a per-instance response cache. Token-level savings come from the gateway.
+- **Model management:** `MODELS` registry (cheap = Haiku, strong = Sonnet, premium = Opus) with
+  per-model failover (`gateway.models`) and `sort: 'cost'` — swap a role in one place.
+- **Batch:** `api/batch` fans out renders with a concurrency limit. (The async 50%-off Anthropic
+  Batch API needs a direct key + polling; left as a future BYOK adapter — same interface.)
+
+**Run locally with LLM:** set `AI_GATEWAY_API_KEY` in `.env.local`, then `vercel dev` (plain `vite`
+serves the app; the offline methods work without any key). On Vercel, `VERCEL_OIDC_TOKEN` is injected
+automatically — no key to manage.
 
 ## Status
 

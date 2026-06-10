@@ -13,6 +13,7 @@ export interface Briefing {
 export interface Cell {
   cards: VibeCard[];
   metrics: Metrics;
+  error?: string;
 }
 
 export interface LabRun {
@@ -60,11 +61,13 @@ export async function runLab(
     cells[m.id] = {};
     for (const b of briefings) {
       const rng = mulberry32((seed ^ hash(`${m.id}|${b.id}`)) >>> 0);
-      const cards = await m.generate(
-        { rng, centroid: biasFromBriefing(b.text), spread: 0.8 },
-        batchSize,
-      );
-      cells[m.id][b.id] = { cards, metrics: metricsFor(cards) };
+      const ctx = { rng, centroid: biasFromBriefing(b.text), spread: 0.8, briefing: b.text };
+      try {
+        const cards = await m.generate(ctx, batchSize);
+        cells[m.id][b.id] = { cards, metrics: metricsFor(cards) };
+      } catch (err) {
+        cells[m.id][b.id] = { cards: [], metrics: metricsFor([]), error: String(err) };
+      }
     }
   }
 

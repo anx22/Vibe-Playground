@@ -17,6 +17,8 @@ export interface MixContext {
   centroid: AxisVector;
   /** How far a draw may stray (Explore wide, Iterate tight). */
   spread: number;
+  /** Raw briefing text — LLM sources/renderers may use it for context. */
+  briefing?: string;
 }
 
 export interface MixResult {

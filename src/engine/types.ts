@@ -15,6 +15,8 @@ export interface VibeCard {
   /** The compound word, e.g. "Editorial-Tech-Atlas". */
   leitwert: string;
   mood: string;
+  /** Optional evocative scene — the LLM render (E-028); absent in the offline template. */
+  scene?: string;
   typography: { display: Typography; body: Typography; data: Typography };
   palette: [string, string, string];
   vector: AxisVector;

@@ -2,6 +2,7 @@ import { dist } from "../engine";
 import type { AxisVector, VibeCard } from "../engine";
 import { OBJECTS } from "../engine/pools";
 import { moodFor, paletteFor, typoFor } from "../engine/derive";
+import { renderScene } from "../llm/client";
 import type { Renderer } from "./method";
 
 function nearestObject(v: AxisVector) {
@@ -34,12 +35,36 @@ export const templateRenderer: Renderer = {
   },
 };
 
-/** Slot: the LLM renders the skeleton into an evocative scene/Leitwert (E-028, needs key). */
+/** The LLM renders the skeleton into an evocative scene/Leitwert (E-028) via the gateway proxy. */
 export const llmSceneRenderer: Renderer = {
   id: "llm-scene",
   label: "LLM-Szene",
   requiresLLM: true,
-  render() {
-    throw new Error("LLM scene renderer not configured — needs an API key + proxy.");
+  async render(m, ctx) {
+    const obj = nearestObject(m.vector);
+    const skeleton = `${m.worlds.map((w) => w.name).join("-")}-${obj.name}`;
+    const out = await renderScene({
+      leitwert: skeleton,
+      worlds: m.worlds.map((w) => w.name),
+      mood: moodFor(m.vector),
+      note: m.note,
+      briefing: ctx.briefing,
+    });
+    return {
+      id: `${out.leitwert}-${Math.floor(ctx.rng() * 1e6)}`,
+      leitwert: out.leitwert,
+      mood: out.mood,
+      scene: out.scene,
+      typography: typoFor(m.vector, ctx.rng),
+      palette: paletteFor(m.vector),
+      vector: m.vector,
+      coherence: { sharedAxes: m.sharedAxes, ok: m.coherent },
+      origin: {
+        home: m.worlds[0].name,
+        intrusion: m.worlds[1]?.name ?? "—",
+        object: obj.name,
+        engineNote: m.note,
+      },
+    } satisfies VibeCard;
   },
 };

@@ -16,12 +16,14 @@ function pct(n: number) {
 }
 
 export function Lab() {
+  const [allowLLM, setAllowLLM] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(
     () => new Set(METHODS.filter((m) => !m.requiresLLM).map((m) => m.id)),
   );
   const [batchSize, setBatchSize] = useState(5);
   const [seed, setSeed] = useState(42);
   const [run, setRun] = useState<LabRun | null>(null);
+  const [busy, setBusy] = useState(false);
 
   const toggle = (id: string) =>
     setSelected((prev) => {
@@ -31,32 +33,48 @@ export function Lab() {
     });
 
   const doRun = async () => {
-    const methods = METHODS.filter((m) => selected.has(m.id));
-    setRun(await runLab(methods, PRESETS, { batchSize, seed }));
+    setBusy(true);
+    try {
+      const methods = METHODS.filter((m) => selected.has(m.id));
+      setRun(await runLab(methods, PRESETS, { batchSize, seed, allowLLM }));
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
     <main className="lab">
       <div className="lab-controls">
         <div className="lab-methods">
-          {METHODS.map((m) => (
-            <label
-              key={m.id}
-              className={`lab-pick${m.requiresLLM ? " lab-pick--llm" : ""}`}
-              title={m.requiresLLM ? "Braucht API-Key + Proxy" : m.kind}
-            >
-              <input
-                type="checkbox"
-                checked={selected.has(m.id)}
-                disabled={m.requiresLLM}
-                onChange={() => toggle(m.id)}
-              />
-              {m.label}
-              {m.requiresLLM && <span className="lab-llm-tag">Key</span>}
-            </label>
-          ))}
+          {METHODS.map((m) => {
+            const disabled = m.requiresLLM && !allowLLM;
+            return (
+              <label
+                key={m.id}
+                className={`lab-pick${disabled ? " lab-pick--llm" : ""}`}
+                title={m.requiresLLM ? "Braucht Gateway-Proxy (LLM aktiv)" : m.kind}
+              >
+                <input
+                  type="checkbox"
+                  checked={selected.has(m.id)}
+                  disabled={disabled}
+                  onChange={() => toggle(m.id)}
+                />
+                {m.label}
+                {m.requiresLLM && <span className="lab-llm-tag">LLM</span>}
+              </label>
+            );
+          })}
         </div>
         <div className="lab-run-row">
+          <label className="lab-toggle" title="Aktiviert die LLM-Methoden über den Gateway-Proxy">
+            <input
+              type="checkbox"
+              checked={allowLLM}
+              onChange={(e) => setAllowLLM(e.target.checked)}
+            />
+            LLM aktiv
+          </label>
           <label className="lab-num">
             Batch
             <input
@@ -71,8 +89,8 @@ export function Lab() {
             Seed
             <input type="number" value={seed} onChange={(e) => setSeed(Number(e.target.value))} />
           </label>
-          <button className="btn btn-iterate" type="button" onClick={doRun}>
-            Run ▷
+          <button className="btn btn-iterate" type="button" onClick={doRun} disabled={busy}>
+            {busy ? "Läuft…" : "Run ▷"}
           </button>
         </div>
       </div>
@@ -97,33 +115,39 @@ export function Lab() {
                   if (!cell) return <div className="lab-cell" key={b.id} />;
                   return (
                     <div className="lab-cell" key={b.id}>
-                      <div className="lab-metrics">
-                        <span className="metric" title="Kohärenz">
-                          K {pct(cell.metrics.coherence)}
-                        </span>
-                        <span className="metric" title="Diversität">
-                          D {cell.metrics.diversity.toFixed(2)}
-                        </span>
-                      </div>
-                      {cell.cards.map((c) => (
-                        <div className="lab-card" key={c.id}>
-                          <span className={`lab-coh${c.coherence.ok ? " lab-coh--ok" : ""}`} />
-                          <div className="lab-card-body">
-                            <span
-                              className="lab-card-leit"
-                              style={{ fontFamily: c.typography.display.family }}
-                            >
-                              {c.leitwert}
+                      {cell.error ? (
+                        <span className="lab-error">{cell.error}</span>
+                      ) : (
+                        <>
+                          <div className="lab-metrics">
+                            <span className="metric" title="Kohärenz">
+                              K {pct(cell.metrics.coherence)}
                             </span>
-                            <span className="lab-card-note">{c.origin.engineNote}</span>
+                            <span className="metric" title="Diversität">
+                              D {cell.metrics.diversity.toFixed(2)}
+                            </span>
                           </div>
-                          <span className="lab-swatches">
-                            {c.palette.map((p, i) => (
-                              <span className="mini-swatch" key={i} style={{ background: p }} />
-                            ))}
-                          </span>
-                        </div>
-                      ))}
+                          {cell.cards.map((c) => (
+                            <div className="lab-card" key={c.id}>
+                              <span className={`lab-coh${c.coherence.ok ? " lab-coh--ok" : ""}`} />
+                              <div className="lab-card-body">
+                                <span
+                                  className="lab-card-leit"
+                                  style={{ fontFamily: c.typography.display.family }}
+                                >
+                                  {c.leitwert}
+                                </span>
+                                <span className="lab-card-note">{c.scene ?? c.origin.engineNote}</span>
+                              </div>
+                              <span className="lab-swatches">
+                                {c.palette.map((p, i) => (
+                                  <span className="mini-swatch" key={i} style={{ background: p }} />
+                                ))}
+                              </span>
+                            </div>
+                          ))}
+                        </>
+                      )}
                     </div>
                   );
                 })}

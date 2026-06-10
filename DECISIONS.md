@@ -32,3 +32,4 @@
 |E-026|Input = **natural-language briefing** (idea/product/direction); an **LLM orchestrates** brief→vibe|No keyword→axis lexicon; the user briefs, the model interprets and steers the space  |
 |E-027|Vibe Card floor = **Leitwert + Mood + Typo-trio**; 3-tone palette is **additive**  |Resolves PROJECT.md vs E-015; palette stays generated but is not the minimum         |
 |E-028|Leitwert generation = **structure proposes, LLM renders**; the compound skeleton alone is not the deliverable|Engine A "sits in the structure; the LLM renders" — the evocative render is the magic, currently missing|
+|E-029|LLM layer = **Vercel AI Gateway** via a thin `api/` proxy; one key, no per-provider token management|Zero markup, `caching:'auto'`, model fallbacks; key server-side only. Model registry (cheap/strong/premium); batch = concurrent fan-out (Anthropic Batch a future BYOK adapter)|
