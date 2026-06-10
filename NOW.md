@@ -14,6 +14,8 @@ north star is speed to a credible direction (E-014).
   → Iterate → Commit → Library; live **Pentagon** (5-axis radar, spread cloud); **Vibe Cards**
   (real-font typo trio, coherence pulse, Herkunft collapser, magnet controls); Speed-to-Direction
   tacho. Duolingo×Pro design tokens, accent inherits from the focused direction.
+  **Main flow renders real scenes:** Engine A proposes the skeleton, the LLM renders the evocative
+  scene (E-028) in one batch round-trip, with offline fallback when no key is present.
 - **Engine A** behind a shared `Engine` interface (`src/engine/`): curated pools + bridge rule,
   axis-derived palette/typo/mood, deterministic seedable RNG.
 - **Lab — method framework** (`src/lab/`): `WorldSource × MixStrategy × Renderer`, fully swappable.
@@ -37,9 +39,10 @@ north star is speed to a credible direction (E-014).
 
 ## Next Steps (in order)
 
-1. **Provision the gateway key → go live**: set the key, `vercel dev` / deploy, then pressure-test
-   `a-scene` / `b-llm` / `c-persona` on real briefings in the Lab.
-2. **Wire the Studio to the LLM** — briefing input + scene render in the main loop (not just the Lab).
+1. **Verify live** on Vercel (key is set in env): run a few real briefings through the Studio + the
+   Lab's `a-scene` / `b-llm` / `c-persona`; tune prompts/models against the output.
+2. **Briefing → centroid via LLM** — let the model set the axis bias too (currently the Studio still
+   uses the offline lexicon for the pentagon; the LLM only renders the scene).
 3. **Engine B real embeddings** (replace LLM-axis-projection); λ/distance becomes a live slider.
 4. **Advanced mode** — expose axis controls, engine lens, Lab; offered adaptively (E-020).
 5. Pool expansion; persistence.

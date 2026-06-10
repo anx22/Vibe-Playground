@@ -1,9 +1,41 @@
 import { create } from "zustand";
 import type { AxisVector, Signal, VibeCard } from "../engine";
 import { AXES, add, autoEngine, clamp, zero, LEXICON } from "../engine";
+import { renderBatch } from "../llm/client";
 
 const BATCH = 5;
 const studioRng = () => Math.random();
+
+/**
+ * Studio generate: Engine A proposes the structure (skeletons), the LLM renders each into an
+ * evocative scene (E-028) in one batch round-trip. Falls back to the offline skeleton when the
+ * gateway proxy is unreachable (plain `vite` / no key), so the loop always works.
+ */
+async function generateBatch(
+  centroid: AxisVector,
+  spread: number,
+  briefing: string,
+): Promise<VibeCard[]> {
+  const skeletons = autoEngine.generate(centroid, { batchSize: BATCH, spread }, studioRng);
+  try {
+    const scenes = await renderBatch(
+      skeletons.map((c) => ({
+        leitwert: c.leitwert,
+        worlds: [c.origin.home, c.origin.intrusion],
+        mood: c.mood,
+        note: c.origin.engineNote,
+        briefing,
+      })),
+    );
+    return skeletons.map((c, i) =>
+      scenes[i]
+        ? { ...c, leitwert: scenes[i].leitwert, mood: scenes[i].mood, scene: scenes[i].scene }
+        : c,
+    );
+  } catch {
+    return skeletons; // offline fallback — the loop still works without a key
+  }
+}
 
 function seedVector(word: string): AxisVector {
   const v = zero();
@@ -48,11 +80,12 @@ interface VibeState {
   library: VibeCard[];
   focusId: string | null;
   commits: number;
+  loading: boolean;
 
   setView: (v: "studio" | "lab") => void;
   setSeed: (w: string) => void;
-  explore: () => void;
-  iterate: () => void;
+  explore: () => Promise<void>;
+  iterate: () => Promise<void>;
   attract: (c: VibeCard) => void;
   repel: (c: VibeCard) => void;
   commit: (c: VibeCard) => void;
@@ -72,31 +105,26 @@ export const useVibeStore = create<VibeState>((set, get) => ({
   library: [],
   focusId: null,
   commits: 0,
+  loading: false,
 
   setView: (v) => set({ view: v }),
 
   setSeed: (w) => set({ seed: w, seedVec: seedVector(w) }),
 
-  explore: () => {
-    const { seedVec } = get();
+  explore: async () => {
+    const { seedVec, seed } = get();
     const centroid = centroidOf(seedVec, []);
     const spread = spreadOf([]);
-    set({
-      phase: "studio",
-      signals: [],
-      centroid,
-      spread,
-      focusId: null,
-      cards: autoEngine.generate(centroid, { batchSize: BATCH, spread }, studioRng),
-    });
+    set({ phase: "studio", signals: [], centroid, spread, focusId: null, cards: [], loading: true });
+    const cards = await generateBatch(centroid, spread, seed);
+    set({ cards, loading: false });
   },
 
-  iterate: () => {
-    const { centroid, spread } = get();
-    set({
-      cards: autoEngine.generate(centroid, { batchSize: BATCH, spread }, studioRng),
-      focusId: null,
-    });
+  iterate: async () => {
+    const { centroid, spread, seed } = get();
+    set({ loading: true });
+    const cards = await generateBatch(centroid, spread, seed);
+    set({ cards, focusId: null, loading: false });
   },
 
   // Live-reflow (E-022): signals re-bias centroid + spread, cards stay put.
@@ -137,5 +165,6 @@ export const useVibeStore = create<VibeState>((set, get) => ({
       spread: 0.85,
       cards: [],
       focusId: null,
+      loading: false,
     }),
 }));

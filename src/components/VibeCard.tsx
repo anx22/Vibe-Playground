@@ -47,6 +47,12 @@ export function VibeCard({
         {card.mood}
       </p>
 
+      {card.scene && (
+        <p className="scene" style={{ fontFamily: card.typography.body.family }}>
+          {card.scene}
+        </p>
+      )}
+
       <div className="trio">
         {(["display", "body", "data"] as const).map((role) => {
           const t = card.typography[role];

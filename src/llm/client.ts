@@ -1,4 +1,5 @@
 import {
+  batchResultSchema,
   personaSchema,
   sceneRenderSchema,
   seedListSchema,
@@ -23,13 +24,20 @@ async function post<T>(path: string, body: unknown, schema: { parse(x: unknown):
   return schema.parse(await res.json());
 }
 
-export const renderScene = (input: {
+export interface RenderJob {
   leitwert: string;
   worlds: string[];
   mood: string;
   note: string;
   briefing?: string;
-}): Promise<SceneRender> => post("/api/render", input, sceneRenderSchema);
+}
+
+export const renderScene = (input: RenderJob): Promise<SceneRender> =>
+  post("/api/render", input, sceneRenderSchema);
+
+/** Batch render — one round-trip, fanned out server-side (the Studio's generate path). */
+export const renderBatch = (jobs: RenderJob[]): Promise<SceneRender[]> =>
+  post("/api/batch", { jobs }, batchResultSchema).then((r) => r.results);
 
 export const expandSeeds = (input: { briefing: string; n: number }): Promise<WorldTerm[]> =>
   post("/api/seeds", input, seedListSchema).then((r) => r.worlds);

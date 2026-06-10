@@ -64,7 +64,7 @@ export default function App() {
           <div className="seedbar">
             <input
               className="seed-input"
-              placeholder="Wirf ein Wort rein – oder leg blank los"
+              placeholder="Briefing: Idee, Produkt, Richtung – oder leg blank los"
               value={s.seed}
               onChange={(e) => s.setSeed(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && s.explore()}
@@ -75,26 +75,35 @@ export default function App() {
           </div>
         ) : (
           <>
-            <div className="batch">
-              {s.cards.map((c) => (
-                <VibeCard
-                  key={c.id}
-                  card={c}
-                  centroid={s.centroid}
-                  focused={c.id === s.focusId}
-                  committed={s.library.some((l) => l.id === c.id)}
-                  onAttract={() => s.attract(c)}
-                  onRepel={() => s.repel(c)}
-                  onCommit={() => s.commit(c)}
-                />
-              ))}
-            </div>
+            {s.loading && s.cards.length === 0 ? (
+              <p className="rendering">Vibes werden gerendert…</p>
+            ) : (
+              <div className="batch">
+                {s.cards.map((c) => (
+                  <VibeCard
+                    key={c.id}
+                    card={c}
+                    centroid={s.centroid}
+                    focused={c.id === s.focusId}
+                    committed={s.library.some((l) => l.id === c.id)}
+                    onAttract={() => s.attract(c)}
+                    onRepel={() => s.repel(c)}
+                    onCommit={() => s.commit(c)}
+                  />
+                ))}
+              </div>
+            )}
             <div className="footer-actions">
               <button className="btn btn-ghost" type="button" onClick={s.reset}>
                 Neu starten
               </button>
-              <button className="btn btn-iterate" type="button" onClick={s.iterate}>
-                Iterate ↻
+              <button
+                className="btn btn-iterate"
+                type="button"
+                onClick={s.iterate}
+                disabled={s.loading}
+              >
+                {s.loading ? "Rendert…" : "Iterate ↻"}
               </button>
             </div>
           </>

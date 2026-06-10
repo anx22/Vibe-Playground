@@ -753,3 +753,25 @@ body {
   color: #b4452f;
   word-break: break-word;
 }
+
+/* ── Scene (the LLM render) + loading ─────────────────── */
+.scene {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--ink);
+  border-left: 3px solid var(--card-accent);
+  padding-left: 10px;
+}
+.rendering {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ink-soft);
+  letter-spacing: 0.04em;
+  padding: 28px 0;
+  animation: blink 1.4s ease-in-out infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 1; }
+}

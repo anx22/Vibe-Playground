@@ -20,6 +20,8 @@ export const sceneRenderSchema = z.object({
 });
 export type SceneRender = z.infer<typeof sceneRenderSchema>;
 
+export const batchResultSchema = z.object({ results: z.array(sceneRenderSchema) });
+
 /** Engine B seed-expansion: fresh world-terms projected onto the 5 axes (no hand-curated pool). */
 export const worldTermSchema = z.object({
   term: z.string(),
