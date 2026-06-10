@@ -21,7 +21,25 @@ credible design direction, fast.
 npm install
 npm run dev      # Vite dev server
 npm run build    # typecheck + production build
+npm test         # vitest (Lab harness)
 ```
+
+## Lab — method framework (open creative space)
+
+The Lab (toggle top-right) is the eval harness, built as swappable parts so the creative space
+stays open — **not** hardwired to the C→B→A stack:
+
+```
+WorldSource  →  MixStrategy  →  Renderer        (one wiring = one "Method")
+curated (A)     bridge (A)       template (offline)
+llm-seed (B)    distance+λ (B)   llm-scene (E-028, needs key)
+persona (C)     triad / contrast / …
+```
+
+Add a new mixing idea, world source, or composition as a registry entry in `src/lab/methods.ts` —
+single engines, 2-/3-/N-way blends and experiments all show side by side, each scored on
+**coherence · diversity · novelty**. LLM-gated methods are registered but skipped until a key + proxy
+are wired. Briefings drive the run (offline keyword stand-in for the LLM orchestration, E-026).
 
 ## Status
 
@@ -36,8 +54,10 @@ See `DESIGN.md` for the interface concept and `NOW.md` for the current focus.
 ```
 src/
   engine/      types · axes · pools · derive (palette/typo/mood) · engineA · index (registry)
-  store/       useVibeStore (zustand) — signals → centroid/spread, live-reflow
+  lab/         method framework (WorldSource·MixStrategy·Renderer) · mix · sources · render
+               · metrics · runner · methods (registry) · lab.test.ts
+  store/       useVibeStore (zustand) — signals → centroid/spread, live-reflow, view toggle
   hooks/       useTweenVector — the pentagon's spring
-  components/  Pentagon · VibeCard · Collapser · Tacho
-  App.tsx      Studio loop + Library drawer
+  components/  Pentagon · VibeCard · Collapser · Tacho · Lab
+  App.tsx      Studio loop + Library drawer + Lab view
 ```

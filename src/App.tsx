@@ -3,6 +3,7 @@ import { useVibeStore } from "./store/useVibeStore";
 import { Pentagon } from "./components/Pentagon";
 import { VibeCard } from "./components/VibeCard";
 import { Tacho } from "./components/Tacho";
+import { Lab } from "./components/Lab";
 
 const DEFAULT_ACCENT = "#E86A4B";
 
@@ -30,6 +31,22 @@ export default function App() {
           Vibe Playground
         </button>
         <div className="topbar-right">
+          <div className="view-toggle">
+            <button
+              type="button"
+              className={s.view === "studio" ? "is-active" : ""}
+              onClick={() => s.setView("studio")}
+            >
+              Studio
+            </button>
+            <button
+              type="button"
+              className={s.view === "lab" ? "is-active" : ""}
+              onClick={() => s.setView("lab")}
+            >
+              Lab
+            </button>
+          </div>
           <span className="streak" title="Tage am Viben">
             <span className="streak-flame">✺</span> 1
           </span>
@@ -37,6 +54,9 @@ export default function App() {
         </div>
       </header>
 
+      {s.view === "lab" ? (
+        <Lab />
+      ) : (
       <main className="stage">
         <Pentagon vector={s.centroid} spread={s.spread} idle={s.phase === "blank"} />
 
@@ -80,8 +100,9 @@ export default function App() {
           </>
         )}
       </main>
+      )}
 
-      {s.library.length > 0 && (
+      {s.view === "studio" && s.library.length > 0 && (
         <aside className="library-drawer">
           <div className="lib-head">Library · {s.library.length}</div>
           <div className="lib-list">

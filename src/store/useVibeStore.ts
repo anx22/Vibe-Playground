@@ -38,6 +38,7 @@ const newSignal = (kind: Signal["kind"], card: VibeCard): Signal => ({
 
 interface VibeState {
   phase: "blank" | "studio";
+  view: "studio" | "lab";
   seed: string;
   seedVec: AxisVector;
   signals: Signal[];
@@ -48,6 +49,7 @@ interface VibeState {
   focusId: string | null;
   commits: number;
 
+  setView: (v: "studio" | "lab") => void;
   setSeed: (w: string) => void;
   explore: () => void;
   iterate: () => void;
@@ -60,6 +62,7 @@ interface VibeState {
 
 export const useVibeStore = create<VibeState>((set, get) => ({
   phase: "blank",
+  view: "studio",
   seed: "",
   seedVec: zero(),
   signals: [],
@@ -69,6 +72,8 @@ export const useVibeStore = create<VibeState>((set, get) => ({
   library: [],
   focusId: null,
   commits: 0,
+
+  setView: (v) => set({ view: v }),
 
   setSeed: (w) => set({ seed: w, seedVec: seedVector(w) }),
 
