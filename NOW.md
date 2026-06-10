@@ -4,65 +4,51 @@
 
 ## Current Goal
 
-Build and validate the **MVP: Studio loop with Engine A**.
-Validate via the **internal Eval/Lab harness** — subjective quality on real batch outputs is the first success metric.
+Wire the **LLM layer** (scene-render + Engine B/C) onto the working Studio + Lab, and pressure-test
+the methods on real briefings. Subjective quality in the Lab is the first success metric (E-018);
+north star is speed to a credible direction (E-014).
 
 ## What Exists
 
-- `vibe-playground-shell.jsx` — Duolingo-style React shell with Sidebar routing, all three engine UIs (client-side combinatorial logic), XP/Streak gamification, Vibe Card with axis-derived palette, Library screen.
-- `KONZEPT.md` — full living concept doc (v0.2, German)
-- `ALT-KONZEPT-ARCHIV.md` — legacy 3.0 archive with salvage candidates
-- `PROJECT.md` / `DECISIONS.md` / `NOW.md` — this handoff package
+- **App — Vite + React + TS, client-side** (`src/`): Studio loop blank → Explore → live-reflow Steer
+  → Iterate → Commit → Library; live **Pentagon** (5-axis radar, spread cloud); **Vibe Cards**
+  (real-font typo trio, coherence pulse, Herkunft collapser, magnet controls); Speed-to-Direction
+  tacho. Duolingo×Pro design tokens, accent inherits from the focused direction.
+- **Engine A** behind a shared `Engine` interface (`src/engine/`): curated pools + bridge rule,
+  axis-derived palette/typo/mood, deterministic seedable RNG.
+- **Lab — method framework** (`src/lab/`): `WorldSource × MixStrategy × Renderer`, fully swappable.
+  Mix strategies live: bridge (A), distance+λ (B-methodology, offline), triad, contrast. Metrics
+  (coherence/diversity/novelty), seeded runner, side-by-side comparison matrix UI, Vitest (3 passing).
+- **Docs:** `PROJECT.md` (facts), `KONZEPT.md` v0.2 (full vision), `DESIGN.md` (interface),
+  `DECISIONS.md` (E-001…E-028).
 
 ## What Does NOT Exist Yet
 
-- Real Studio loop with Explore → Steer → Iterate → Commit flow
-- Attract/repel control primitive in the UI
-- Simple/Advanced mode toggle (app-wide)
-- Headless eval harness / Lab screen with batch runs
-- Real LLM calls (engines are fully client-side/simulated)
-- Persistence of any kind
+- **LLM scene-render layer** (E-028) — A still emits the compound skeleton, not the evocative scene.
+- **Engine B** real seed-expansion + embeddings; **Engine C** persona → world. Both LLM-gated, skipped.
+- **Briefing → LLM orchestration** (E-026) — the offline keyword lexicon is a test stand-in only.
+- **Advanced mode** UI (axis controls, λ/distance band, engine lens). Only a Studio/Lab toggle exists.
+- Persistence beyond in-memory; expanded pools.
 
 ## Next Steps (in order)
 
-### Step 1 — Eval Harness (Lab, headless)
-
-Build a headless test harness around the existing Engine A functions (`genA`).
-
-- Runs N generations with given axis-bias params
-- Outputs: Leitwert, engine note, axis vector, palette
-- Auto-metrics: coherence (shared axes count), diversity (pairwise vector distance), novelty (distance to previous batch)
-- Output format: readable list we can assess manually
-- Entry point: runnable from the Lab screen in Advanced mode
-
-### Step 2 — Studio Loop refactor
-
-Refactor the current shell so the main screen is the Studio loop, not the engine-picker:
-
-- Single “Generate” action (engine hidden in Simple, selectable in Advanced)
-- Vibe Card batch (3–5 cards per round)
-- Attract/repel on each card (👍/👎 + optional text input)
-- Signals accumulate and bias next generation
-- “Commit” saves to Library
-
-### Step 3 — Simple/Advanced toggle
-
-Add app-wide mode toggle:
-
-- Simple: hides engine lens, axis controls, distance/λ params
-- Advanced: exposes all machinery + Lab access
+1. **Thin LLM proxy + scene renderer** (E-028) — turns the skeleton into a scene; reused by B/C.
+   Provider via an LLM gateway (see gateway research) — key never client-side.
+2. **Engine C live** (persona) — the pressure-test put C as the most viable base for the use case.
+3. **Engine B live** — seed-expansion + embeddings; the λ/distance band becomes a real slider.
+4. **Advanced mode** — expose axis controls, engine lens, Lab; offered adaptively (E-020).
+5. Pool expansion; real briefing input.
 
 ## Known Issues / Watch-outs
 
-- **Tonal fit:** Duolingo-style playfulness may clash with the professional designer audience. Needs tonal calibration (chunky/rounded but less “kiddie”).
-- **Engine B/C** are simulated — no real embeddings. λ/distance UI is real but naming step needs LLM call to be genuinely generative.
-- **Pool size:** current Engine A pools are intentionally small for prototyping; need expansion once quality baseline is set.
-- **Attract/repel → axis mapping:** typed keyword needs to resolve to an axis-space vector. Mechanism not yet defined (keyword lookup vs. LLM vs. embedding).
-- **Legacy salvage:** Pattern Library + Canvas + Export from 3.0 are interesting as downstream modules (direction → system → code), but explicitly out of MVP scope.
+- **Tonal fit:** Duolingo×Pro chosen (E-019); keep calibrating "chunky but not kiddie".
+- **Pool size:** Engine A pools intentionally small → novelty ceiling (expected, KONZEPT §6-A).
+- **Input mechanism:** briefing + LLM orchestration (E-026); the lexicon bias is a fixture, not the product.
+- **Legacy salvage:** Pattern Library + Canvas + Export (direction→system→code) out of MVP scope.
 
 ## Open Questions
 
-- Pools expand first vs. real LLM call as render step — which unblocks quality faster?
 - 5 or 6 axes (add Formality)?
-- Default batch size per Explore round?
-- First open to external users: when / under what conditions?
+- Default batch size per Explore round (currently 5)?
+- LLM gateway / provider choice — simplicity vs. cost (research in progress).
+- When / under what conditions to open to external users?

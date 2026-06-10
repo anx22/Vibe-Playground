@@ -89,10 +89,10 @@ Professional designers / art directors. High standards, want control + speed. Ad
 
 ## Tech Stack (current)
 
-- React (JSX), client-side only
+- React + TypeScript (Vite), client-side only
 - No backend, no auth, no persistence (in-memory)
-- No real LLM calls yet — engines run combinatorially
-- Existing shell: `vibe-playground-shell.jsx`
+- Engines run combinatorially (Engine A); the LLM layer (scene-render + B/C) is planned via a thin gateway proxy — key never client-side
+- App + Lab method framework live in `src/` (see `README.md`)
 
 ## Reference Docs
 
