@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { sceneRenderSchema } from "../src/llm/schema";
-import { MODELS, genObject, mapLimit } from "./_lib/gateway";
-import { RENDER_SYSTEM, renderPrompt, type RenderInput } from "./_lib/prompts";
+import { sceneRenderSchema } from "./_lib/schema.js";
+import { MODELS, genObject, mapLimit } from "./_lib/gateway.js";
+import { RENDER_SYSTEM, renderPrompt, type RenderInput } from "./_lib/prompts.js";
 
 /**
  * Batch render — concurrency-limited fan-out through the gateway (sync).

@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { seedListSchema } from "../src/llm/schema";
-import { MODELS, genObject } from "./_lib/gateway";
-import { SEED_SYSTEM } from "./_lib/prompts";
+import { seedListSchema } from "./_lib/schema.js";
+import { MODELS, genObject } from "./_lib/gateway.js";
+import { SEED_SYSTEM } from "./_lib/prompts.js";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") return res.status(405).json({ error: "POST only" });

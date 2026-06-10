@@ -14,8 +14,17 @@ import {
  * Callers fall back to the offline template when these throw (no key / `vite` without functions).
  */
 
+/**
+ * Optional base URL so the eval can target a deployed gateway (e.g. the live Vercel app)
+ * from Node. In the browser this stays "" → same-origin relative requests.
+ */
+let API_BASE = "";
+export const setApiBase = (base: string) => {
+  API_BASE = base.replace(/\/$/, "");
+};
+
 async function post<T>(path: string, body: unknown, schema: { parse(x: unknown): T }): Promise<T> {
-  const res = await fetch(path, {
+  const res = await fetch(API_BASE + path, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
@@ -48,7 +57,7 @@ export const generatePersona = (input: { briefing: string }): Promise<Persona> =
 /** Is the LLM layer reachable & configured? Drives the Lab's "LLM" toggle. */
 export async function llmReady(): Promise<boolean> {
   try {
-    const res = await fetch("/api/health");
+    const res = await fetch(API_BASE + "/api/health");
     if (!res.ok) return false;
     const body = (await res.json()) as { configured?: boolean };
     return Boolean(body.configured);
