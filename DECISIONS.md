@@ -31,3 +31,4 @@
 |E-025|Object metaphor = **functional grounding** (pulls the axis vector, shapes output)  |Not decorative; the metaphor is a real coherence + output lever (strongest hebel)    |
 |E-026|Input = **natural-language briefing** (idea/product/direction); an **LLM orchestrates** brief→vibe|No keyword→axis lexicon; the user briefs, the model interprets and steers the space  |
 |E-027|Vibe Card floor = **Leitwert + Mood + Typo-trio**; 3-tone palette is **additive**  |Resolves PROJECT.md vs E-015; palette stays generated but is not the minimum         |
+|E-028|Leitwert generation = **structure proposes, LLM renders**; the compound skeleton alone is not the deliverable|Engine A "sits in the structure; the LLM renders" — the evocative render is the magic, currently missing|
