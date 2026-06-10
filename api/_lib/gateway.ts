@@ -14,6 +14,10 @@ export const MODELS = {
   premium: "anthropic/claude-opus-4.7", // hardest renders
 } as const;
 
+/** Resolve a tier name to a model id — one place to control spend per surface. */
+export const modelFor = (tier?: "cheap" | "strong" | "premium") =>
+  tier === "premium" ? MODELS.premium : tier === "cheap" ? MODELS.cheap : MODELS.strong;
+
 /** Failover order per model (tried by the gateway if the primary fails/unavailable). */
 const FALLBACKS: Record<string, string[]> = {
   [MODELS.premium]: [MODELS.strong, MODELS.cheap],
@@ -42,7 +46,7 @@ export async function genObject<T>(opts: {
     if (hit && Date.now() - hit.at < TTL_MS) return hit.value as T;
   }
 
-  const { object } = await generateObject({
+  const result = await generateObject({
     model: opts.model,
     schema: opts.schema,
     system: opts.system,
@@ -55,6 +59,13 @@ export async function genObject<T>(opts: {
       },
     },
   });
+  // Token visibility (shows up in Vercel runtime logs) — guards against silent overspend.
+  try {
+    console.log(`[gw] ${opts.model} usage=${JSON.stringify(result.usage)}`);
+  } catch {
+    /* ignore */
+  }
+  const object = result.object;
 
   if (!opts.noCache) cache.set(ck, { at: Date.now(), value: object });
   return object as T;

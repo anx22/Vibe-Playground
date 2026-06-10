@@ -83,7 +83,7 @@ const cPersona: Method = {
   async generate(ctx, batchSize) {
     const cards: VibeCard[] = [];
     for (let i = 0; i < batchSize; i++) {
-      const p = await generatePersona({ briefing: ctx.briefing ?? "" });
+      const p = await generatePersona({ briefing: ctx.briefing ?? "", tier: ctx.tier });
       cards.push({
         id: `${p.leitwert}-${Math.floor(ctx.rng() * 1e6)}`,
         leitwert: p.leitwert,

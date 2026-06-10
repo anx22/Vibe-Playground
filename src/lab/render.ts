@@ -43,13 +43,16 @@ export const llmSceneRenderer: Renderer = {
   async render(m, ctx) {
     const obj = nearestObject(m.vector);
     const skeleton = `${m.worlds.map((w) => w.name).join("-")}-${obj.name}`;
-    const out = await renderScene({
-      leitwert: skeleton,
-      worlds: m.worlds.map((w) => w.name),
-      mood: moodFor(m.vector),
-      note: m.note,
-      briefing: ctx.briefing,
-    });
+    const out = await renderScene(
+      {
+        leitwert: skeleton,
+        worlds: m.worlds.map((w) => w.name),
+        mood: moodFor(m.vector),
+        note: m.note,
+        briefing: ctx.briefing,
+      },
+      ctx.tier,
+    );
     return {
       id: `${out.leitwert}-${Math.floor(ctx.rng() * 1e6)}`,
       leitwert: out.leitwert,

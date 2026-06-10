@@ -19,6 +19,8 @@ export interface MixContext {
   spread: number;
   /** Raw briefing text — LLM sources/renderers may use it for context. */
   briefing?: string;
+  /** Model tier for LLM methods — Lab defaults to "cheap" (Haiku) to bound eval cost. */
+  tier?: "cheap" | "strong";
 }
 
 export interface MixResult {

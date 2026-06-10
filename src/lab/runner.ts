@@ -27,6 +27,8 @@ export interface LabOpts {
   batchSize?: number;
   seed?: number;
   allowLLM?: boolean;
+  /** Model tier for LLM methods. Defaults to "cheap" (Haiku) — the Lab compares methodology, not polish. */
+  modelTier?: "cheap" | "strong";
 }
 
 function hash(s: string): number {
@@ -47,6 +49,7 @@ export async function runLab(
   const batchSize = opts.batchSize ?? 5;
   const seed = opts.seed ?? 42;
   const allowLLM = opts.allowLLM ?? false;
+  const tier = opts.modelTier ?? "cheap";
 
   const cells: Record<string, Record<string, Cell>> = {};
   const skipped: string[] = [];
@@ -61,7 +64,7 @@ export async function runLab(
     cells[m.id] = {};
     for (const b of briefings) {
       const rng = mulberry32((seed ^ hash(`${m.id}|${b.id}`)) >>> 0);
-      const ctx = { rng, centroid: biasFromBriefing(b.text), spread: 0.8, briefing: b.text };
+      const ctx = { rng, centroid: biasFromBriefing(b.text), spread: 0.8, briefing: b.text, tier };
       try {
         const cards = await m.generate(ctx, batchSize);
         cells[m.id][b.id] = { cards, metrics: metricsFor(cards) };

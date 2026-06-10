@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { sceneRenderSchema } from "./_lib/schema.js";
-import { MODELS, genObject, mapLimit } from "./_lib/gateway.js";
+import { genObject, mapLimit, modelFor } from "./_lib/gateway.js";
 import { RENDER_SYSTEM, renderPrompt, type RenderInput } from "./_lib/prompts.js";
 
 /**
@@ -13,13 +13,14 @@ import { RENDER_SYSTEM, renderPrompt, type RenderInput } from "./_lib/prompts.js
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
   try {
-    const { jobs, concurrency } = (req.body ?? {}) as {
+    const { jobs, concurrency, tier } = (req.body ?? {}) as {
       jobs?: RenderInput[];
       concurrency?: number;
+      tier?: "cheap" | "strong";
     };
     const results = await mapLimit(jobs ?? [], concurrency ?? 5, (job) =>
       genObject({
-        model: MODELS.strong,
+        model: modelFor(tier),
         schema: sceneRenderSchema,
         system: RENDER_SYSTEM,
         prompt: renderPrompt(job),

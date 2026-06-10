@@ -38,14 +38,20 @@ async function main() {
   const seed = arg("--seed", 42);
   const batch = arg("--batch", 5);
   const useLLM = has("--llm");
+  const tier: "cheap" | "strong" = has("--strong") ? "strong" : "cheap";
   const base = process.env.VIBE_API_BASE ?? "";
   if (base) setApiBase(base);
 
   const methods = useLLM ? METHODS : offlineMethods();
-  const run = await runLab(methods, BRIEFINGS, { seed, batchSize: batch, allowLLM: useLLM });
+  const run = await runLab(methods, BRIEFINGS, {
+    seed,
+    batchSize: batch,
+    allowLLM: useLLM,
+    modelTier: tier,
+  });
 
   console.log(
-    `\n  VIBE LAB · eval   seed=${seed} batch=${batch} llm=${useLLM ? `on (${base || "relative"})` : "off"}`,
+    `\n  VIBE LAB · eval   seed=${seed} batch=${batch} llm=${useLLM ? `on · ${tier} (${base || "relative"})` : "off"}`,
   );
   if (run.skipped.length) console.log(`  skipped (need LLM): ${run.skipped.join(", ")}`);
 
@@ -70,12 +76,30 @@ async function main() {
     }
   }
 
-  // Diversity summary — directly answers "are suggestions too similar?"
-  console.log(`\n${"─".repeat(78)}\n  DIVERSITY by method (mean pairwise distance, higher = more varied):`);
+  // ── Methodology scorecard — how good/bad each method is, standalone ──────────
+  console.log(`\n${"─".repeat(78)}\n  SCORECARD (avg across briefings)`);
+  console.log(`    ${"method".padEnd(18)} coherence  diversity  novelty(uniq)`);
+  let llmCalls = 0;
   for (const mid of run.methodIds) {
-    const ds = BRIEFINGS.map((b) => run.cells[mid]?.[b.id]?.metrics.diversity ?? 0);
-    const avg = ds.reduce((s, x) => s + x, 0) / ds.length;
-    console.log(`    ${mid.padEnd(18)} ${bar(avg, 0, 2.5)} ${avg.toFixed(2)}`);
+    const cells = BRIEFINGS.map((b) => run.cells[mid]?.[b.id]).filter(Boolean);
+    const mean = (f: (c: NonNullable<(typeof cells)[number]>) => number) =>
+      cells.reduce((s, c) => s + f(c!), 0) / (cells.length || 1);
+    const coh = mean((c) => c.metrics.coherence);
+    const div = mean((c) => c.metrics.diversity);
+    // repetition: fraction of unique Leitwerte across all this method's cards
+    const all = cells.flatMap((c) => c!.cards.map((x) => x.leitwert));
+    const uniq = all.length ? new Set(all).size / all.length : 0;
+    if (METHODS.find((m) => m.id === mid)?.requiresLLM) llmCalls += all.length;
+    console.log(
+      `    ${mid.padEnd(18)} ${bar(coh)} ${(coh * 100).toFixed(0).padStart(3)}%  ${bar(div, 0, 2.5)} ${div.toFixed(2)}  ${bar(uniq)} ${(uniq * 100).toFixed(0)}%`,
+    );
+  }
+  if (useLLM) {
+    // b-llm adds one seed-expansion call per briefing
+    const seedCalls = run.methodIds.includes("b-llm") ? BRIEFINGS.length : 0;
+    console.log(
+      `\n  ~${llmCalls + seedCalls} model calls this run (tier=${tier})  ·  Studio uses 'strong', Lab '${tier}'`,
+    );
   }
   console.log("");
 }
