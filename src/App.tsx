@@ -1,15 +1,18 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import type { VibeCard as Card } from "./engine";
 import { useVibeStore } from "./store/useVibeStore";
 import { Pentagon } from "./components/Pentagon";
 import { VibeCard } from "./components/VibeCard";
 import { Tacho } from "./components/Tacho";
 import { Lab } from "./components/Lab";
+import { ExportModal } from "./components/ExportModal";
 
 const DEFAULT_ACCENT = "#E86A4B";
 
 export default function App() {
   const s = useVibeStore();
   const [libOpen, setLibOpen] = useState(false);
+  const [exportCard, setExportCard] = useState<Card | null>(null);
 
   const focusedCard = useMemo(
     () => s.cards.find((c) => c.id === s.focusId) ?? s.library.find((c) => c.id === s.focusId),
@@ -123,6 +126,7 @@ export default function App() {
                     onAttract={() => s.attract(c)}
                     onRepel={() => s.repel(c)}
                     onCommit={() => s.commit(c)}
+                    onExport={() => setExportCard(c)}
                   />
                 ))}
               </div>
@@ -137,21 +141,33 @@ export default function App() {
                   <p className="lib-empty">Noch nichts committed. Drück ★ auf einer Card.</p>
                 ) : (
                   s.library.map((c) => (
-                    <button
+                    <div
                       key={c.id}
-                      type="button"
                       className="lib-item"
-                      onClick={() => s.focus(c.id)}
                       style={{ "--card-accent": c.palette[2] } as CSSProperties}
                     >
-                      <span className="lib-swatch" style={{ background: c.palette[2] }} />
-                      <span
-                        className="lib-name"
-                        style={{ fontFamily: c.typography.display.family }}
+                      <button
+                        type="button"
+                        className="lib-item-main"
+                        onClick={() => s.focus(c.id)}
                       >
-                        {c.leitwert}
-                      </span>
-                    </button>
+                        <span className="lib-swatch" style={{ background: c.palette[2] }} />
+                        <span
+                          className="lib-name"
+                          style={{ fontFamily: c.typography.display.family }}
+                        >
+                          {c.leitwert}
+                        </span>
+                      </button>
+                      <button
+                        type="button"
+                        className="lib-export"
+                        onClick={() => setExportCard(c)}
+                        title="Als Prompt exportieren"
+                      >
+                        ⤓
+                      </button>
+                    </div>
                   ))
                 )}
               </div>
@@ -159,6 +175,8 @@ export default function App() {
           )}
         </div>
       )}
+
+      {exportCard && <ExportModal card={exportCard} onClose={() => setExportCard(null)} />}
     </div>
   );
 }

@@ -49,7 +49,7 @@ the key and talks to the gateway via the AI SDK; the key is **never client-side*
 
 ```
 src/llm/      schema (zod, shared) · client (fetchers, graceful offline fallback)
-api/          health · render (scene, E-028) · seeds (B) · persona (C) · batch
+api/          health · interpret (briefing→axes, E-034) · render (scene, E-028) · seeds · persona · batch
 api/_lib/     gateway (model registry · caching:'auto' · model fallbacks · in-instance cache) · prompts
 ```
 

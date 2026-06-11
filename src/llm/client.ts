@@ -1,4 +1,5 @@
 import {
+  axisVectorSchema,
   batchResultSchema,
   personaSchema,
   sceneRenderSchema,
@@ -7,6 +8,7 @@ import {
   type SceneRender,
   type WorldTerm,
 } from "./schema";
+import type { AxisVector } from "../engine";
 
 /**
  * Client-side fetchers. They call our serverless proxy (api/), which holds the
@@ -60,13 +62,15 @@ export const expandSeeds = (input: {
 export const generatePersona = (input: { briefing: string; tier?: Tier }): Promise<Persona> =>
   post("/api/persona", input, personaSchema);
 
-/** Is the LLM layer reachable & configured? Drives the Lab's "LLM" toggle. */
+/** Briefing → axis vector via the LLM (E-026), so the briefing actually steers the structure. */
+export const interpretBriefing = (briefing: string, tier: Tier = "cheap"): Promise<AxisVector> =>
+  post("/api/interpret", { briefing, tier }, axisVectorSchema) as Promise<AxisVector>;
+
+/** Is the LLM proxy reachable? (The authoritative test of generation is an actual render.) */
 export async function llmReady(): Promise<boolean> {
   try {
     const res = await fetch(API_BASE + "/api/health");
-    if (!res.ok) return false;
-    const body = (await res.json()) as { configured?: boolean };
-    return Boolean(body.configured);
+    return res.ok;
   } catch {
     return false;
   }

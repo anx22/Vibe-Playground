@@ -26,6 +26,11 @@ export const SEED_SYSTEM =
   "energy(leise..laut), time(historisch..futuristisch), structure(organisch..raster), " +
   "density(sparsam..dicht).";
 
+export const INTERPRET_SYSTEM =
+  "Du bist Design-Analyst. Projiziere ein Briefing auf 5 Achsen, je -1..1: " +
+  "material (kalt/synthetisch..warm/organisch), energy (leise..laut), time (historisch.." +
+  "futuristisch), structure (organisch..Raster/System), density (sparsam..dicht). Gib nur die Zahlen.";
+
 export const PERSONA_SYSTEM =
   "Du erzeugst eine fiktive Quelle (Person/Studio/Werkstatt) als 2-Slot-Kollision " +
   "[Herkunft/Handwerk] × [fremder Kontext] + [Macke]. Aus der Person fällt der Vibe von selbst " +

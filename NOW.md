@@ -4,9 +4,11 @@
 
 ## Current Goal
 
-Wire the **LLM layer** (scene-render + Engine B/C) onto the working Studio + Lab, and pressure-test
-the methods on real briefings. Subjective quality in the Lab is the first success metric (E-018);
-north star is speed to a credible direction (E-014).
+The end-to-end loop is **live on Vercel** (briefing → LLM-interpreted axes → structure → LLM scene →
+card → commit → export). Remaining: Advanced mode, real embeddings for B, persistence. Subjective
+quality in the Lab is the first success metric (E-018); north star is speed to a credible direction
+(E-014). **Cost is bounded** (Studio=Sonnet, Lab=Haiku, no Opus); the gateway free-tier is
+rate-limited until credits are topped up.
 
 ## What Exists
 
@@ -21,31 +23,31 @@ north star is speed to a credible direction (E-014).
 - **Lab — method framework** (`src/lab/`): `WorldSource × MixStrategy × Renderer`, fully swappable.
   Mix strategies live: bridge (A), distance+λ (B-methodology, offline), triad, contrast. Metrics
   (coherence/diversity/novelty), seeded runner, side-by-side comparison matrix UI, Vitest (3 passing).
-- **LLM layer — Vercel AI Gateway** (`src/llm/` + `api/`, E-029): thin proxy with model registry,
-  `caching:'auto'`, model fallbacks, batch fan-out. Scene renderer (E-028), Engine B (seed-expansion)
-  and Engine C (persona) wired as real Lab methods — activate with a gateway key.
-- **Docs:** `PROJECT.md` (facts), `KONZEPT.md` v0.2 (full vision), `DESIGN.md` (interface),
-  `DECISIONS.md` (E-001…E-028).
+- **LLM layer — Vercel AI Gateway** (`src/llm/` + `api/`, E-029): thin proxy, model registry +
+  **tiers** (Studio=Sonnet, Lab=Haiku, no Opus, E-030), `caching:'auto'`, fallbacks, usage logging.
+  Endpoints: `render` · `batch` · `seeds` · `persona` · `interpret` (briefing→axes, E-034) · `health`.
+- **Briefing → LLM-interpreted axes** (E-034): Explore projects the briefing onto the 5 axes via the
+  model (lexicon fallback) — the briefing steers the Pentagon, not just the scene text.
+- **Single-screen Studio** (E-032): rail (compact Pentagon + controls) · card grid · Library panel.
+- **Library export** (E-033): any/committed direction → copy-ready prompt/brief (client-side).
+- **Engine variety + novelty** (E-031): uniqueness 60%→100% at full coherence; Studio & Lab consistent.
+- **Eval** (`scripts/eval.ts`, `npm run eval`): methodology scorecard (coherence/diversity/uniqueness)
+  + model-call estimate; `VIBE_API_BASE=… --llm` runs against the live gateway.
+- **Docs:** `PROJECT.md` · `KONZEPT.md` v0.2 · `DESIGN.md` · `DECISIONS.md` (E-001…E-034).
 
 ## What Does NOT Exist Yet
 
-- **Gateway key not provisioned** — the LLM scene-render (E-028) + Engine B/C are built but inert
-  until `AI_GATEWAY_API_KEY` / Vercel OIDC is set; offline methods run without it.
-- **Real embeddings for B** — seeds are LLM-projected onto the axes (concept-valid stand-in).
-- **Briefing → LLM orchestration** in the Studio (E-026) — the offline keyword lexicon is still the
-  Studio's input; the Lab already passes the briefing to the LLM methods.
 - **Advanced mode** UI (axis controls, λ/distance band, engine lens). Only a Studio/Lab toggle exists.
-- Persistence beyond in-memory; expanded pools.
+- **Real embeddings for B** — seeds are LLM-projected onto the axes (concept-valid stand-in).
+- **Persistence** beyond in-memory (localStorage / accounts).
+- **Paid gateway credits** — free tier is rate-limited; renders fall back to skeletons when throttled.
 
 ## Next Steps (in order)
 
-1. **Verify live** on Vercel (key is set in env): run a few real briefings through the Studio + the
-   Lab's `a-scene` / `b-llm` / `c-persona`; tune prompts/models against the output.
-2. **Briefing → centroid via LLM** — let the model set the axis bias too (currently the Studio still
-   uses the offline lexicon for the pentagon; the LLM only renders the scene).
+1. **Top up gateway credits** (your action) to lift the free-tier rate limit → full live scenes.
+2. **Advanced mode** — axis controls, engine lens, distance/λ, Lab access; offered adaptively (E-020).
 3. **Engine B real embeddings** (replace LLM-axis-projection); λ/distance becomes a live slider.
-4. **Advanced mode** — expose axis controls, engine lens, Lab; offered adaptively (E-020).
-5. Pool expansion; persistence.
+4. **Persistence** — keep the Library across sessions.
 
 ## Known Issues / Watch-outs
 

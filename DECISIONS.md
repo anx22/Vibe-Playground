@@ -33,3 +33,8 @@
 |E-027|Vibe Card floor = **Leitwert + Mood + Typo-trio**; 3-tone palette is **additive**  |Resolves PROJECT.md vs E-015; palette stays generated but is not the minimum         |
 |E-028|Leitwert generation = **structure proposes, LLM renders**; the compound skeleton alone is not the deliverable|Engine A "sits in the structure; the LLM renders" — the evocative render is the magic, currently missing|
 |E-029|LLM layer = **Vercel AI Gateway** via a thin `api/` proxy; one key, no per-provider token management|Zero markup, `caching:'auto'`, model fallbacks; key server-side only. Model registry (cheap/strong/premium); batch = concurrent fan-out (Anthropic Batch a future BYOK adapter)|
+|E-030|**Model tiers**: Studio = `strong` (Sonnet), Lab/eval = `cheap` (Haiku), Opus never called|Bounds token cost; Lab compares methodology, not polish. Usage logged per call.|
+|E-031|Engine A gets **variety (top-K) + novelty filter** + bigger pools; mirrored into Lab mix/render|Kills the repetition (a-bridge uniqueness 60%→100%) at full coherence; Studio & Lab consistent|
+|E-032|**Single-screen Studio**: sticky rail (Pentagon + controls) · scrollable card grid · collapsible Library panel; compact card (details behind collapser)|Everything visible at once, no long scroll (the prior vertical stack)|
+|E-033|**Library export**: a committed direction → a copy-ready prompt/brief (client-side, no tokens)|Closes the output surface (E-024) — the vibe becomes reusable in any LLM/tool|
+|E-034|Input = **LLM-interpreted briefing → axis vector** (`/api/interpret`, cheap), lexicon as fallback|Realises E-026 for the *structure*, not just the scene; the briefing actually steers the Pentagon|

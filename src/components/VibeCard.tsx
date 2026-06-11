@@ -18,6 +18,7 @@ export function VibeCard({
   onAttract,
   onRepel,
   onCommit,
+  onExport,
 }: {
   card: Card;
   centroid: AxisVector;
@@ -26,6 +27,7 @@ export function VibeCard({
   onAttract: () => void;
   onRepel: () => void;
   onCommit: () => void;
+  onExport: () => void;
 }) {
   const [base, ink, accent] = card.palette;
   const ind = indicator(card, centroid);
@@ -37,7 +39,12 @@ export function VibeCard({
     >
       <header className="card-top">
         <span className={`coh${card.coherence.ok ? " coh--ok" : ""}`} title="Bridge-Regel" />
-        <span className={`indicator indicator--${ind.level}`}>{ind.label}</span>
+        <span className="card-top-right">
+          <span className={`indicator indicator--${ind.level}`}>{ind.label}</span>
+          <button className="card-export" type="button" onClick={onExport} title="Als Prompt exportieren">
+            ⤓
+          </button>
+        </span>
       </header>
 
       <h2 className="leitwert" style={{ fontFamily: card.typography.display.family }}>

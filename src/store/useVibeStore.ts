@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import type { AxisVector, Signal, VibeCard } from "../engine";
 import { AXES, add, autoEngine, clamp, zero, LEXICON } from "../engine";
-import { renderBatch } from "../llm/client";
+import { interpretBriefing, renderBatch } from "../llm/client";
 
 const BATCH = 5;
 const studioRng = () => Math.random();
@@ -112,11 +112,21 @@ export const useVibeStore = create<VibeState>((set, get) => ({
   setSeed: (w) => set({ seed: w, seedVec: seedVector(w) }),
 
   explore: async () => {
-    const { seedVec, seed } = get();
-    const centroid = centroidOf(seedVec, []);
+    const briefing = get().seed;
+    set({ phase: "studio", signals: [], focusId: null, cards: [], loading: true });
+    // Briefing → axis bias: LLM-interpreted (E-026), with the offline lexicon as fallback.
+    let seedVec = seedVector(briefing);
+    if (briefing.trim()) {
+      try {
+        seedVec = await interpretBriefing(briefing);
+      } catch {
+        /* keep lexicon fallback */
+      }
+    }
     const spread = spreadOf([]);
-    set({ phase: "studio", signals: [], centroid, spread, focusId: null, cards: [], loading: true });
-    const cards = await generateBatch(centroid, spread, seed);
+    const centroid = centroidOf(seedVec, []);
+    set({ seedVec, centroid, spread });
+    const cards = await generateBatch(centroid, spread, briefing);
     set({ cards, loading: false });
   },
 
