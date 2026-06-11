@@ -775,3 +775,95 @@ body {
   0%, 100% { opacity: 0.45; }
   50% { opacity: 1; }
 }
+
+/* ── Single-screen Studio layout ──────────────────────── */
+.studio {
+  height: calc(100vh - 78px);
+  display: flex;
+  gap: 20px;
+  padding: 4px 24px 16px;
+  min-height: 0;
+}
+.studio-rail {
+  width: 234px;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: stretch;
+}
+.studio-rail .pentagon-wrap {
+  margin: 2px auto 4px;
+}
+.studio-rail .btn {
+  width: 100%;
+}
+.studio-main {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.seed-input--rail {
+  width: 100%;
+  padding: 11px 14px;
+  font-size: 14px;
+  border-radius: 14px;
+}
+.rail-row {
+  display: flex;
+  gap: 8px;
+}
+.btn-sm {
+  padding: 9px 12px;
+  font-size: 13px;
+  border-radius: 14px;
+  box-shadow: 0 3px 0 var(--line);
+}
+.rail-row .btn-sm {
+  flex: 1;
+}
+.btn-ghost.is-active {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* denser card grid + compact card (overrides earlier rules) */
+.batch {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(238px, 1fr));
+  gap: 16px;
+  max-width: none;
+  justify-content: stretch;
+}
+.card {
+  width: auto;
+  padding: 15px;
+  gap: 9px;
+}
+.leitwert {
+  font-size: 23px;
+}
+.scene {
+  font-size: 14px;
+}
+.swatch {
+  height: 24px;
+}
+
+/* Library as a collapsible right panel */
+.library-panel {
+  width: 224px;
+  flex: none;
+  background: var(--paper);
+  border: 2.5px solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: 0 5px 0 var(--line);
+  padding: 12px;
+  overflow-y: auto;
+}
+.lib-empty {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}

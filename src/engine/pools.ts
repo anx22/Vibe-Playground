@@ -36,6 +36,12 @@ export const WORLDS: World[] = [
   { name: "Cyber", vector: v(-0.8, 0.7, 0.9, 0.3, 0.7) },
   { name: "Archive", vector: v(0.0, -0.5, -0.6, 0.6, 0.7) },
   { name: "Solar", vector: v(0.4, 0.3, 0.7, 0.2, -0.3) },
+  { name: "Nautical", vector: v(0.2, -0.2, -0.4, 0.3, 0.2) },
+  { name: "Apotheke", vector: v(0.5, -0.5, -0.6, 0.4, 0.5) },
+  { name: "Arcade", vector: v(-0.5, 0.7, 0.5, 0.2, 0.6) },
+  { name: "Constructivist", vector: v(-0.3, 0.6, -0.4, 0.7, 0.5) },
+  { name: "Ceramic", vector: v(0.7, -0.2, -0.2, -0.3, 0.1) },
+  { name: "Observatory", vector: v(-0.2, -0.4, 0.5, 0.5, 0.3) },
 ];
 
 export const OBJECTS: ObjectMetaphor[] = [
@@ -51,6 +57,12 @@ export const OBJECTS: ObjectMetaphor[] = [
   { name: "Kompass", vector: v(-0.1, -0.1, -0.2, 0.4, -0.1) },
   { name: "Totem", vector: v(0.7, 0.3, -0.2, -0.4, 0.3) },
   { name: "Circuit", vector: v(-0.8, 0.4, 0.9, 0.6, 0.5) },
+  { name: "Logbuch", vector: v(0.1, -0.4, -0.4, 0.4, 0.5) },
+  { name: "Schaltplan", vector: v(-0.5, 0.1, 0.4, 0.7, 0.6) },
+  { name: "Herbarium", vector: v(0.6, -0.3, -0.3, 0.2, 0.5) },
+  { name: "Plakat", vector: v(-0.1, 0.7, 0.0, 0.3, 0.4) },
+  { name: "Karteikarte", vector: v(0.0, -0.3, -0.2, 0.6, 0.5) },
+  { name: "Zifferblatt", vector: v(-0.2, -0.2, 0.1, 0.5, 0.2) },
 ];
 
 export const DISPLAY_FONTS: FontDef[] = [

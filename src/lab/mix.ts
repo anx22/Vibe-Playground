@@ -24,11 +24,8 @@ export const bridgeMix: MixStrategy = {
       (w) => w.name !== home.name && sharedSigns(home.vector, w.vector).length >= 1,
     );
     if (!cands.length) return null;
-    cands.sort(
-      (a, b) =>
-        dist(b.vector, home.vector) - dist(a.vector, home.vector) + (ctx.rng() - 0.5) * 0.1,
-    );
-    const intr = cands[0];
+    cands.sort((a, b) => dist(b.vector, home.vector) - dist(a.vector, home.vector));
+    const intr = cands[Math.min(cands.length - 1, Math.floor(ctx.rng() * 3))];
     const shared = sharedSigns(home.vector, intr.vector);
     return {
       worlds: [home, intr],

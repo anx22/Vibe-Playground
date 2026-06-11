@@ -53,32 +53,31 @@ export function VibeCard({
         </p>
       )}
 
-      <div className="trio">
-        {(["display", "body", "data"] as const).map((role) => {
-          const t = card.typography[role];
-          return (
-            <div className="trio-row" key={role}>
-              <span className="trio-sample" style={{ fontFamily: t.family }}>
-                Ag
-              </span>
-              <span className="trio-meta">
-                <span className="trio-name" style={{ fontFamily: t.family }}>
-                  {t.name}
-                </span>
-                <span className="trio-role">{t.role}</span>
-              </span>
-            </div>
-          );
-        })}
-      </div>
-
       <div className="palette">
         {([base, ink, accent] as const).map((c, i) => (
           <span className="swatch" key={i} style={{ background: c }} title={c} />
         ))}
       </div>
 
-      <Collapser label="Herkunft">
+      <Collapser label="Details">
+        <div className="trio">
+          {(["display", "body", "data"] as const).map((role) => {
+            const t = card.typography[role];
+            return (
+              <div className="trio-row" key={role}>
+                <span className="trio-sample" style={{ fontFamily: t.family }}>
+                  Ag
+                </span>
+                <span className="trio-meta">
+                  <span className="trio-name" style={{ fontFamily: t.family }}>
+                    {t.name}
+                  </span>
+                  <span className="trio-role">{t.role}</span>
+                </span>
+              </div>
+            );
+          })}
+        </div>
         <p className="origin-line">
           {card.origin.home} <span className="x">×</span> {card.origin.intrusion}{" "}
           <span className="arrow">→</span> {card.origin.object}

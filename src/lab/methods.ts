@@ -22,6 +22,7 @@ const aBridge = recipe({
   source: curatedSource,
   mix: bridgeMix,
   render: templateRenderer,
+  noveltyTau: 0.45,
 });
 
 const bLambdaOffline = recipe({

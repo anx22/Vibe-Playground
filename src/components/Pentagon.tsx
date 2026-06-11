@@ -25,15 +25,20 @@ export function Pentagon({
   vector,
   spread,
   idle,
+  size = 320,
 }: {
   vector: AxisVector;
   spread: number;
   idle: boolean;
+  size?: number;
 }) {
   const v = useTweenVector(vector);
 
   return (
-    <div className={`pentagon-wrap${idle ? " pentagon-wrap--idle" : ""}`}>
+    <div
+      className={`pentagon-wrap${idle ? " pentagon-wrap--idle" : ""}`}
+      style={{ width: size, height: size }}
+    >
       <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="pentagon" aria-hidden>
         {/* grid rings */}
         {[0.34, 0.67, 1].map((g) => (
