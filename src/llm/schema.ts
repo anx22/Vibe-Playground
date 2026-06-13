@@ -27,6 +27,8 @@ export const worldTermSchema = z.object({
   term: z.string(),
   connotation: z.string(),
   vector: axisVectorSchema,
+  /** High-dimensional semantic embedding (Engine B metric); absent if embedding was unavailable. */
+  embedding: z.array(z.number()).optional(),
 });
 export const seedListSchema = z.object({ worlds: z.array(worldTermSchema) });
 export type WorldTerm = z.infer<typeof worldTermSchema>;

@@ -17,6 +17,6 @@ export const llmSeedSource: WorldSource = {
   requiresLLM: true,
   async candidates(ctx) {
     const seeds = await expandSeeds({ briefing: ctx.briefing ?? "", n: 14, tier: ctx.tier });
-    return seeds.map((s) => ({ name: s.term, vector: s.vector }));
+    return seeds.map((s) => ({ name: s.term, vector: s.vector, embedding: s.embedding }));
   },
 };

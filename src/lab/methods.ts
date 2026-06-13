@@ -3,7 +3,7 @@ import { paletteFor, typoFor } from "../engine/derive";
 import { generatePersona } from "../llm/client";
 import type { Method } from "./method";
 import { recipe } from "./method";
-import { bridgeMix, contrastMix, lambdaBandMix, triadMix } from "./mix";
+import { bridgeMix, contrastMix, lambdaBandMix, latentBandMix, triadMix } from "./mix";
 import { curatedSource, llmSeedSource } from "./sources";
 import { llmSceneRenderer, templateRenderer } from "./render";
 
@@ -64,13 +64,13 @@ const aScene = recipe({
   render: llmSceneRenderer,
 });
 
-/** Engine B live: LLM seed-expansion → distance+λ → LLM scene. */
+/** Engine B live: LLM seed-expansion → real embeddings → cosine-band + λ → LLM scene. */
 const bLLM = recipe({
   id: "b-llm",
-  label: "B · Seed-Expansion + λ",
+  label: "B · Embeddings + λ",
   kind: "single",
   source: llmSeedSource,
-  mix: lambdaBandMix,
+  mix: latentBandMix,
   render: llmSceneRenderer,
   noveltyTau: 0.3,
 });

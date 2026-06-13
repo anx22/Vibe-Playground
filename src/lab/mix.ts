@@ -123,4 +123,79 @@ export const contrastMix: MixStrategy = {
   },
 };
 
-export const MIX_STRATEGIES: MixStrategy[] = [bridgeMix, lambdaBandMix, triadMix, contrastMix];
+/** Cosine distance in the embedding space (0 = identical direction, 1 = orthogonal, 2 = opposite). */
+function cosineDist(a: number[], b: number[]): number {
+  let dot = 0;
+  let na = 0;
+  let nb = 0;
+  for (let i = 0; i < a.length; i++) {
+    dot += a[i] * b[i];
+    na += a[i] * a[i];
+    nb += b[i] * b[i];
+  }
+  if (na === 0 || nb === 0) return 1;
+  return 1 - dot / (Math.sqrt(na) * Math.sqrt(nb));
+}
+
+/**
+ * B · Latent-Space — real embeddings. Picks a collision by *semantic* cosine distance inside a
+ * tension band (the concept's continuous version of the bridge rule). The card vector is still a
+ * λ-blend of the two worlds' 5 axes (for palette/typo). Falls back to axis-euclidean if a world
+ * has no embedding. The band is the "safe ↔ experimental" knob.
+ */
+export const latentBandMix: MixStrategy = {
+  id: "latent-band",
+  label: "Latent-Space · Embeddings (B)",
+  arity: 2,
+  mix(pool, ctx) {
+    const a = nearest(pool, jitter(ctx.centroid, ctx.spread, ctx.rng));
+    const embedded = a.embedding && pool.some((w) => w.name !== a.name && w.embedding);
+
+    let b: World | undefined;
+    let metric = "axis";
+    if (embedded && a.embedding) {
+      const scored = pool
+        .filter((w) => w.name !== a.name && w.embedding)
+        .map((w) => ({ w, d: cosineDist(a.embedding!, w.embedding!) }));
+      // Tension band on cosine distance; relax to the 3 nearest-to-ideal if the band is empty.
+      let band = scored.filter((s) => s.d >= 0.2 && s.d <= 0.6).map((s) => s.w);
+      if (!band.length) {
+        band = scored.sort((x, y) => Math.abs(0.4 - x.d) - Math.abs(0.4 - y.d)).slice(0, 3).map((s) => s.w);
+      }
+      b = band[Math.floor(ctx.rng() * band.length)];
+      metric = "cos";
+    } else {
+      const band = pool.filter((w) => {
+        const d = dist(w.vector, a.vector);
+        return w.name !== a.name && d >= 1.0 && d <= 2.4;
+      });
+      if (!band.length) return null;
+      b = band[Math.floor(ctx.rng() * band.length)];
+    }
+    if (!b) return null;
+
+    const lambda = 0.3 + ctx.rng() * 0.4;
+    const vector = zero();
+    for (const ax of AXES) vector[ax] = clamp(a.vector[ax] * lambda + b.vector[ax] * (1 - lambda));
+    const shared = sharedSigns(a.vector, b.vector);
+    const dval =
+      metric === "cos" && a.embedding && b.embedding
+        ? cosineDist(a.embedding, b.embedding).toFixed(2)
+        : dist(a.vector, b.vector).toFixed(2);
+    return {
+      worlds: [a, b],
+      vector,
+      coherent: true,
+      sharedAxes: shared,
+      note: `${a.name} ↔ ${b.name} · λ=${lambda.toFixed(2)} · ${metric}-d=${dval}`,
+    };
+  },
+};
+
+export const MIX_STRATEGIES: MixStrategy[] = [
+  bridgeMix,
+  lambdaBandMix,
+  latentBandMix,
+  triadMix,
+  contrastMix,
+];

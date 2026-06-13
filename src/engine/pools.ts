@@ -3,6 +3,8 @@ import type { AxisVector } from "./types";
 export interface World {
   name: string;
   vector: AxisVector;
+  /** Optional real semantic embedding (Engine B); curated worlds don't have one. */
+  embedding?: number[];
 }
 export interface ObjectMetaphor {
   name: string;

@@ -18,12 +18,16 @@ export const sceneRenderSchema = z.object({
   mood: z.string().describe("short mood modifier, 2–4 words"),
 });
 
-export const worldTermSchema = z.object({
-  term: z.string(),
-  connotation: z.string(),
-  vector: axisVectorSchema,
+/** What the LLM produces for Engine B (term + connotation + axis projection). */
+export const seedGenSchema = z.object({
+  worlds: z.array(
+    z.object({
+      term: z.string(),
+      connotation: z.string(),
+      vector: axisVectorSchema,
+    }),
+  ),
 });
-export const seedListSchema = z.object({ worlds: z.array(worldTermSchema) });
 
 export const personaSchema = z.object({
   persona: z.string().describe("a fictional source: person/studio/workshop in one sentence, with a Macke"),
