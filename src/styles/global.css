@@ -1067,3 +1067,32 @@ body {
   border: 2.5px solid var(--ink);
   cursor: pointer;
 }
+
+/* ── Rate-limit banner ────────────────────────────────── */
+.ratelimit-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 24px 6px;
+  padding: 10px 14px;
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  background: #f7e4c2;
+  font-weight: 700;
+  font-size: 13px;
+  box-shadow: 0 3px 0 var(--line);
+}
+.rl-link {
+  margin-left: auto;
+  color: var(--ink);
+  font-weight: 900;
+  text-decoration: underline;
+  white-space: nowrap;
+}
+.rl-x {
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font-weight: 800;
+  color: var(--ink-soft);
+}

@@ -23,15 +23,16 @@ async function generateBatch(
   briefing: string,
   lens: Lens,
   tension: number,
-): Promise<VibeCard[]> {
+): Promise<{ cards: VibeCard[]; sceneOk: boolean }> {
   if (lens !== "auto") {
     const m = methodFor(lens);
     if (m) {
       try {
-        return await m.generate(
+        const cards = await m.generate(
           { rng: studioRng, centroid, spread, briefing, tier: "strong", tension },
           BATCH,
         );
+        return { cards, sceneOk: true };
       } catch {
         /* fall through to Engine A */
       }
@@ -49,13 +50,16 @@ async function generateBatch(
         briefing,
       })),
     );
-    return skeletons.map((c, i) =>
-      scenes[i]
-        ? { ...c, leitwert: scenes[i].leitwert, mood: scenes[i].mood, scene: scenes[i].scene }
-        : c,
-    );
+    return {
+      cards: skeletons.map((c, i) =>
+        scenes[i]
+          ? { ...c, leitwert: scenes[i].leitwert, mood: scenes[i].mood, scene: scenes[i].scene }
+          : c,
+      ),
+      sceneOk: true,
+    };
   } catch {
-    return skeletons;
+    return { cards: skeletons, sceneOk: false }; // offline / rate-limited fallback
   }
 }
 
@@ -105,6 +109,8 @@ interface VibeState {
   focusId: string | null;
   commits: number;
   loading: boolean;
+  /** True when the last generate fell back to skeletons (rate-limited / gateway unreachable). */
+  llmFallback: boolean;
   // Advanced (adaptive): unlocks on first steer; persisted.
   advanced: boolean;
   lens: Lens;
@@ -138,6 +144,7 @@ export const useVibeStore = create<VibeState>()(
       focusId: null,
       commits: 0,
       loading: false,
+      llmFallback: false,
       advanced: false,
       lens: "auto",
       tension: 0.45,
@@ -163,15 +170,15 @@ export const useVibeStore = create<VibeState>()(
         const spread = spreadFromTension(tension, []);
         const centroid = centroidOf(seedVec, []);
         set({ seedVec, centroid, spread });
-        const cards = await generateBatch(centroid, spread, briefing, lens, tension);
-        set({ cards, loading: false });
+        const { cards, sceneOk } = await generateBatch(centroid, spread, briefing, lens, tension);
+        set({ cards, loading: false, llmFallback: !sceneOk });
       },
 
       iterate: async () => {
         const { centroid, spread, seed, lens, tension } = get();
         set({ loading: true });
-        const cards = await generateBatch(centroid, spread, seed, lens, tension);
-        set({ cards, focusId: null, loading: false });
+        const { cards, sceneOk } = await generateBatch(centroid, spread, seed, lens, tension);
+        set({ cards, focusId: null, loading: false, llmFallback: !sceneOk });
       },
 
       // Live-reflow (E-022): signals re-bias centroid + spread, cards stay put. First steer unlocks Advanced.

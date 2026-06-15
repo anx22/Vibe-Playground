@@ -14,6 +14,12 @@ export default function App() {
   const s = useVibeStore();
   const [libOpen, setLibOpen] = useState(false);
   const [exportCard, setExportCard] = useState<Card | null>(null);
+  const [bannerDismissed, setBannerDismissed] = useState(false);
+
+  // Re-arm the rate-limit banner once a render succeeds again.
+  useEffect(() => {
+    if (!s.llmFallback) setBannerDismissed(false);
+  }, [s.llmFallback]);
 
   const focusedCard = useMemo(
     () => s.cards.find((c) => c.id === s.focusId) ?? s.library.find((c) => c.id === s.focusId),
@@ -54,12 +60,28 @@ export default function App() {
               Lab
             </button>
           </div>
-          <span className="streak" title="Tage am Viben">
-            <span className="streak-flame">✺</span> 1
-          </span>
           <Tacho value={tacho} />
         </div>
       </header>
+
+      {s.view === "studio" && s.phase === "studio" && s.llmFallback && !bannerDismissed && (
+        <div className="ratelimit-banner">
+          <span>
+            Rate-Limit oder kein Gateway — Vibes laufen gerade als <b>Skelette</b> (ohne LLM-Szene).
+          </span>
+          <a
+            className="rl-link"
+            href="https://vercel.com/d?to=%2F%5Bteam%5D%2F%7E%2Fai%3Fmodal%3Dtop-up"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Credits aufladen ↗
+          </a>
+          <button className="rl-x" type="button" onClick={() => setBannerDismissed(true)} aria-label="schließen">
+            ✕
+          </button>
+        </div>
+      )}
 
       {s.view === "lab" ? (
         <Lab />
