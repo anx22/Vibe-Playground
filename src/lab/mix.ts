@@ -157,8 +157,11 @@ export const latentBandMix: MixStrategy = {
       const scored = pool
         .filter((w) => w.name !== a.name && w.embedding)
         .map((w) => ({ w, d: cosineDist(a.embedding!, w.embedding!) }));
-      // Tension band on cosine distance; relax to the 3 nearest-to-ideal if the band is empty.
-      let band = scored.filter((s) => s.d >= 0.2 && s.d <= 0.6).map((s) => s.w);
+      // Tension band on cosine distance — widened by ctx.tension (safe→narrow, experimental→wide).
+      const t = ctx.tension ?? 0.5;
+      const lo = 0.2 - t * 0.05;
+      const hi = 0.45 + t * 0.45;
+      let band = scored.filter((s) => s.d >= lo && s.d <= hi).map((s) => s.w);
       if (!band.length) {
         band = scored.sort((x, y) => Math.abs(0.4 - x.d) - Math.abs(0.4 - y.d)).slice(0, 3).map((s) => s.w);
       }

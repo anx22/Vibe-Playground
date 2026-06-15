@@ -981,3 +981,89 @@ body {
   cursor: pointer;
   font-size: 13px;
 }
+
+/* ── Advanced panel (adaptive) ────────────────────────── */
+.adv-panel {
+  border: 2px solid var(--ink);
+  border-radius: 16px;
+  background: var(--paper);
+  box-shadow: 0 3px 0 var(--line);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: pop 0.24s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+.adv-head {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+}
+.adv-lens {
+  display: flex;
+  gap: 6px;
+}
+.adv-lens-btn {
+  flex: 1;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  background: var(--bg);
+  font-family: var(--ui);
+  font-weight: 800;
+  font-size: 13px;
+  padding: 7px 0;
+  cursor: pointer;
+  color: var(--ink);
+}
+.adv-lens-btn.is-active {
+  background: var(--card-accent, var(--accent));
+  color: var(--paper);
+}
+.adv-lens-hint {
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+.adv-tension {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 2px;
+}
+.adv-tension-labels {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+.adv-tension input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 6px;
+  background: var(--line);
+  outline: none;
+}
+.adv-tension input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2.5px solid var(--ink);
+  cursor: pointer;
+}
+.adv-tension input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2.5px solid var(--ink);
+  cursor: pointer;
+}

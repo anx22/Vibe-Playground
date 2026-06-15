@@ -1,21 +1,43 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import type { AxisVector, Signal, VibeCard } from "../engine";
 import { AXES, add, autoEngine, clamp, zero, LEXICON } from "../engine";
+import { METHODS } from "../lab";
 import { interpretBriefing, renderBatch } from "../llm/client";
 
 const BATCH = 5;
 const studioRng = () => Math.random();
 
+export type Lens = "auto" | "B" | "C";
+
+const methodFor = (lens: Lens) => METHODS.find((m) => m.id === (lens === "B" ? "b-llm" : "c-persona"));
+
 /**
- * Studio generate: Engine A proposes the structure (skeletons), the LLM renders each into an
- * evocative scene (E-028) in one batch round-trip. Falls back to the offline skeleton when the
- * gateway proxy is unreachable (plain `vite` / no key), so the loop always works.
+ * Studio generate. Lens "auto" = Engine A skeleton + one batch LLM scene-render (fast).
+ * Lens "B"/"C" = the live Lab method (embeddings / persona) at the strong tier. Always falls
+ * back to the offline skeleton when the gateway is unreachable, so the loop never dead-ends.
  */
 async function generateBatch(
   centroid: AxisVector,
   spread: number,
   briefing: string,
+  lens: Lens,
+  tension: number,
 ): Promise<VibeCard[]> {
+  if (lens !== "auto") {
+    const m = methodFor(lens);
+    if (m) {
+      try {
+        return await m.generate(
+          { rng: studioRng, centroid, spread, briefing, tier: "strong", tension },
+          BATCH,
+        );
+      } catch {
+        /* fall through to Engine A */
+      }
+    }
+  }
+
   const skeletons = autoEngine.generate(centroid, { batchSize: BATCH, spread }, studioRng);
   try {
     const scenes = await renderBatch(
@@ -33,7 +55,7 @@ async function generateBatch(
         : c,
     );
   } catch {
-    return skeletons; // offline fallback — the loop still works without a key
+    return skeletons;
   }
 }
 
@@ -58,7 +80,9 @@ function centroidOf(seed: AxisVector, signals: Signal[]): AxisVector {
   return c;
 }
 
-const spreadOf = (signals: Signal[]) => clamp(0.85 - signals.length * 0.05, 0.22, 0.85);
+/** Spread = the "safe ↔ experimental" tension knob, tightened as steering signals accumulate. */
+const spreadFromTension = (tension: number, signals: Signal[]) =>
+  clamp(0.3 + tension * 0.6 - signals.length * 0.05, 0.22, 0.95);
 
 let sigCount = 0;
 const newSignal = (kind: Signal["kind"], card: VibeCard): Signal => ({
@@ -81,9 +105,15 @@ interface VibeState {
   focusId: string | null;
   commits: number;
   loading: boolean;
+  // Advanced (adaptive): unlocks on first steer; persisted.
+  advanced: boolean;
+  lens: Lens;
+  tension: number;
 
   setView: (v: "studio" | "lab") => void;
   setSeed: (w: string) => void;
+  setLens: (l: Lens) => void;
+  setTension: (t: number) => void;
   explore: () => Promise<void>;
   iterate: () => Promise<void>;
   attract: (c: VibeCard) => void;
@@ -93,88 +123,109 @@ interface VibeState {
   reset: () => void;
 }
 
-export const useVibeStore = create<VibeState>((set, get) => ({
-  phase: "blank",
-  view: "studio",
-  seed: "",
-  seedVec: zero(),
-  signals: [],
-  centroid: zero(),
-  spread: 0.85,
-  cards: [],
-  library: [],
-  focusId: null,
-  commits: 0,
-  loading: false,
-
-  setView: (v) => set({ view: v }),
-
-  setSeed: (w) => set({ seed: w, seedVec: seedVector(w) }),
-
-  explore: async () => {
-    const briefing = get().seed;
-    set({ phase: "studio", signals: [], focusId: null, cards: [], loading: true });
-    // Briefing → axis bias: LLM-interpreted (E-026), with the offline lexicon as fallback.
-    let seedVec = seedVector(briefing);
-    if (briefing.trim()) {
-      try {
-        seedVec = await interpretBriefing(briefing);
-      } catch {
-        /* keep lexicon fallback */
-      }
-    }
-    const spread = spreadOf([]);
-    const centroid = centroidOf(seedVec, []);
-    set({ seedVec, centroid, spread });
-    const cards = await generateBatch(centroid, spread, briefing);
-    set({ cards, loading: false });
-  },
-
-  iterate: async () => {
-    const { centroid, spread, seed } = get();
-    set({ loading: true });
-    const cards = await generateBatch(centroid, spread, seed);
-    set({ cards, focusId: null, loading: false });
-  },
-
-  // Live-reflow (E-022): signals re-bias centroid + spread, cards stay put.
-  attract: (c) => {
-    const signals = [...get().signals, newSignal("attract", c)];
-    set({
-      signals,
-      centroid: centroidOf(get().seedVec, signals),
-      spread: spreadOf(signals),
-      focusId: c.id,
-    });
-  },
-  repel: (c) => {
-    const signals = [...get().signals, newSignal("repel", c)];
-    set({
-      signals,
-      centroid: centroidOf(get().seedVec, signals),
-      spread: spreadOf(signals),
-      focusId: c.id,
-    });
-  },
-
-  commit: (c) => {
-    const { library, commits } = get();
-    if (library.some((l) => l.id === c.id)) return;
-    set({ library: [c, ...library], commits: commits + 1, focusId: c.id });
-  },
-
-  focus: (id) => set({ focusId: id }),
-
-  reset: () =>
-    set({
+export const useVibeStore = create<VibeState>()(
+  persist(
+    (set, get) => ({
       phase: "blank",
+      view: "studio",
       seed: "",
       seedVec: zero(),
       signals: [],
       centroid: zero(),
-      spread: 0.85,
+      spread: 0.57,
       cards: [],
+      library: [],
       focusId: null,
+      commits: 0,
       loading: false,
+      advanced: false,
+      lens: "auto",
+      tension: 0.45,
+
+      setView: (v) => set({ view: v }),
+      setSeed: (w) => set({ seed: w, seedVec: seedVector(w) }),
+      setLens: (l) => set({ lens: l }),
+      setTension: (t) =>
+        set({ tension: t, spread: spreadFromTension(t, get().signals) }),
+
+      explore: async () => {
+        const briefing = get().seed;
+        set({ phase: "studio", signals: [], focusId: null, cards: [], loading: true });
+        let seedVec = seedVector(briefing);
+        if (briefing.trim()) {
+          try {
+            seedVec = await interpretBriefing(briefing);
+          } catch {
+            /* keep lexicon fallback */
+          }
+        }
+        const { tension, lens } = get();
+        const spread = spreadFromTension(tension, []);
+        const centroid = centroidOf(seedVec, []);
+        set({ seedVec, centroid, spread });
+        const cards = await generateBatch(centroid, spread, briefing, lens, tension);
+        set({ cards, loading: false });
+      },
+
+      iterate: async () => {
+        const { centroid, spread, seed, lens, tension } = get();
+        set({ loading: true });
+        const cards = await generateBatch(centroid, spread, seed, lens, tension);
+        set({ cards, focusId: null, loading: false });
+      },
+
+      // Live-reflow (E-022): signals re-bias centroid + spread, cards stay put. First steer unlocks Advanced.
+      attract: (c) => {
+        const signals = [...get().signals, newSignal("attract", c)];
+        set({
+          signals,
+          centroid: centroidOf(get().seedVec, signals),
+          spread: spreadFromTension(get().tension, signals),
+          focusId: c.id,
+          advanced: true,
+        });
+      },
+      repel: (c) => {
+        const signals = [...get().signals, newSignal("repel", c)];
+        set({
+          signals,
+          centroid: centroidOf(get().seedVec, signals),
+          spread: spreadFromTension(get().tension, signals),
+          focusId: c.id,
+          advanced: true,
+        });
+      },
+
+      commit: (c) => {
+        const { library, commits } = get();
+        if (library.some((l) => l.id === c.id)) return;
+        set({ library: [c, ...library], commits: commits + 1, focusId: c.id, advanced: true });
+      },
+
+      focus: (id) => set({ focusId: id }),
+
+      reset: () =>
+        set({
+          phase: "blank",
+          seed: "",
+          seedVec: zero(),
+          signals: [],
+          centroid: zero(),
+          spread: spreadFromTension(get().tension, []),
+          cards: [],
+          focusId: null,
+          loading: false,
+        }),
     }),
-}));
+    {
+      name: "vibe-playground",
+      partialize: (s) => ({
+        library: s.library,
+        commits: s.commits,
+        advanced: s.advanced,
+        lens: s.lens,
+        tension: s.tension,
+      }),
+    },
+  ),
+);

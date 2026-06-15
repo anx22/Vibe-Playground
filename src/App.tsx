@@ -6,6 +6,7 @@ import { VibeCard } from "./components/VibeCard";
 import { Tacho } from "./components/Tacho";
 import { Lab } from "./components/Lab";
 import { ExportModal } from "./components/ExportModal";
+import { AdvancedPanel } from "./components/AdvancedPanel";
 
 const DEFAULT_ACCENT = "#E86A4B";
 
@@ -109,6 +110,14 @@ export default function App() {
                 Library · {s.library.length}
               </button>
             </div>
+            {s.advanced && (
+              <AdvancedPanel
+                lens={s.lens}
+                tension={s.tension}
+                onLens={s.setLens}
+                onTension={s.setTension}
+              />
+            )}
           </aside>
 
           <main className="studio-main">

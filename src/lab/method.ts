@@ -21,6 +21,8 @@ export interface MixContext {
   briefing?: string;
   /** Model tier for LLM methods — Lab defaults to "cheap" (Haiku) to bound eval cost. */
   tier?: "cheap" | "strong";
+  /** 0..1 "safe ↔ experimental" — widens the latent tension band. */
+  tension?: number;
 }
 
 export interface MixResult {

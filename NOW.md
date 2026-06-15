@@ -35,19 +35,24 @@ rate-limited until credits are topped up.
   + model-call estimate; `VIBE_API_BASE=… --llm` runs against the live gateway.
 - **Docs:** `PROJECT.md` · `KONZEPT.md` v0.2 · `DESIGN.md` · `DECISIONS.md` (E-001…E-034).
 
+- **Engine B real embeddings** (E-036): seed-expansion → `text-embedding-3-small` (1536-dim) →
+  cosine-band collision selection; 5-axis λ-blend for visuals. Live as Lab `B · Embeddings + λ`.
+- **Advanced mode (adaptive, E-037)**: unlocks on first steer; engine **lens** (Auto/B/C) drives the
+  Studio engine, **tension knob** (safe↔experimental) controls spread + the latent band.
+- **Persistence (E-035)**: localStorage — Library, commits, advanced/lens/tension survive reload.
+
 ## What Does NOT Exist Yet
 
-- **Advanced mode** UI (axis controls, λ/distance band, engine lens). Only a Studio/Lab toggle exists.
-- **Real embeddings for B** — seeds are LLM-projected onto the axes (concept-valid stand-in).
-- **Persistence** beyond in-memory (localStorage / accounts).
 - **Paid gateway credits** — free tier is rate-limited; renders fall back to skeletons when throttled.
+- **Accounts / sharing / backend** (Supabase/Neon) — deferred; only needed if it goes public.
+- **Axis sliders & model/batch controls** in Advanced — deferred (kept the surface lean).
 
 ## Next Steps (in order)
 
 1. **Top up gateway credits** (your action) to lift the free-tier rate limit → full live scenes.
-2. **Advanced mode** — axis controls, engine lens, distance/λ, Lab access; offered adaptively (E-020).
-3. **Engine B real embeddings** (replace LLM-axis-projection); λ/distance becomes a live slider.
-4. **Persistence** — keep the Library across sessions.
+2. **Tune the tension band** against real briefings (cosine bounds in `latentBandMix`) once credits flow.
+3. **Polish pass** — empty/error states, blank-slate example briefings, tonal calibration (gamification).
+4. Open questions to settle: 5 vs 6 axes (Formality), default batch size, when to open externally.
 
 ## Known Issues / Watch-outs
 
