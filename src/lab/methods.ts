@@ -17,7 +17,7 @@ import { llmSceneRenderer, templateRenderer } from "./render";
 // ── Offline (curated source + template render) ─────────────────────────────────
 const aBridge = recipe({
   id: "a-bridge",
-  label: "A · Bridge (offline)",
+  label: "Katalog · Regel (offline)",
   kind: "single",
   source: curatedSource,
   mix: bridgeMix,
@@ -27,7 +27,7 @@ const aBridge = recipe({
 
 const bLambdaOffline = recipe({
   id: "b-lambda-offline",
-  label: "B-Methodik · Distanz+λ (offline)",
+  label: "Katalog · Distanz (offline)",
   kind: "single",
   source: curatedSource,
   mix: lambdaBandMix,
@@ -37,7 +37,7 @@ const bLambdaOffline = recipe({
 
 const xTriad = recipe({
   id: "x-triad",
-  label: "Experiment · Triade",
+  label: "Experiment · 3 Welten",
   kind: "experimental",
   source: curatedSource,
   mix: triadMix,
@@ -57,7 +57,7 @@ const xContrast = recipe({
 /** E-028 flagship: A proposes the skeleton, the LLM renders the evocative scene. */
 const aScene = recipe({
   id: "a-scene",
-  label: "A-Skelett · LLM-Szene",
+  label: "Katalog + Schreibschritt",
   kind: "single",
   source: curatedSource,
   mix: bridgeMix,
@@ -67,7 +67,7 @@ const aScene = recipe({
 /** Engine B live: LLM seed-expansion → real embeddings → cosine-band + λ → LLM scene. */
 const bLLM = recipe({
   id: "b-llm",
-  label: "B · Embeddings + λ",
+  label: "Generativ · Embeddings",
   kind: "single",
   source: llmSeedSource,
   mix: latentBandMix,
@@ -78,7 +78,7 @@ const bLLM = recipe({
 /** Engine C live: a persona, whose aesthetic falls out as the vibe (own paradigm, no world-mix). */
 const cPersona: Method = {
   id: "c-persona",
-  label: "C · Persona → Szene",
+  label: "Persona",
   kind: "single",
   requiresLLM: true,
   async generate(ctx, batchSize) {
