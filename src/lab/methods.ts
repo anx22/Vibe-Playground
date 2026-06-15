@@ -3,7 +3,7 @@ import { paletteFor, typoFor } from "../engine/derive";
 import { generatePersona } from "../llm/client";
 import type { Method } from "./method";
 import { recipe } from "./method";
-import { bridgeMix, contrastMix, lambdaBandMix, latentBandMix, triadMix } from "./mix";
+import { bridgeMix, lambdaBandMix, latentBandMix } from "./mix";
 import { curatedSource, llmSeedSource } from "./sources";
 import { llmSceneRenderer, templateRenderer } from "./render";
 
@@ -35,23 +35,9 @@ const bLambdaOffline = recipe({
   noveltyTau: 0.35,
 });
 
-const xTriad = recipe({
-  id: "x-triad",
-  label: "Experiment · 3 Welten",
-  kind: "experimental",
-  source: curatedSource,
-  mix: triadMix,
-  render: templateRenderer,
-});
-
-const xContrast = recipe({
-  id: "x-contrast",
-  label: "Experiment · Kontrast",
-  kind: "experimental",
-  source: curatedSource,
-  mix: contrastMix,
-  render: templateRenderer,
-});
+// E-041: x-triad (3 Welten) and x-contrast (Max-Distanz) were cut — the judged eval
+// scored them 3.04 / 3.13, below every LLM path, with the worst briefing-fit. More worlds
+// and wider collisions did not buy quality, so they no longer earn a slot.
 
 // ── LLM paths (via the Vercel AI Gateway proxy) ────────────────────────────────
 /** E-028 flagship: A proposes the skeleton, the LLM renders the evocative scene. */
@@ -104,8 +90,6 @@ const cPersona: Method = {
 export const METHODS: Method[] = [
   aBridge,
   bLambdaOffline,
-  xTriad,
-  xContrast,
   aScene,
   bLLM,
   cPersona,

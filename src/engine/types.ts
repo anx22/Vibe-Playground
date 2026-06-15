@@ -22,6 +22,18 @@ export interface VibeCard {
   vector: AxisVector;
   coherence: { sharedAxes: AxisKey[]; ok: boolean };
   origin: { home: string; intrusion: string; object: string; engineNote: string };
+  /** LLM-judge score (1..5 each + overall), attached by the judge-select step (E-041). */
+  quality?: Quality;
+}
+
+/** The judge's verdict on one card — the production fitness signal (E-041). */
+export interface Quality {
+  coherence: number;
+  trigger: number;
+  fit: number;
+  freshness: number;
+  overall: number;
+  note: string;
 }
 
 export type SignalKind = "attract" | "repel";

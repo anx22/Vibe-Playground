@@ -38,7 +38,16 @@ export function VibeCard({
       style={{ "--card-accent": accent } as CSSProperties}
     >
       <header className="card-top">
-        <span className={`coh${card.coherence.ok ? " coh--ok" : ""}`} title="Bridge-Regel" />
+        {card.quality ? (
+          <span
+            className="qscore"
+            title={`LLM-Bewertung ${card.quality.overall.toFixed(1)}/5 · ${card.quality.note}`}
+          >
+            {card.quality.overall.toFixed(1)}
+          </span>
+        ) : (
+          <span className={`coh${card.coherence.ok ? " coh--ok" : ""}`} title="Bridge-Regel" />
+        )}
         <span className="card-top-right">
           <span className={`indicator indicator--${ind.level}`}>{ind.label}</span>
           <button className="card-export" type="button" onClick={onExport} title="Als Prompt exportieren">
@@ -90,6 +99,14 @@ export function VibeCard({
           <span className="arrow">→</span> {card.origin.object}
         </p>
         <p className="origin-note">{card.origin.engineNote}</p>
+        {card.quality && (
+          <p className="qbreak">
+            Kohärenz {card.quality.coherence} · Trigger {card.quality.trigger} · Fit{" "}
+            {card.quality.fit} · Frische {card.quality.freshness}
+            <br />
+            <span className="qnote">{card.quality.note}</span>
+          </p>
+        )}
         <div className="vecmini">
           {AXES.map((ax) => (
             <span className="vecmini-axis" key={ax}>

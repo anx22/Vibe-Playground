@@ -30,9 +30,14 @@ success metric (E-018); north star is speed to a credible direction (E-014). Cos
 - **Advanced (adaptive, E-037)**: unlocks on first steer; **lens** (Katalog/Generativ/Persona) +
   **tension knob** (safe↔experimental → spread + cosine band width).
 - **Persistence (E-035)**: localStorage — Library, commits, advanced/lens/tension survive reload.
-- **Lab** (`src/lab/`): all methods side by side on the same briefings, scored on
-  coherence/diversity/uniqueness; runs on Haiku. `npm run eval` gives the same scorecard headless.
-- **Docs:** `PROJECT.md` · `KONZEPT.md` · `DESIGN.md` · `DECISIONS.md` (E-001…E-040).
+- **Judge-select (E-041)**: every Explore/Iterate round generates a few extra candidates, the
+  cheap LLM-judge scores each (1–5 coherence/trigger/fit/freshness), and the Studio keeps the best —
+  the score shows on the card. The production fitness step the eval proved is the real quality lever
+  (not the mixing math). Degrades to original order if the judge is unreachable.
+- **Lab** (`src/lab/`): the remaining methods side by side on the same briefings. Structural metrics
+  (coherence/diversity/uniqueness) for reference + the **LLM-judge scorecard** (`npm run eval -- --judge`)
+  for actual quality. Runs on Haiku. Cut: x-triad / x-contrast (judged 3.04/3.13, below every LLM path).
+- **Docs:** `PROJECT.md` · `KONZEPT.md` · `DESIGN.md` · `DECISIONS.md` (E-001…E-041).
 
 ## What Does NOT Exist Yet
 
@@ -42,10 +47,14 @@ success metric (E-018); north star is speed to a credible direction (E-014). Cos
 
 ## Next Steps (in order)
 
-1. **Tune the tension band** (Generativ) against real briefings so "safe ↔ experimental" is felt.
-2. **Three small decisions** (user): final lens names? keep the write-step for Katalog/Generativ?
-   default batch size (5)?
-3. Optional: align Lab batch size / add a "stacking" path; accounts/persistence-backend if public.
+1. **Watch judge-select cost/latency** in the Studio: OVERSCAN = BATCH+2 (7 renders → keep 5) + 7
+   parallel cheap judges per round. If latency hurts the "speed to direction" north star, drop OVERSCAN
+   to BATCH (rank-only) or make it opt-in.
+2. **Use the judge to drive the next algorithm changes**: the eval is now a real fitness function —
+   close the `fit` gap (briefing match was the weakest sub-score) and decide whether the curated
+   Katalog pool earns its place vs. Generativ/Persona.
+3. **Tune the tension band** (Generativ) against real briefings so "safe ↔ experimental" is felt.
+4. Optional: a "stacking" path; accounts/persistence-backend if public.
 
 ## Known Issues / Watch-outs
 

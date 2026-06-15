@@ -4,8 +4,11 @@ import type { AxisVector, Signal, VibeCard } from "../engine";
 import { AXES, add, autoEngine, clamp, zero, LEXICON } from "../engine";
 import { METHODS } from "../lab";
 import { interpretBriefing, renderBatch } from "../llm/client";
+import { judgeRank } from "../llm/select";
 
 const BATCH = 5;
+/** Generate a few extra, then judge-select down to BATCH — the production fitness step (E-041). */
+const OVERSCAN = BATCH + 2;
 const studioRng = () => Math.random();
 
 export type Lens = "auto" | "B" | "C";
@@ -30,16 +33,17 @@ async function generateBatch(
       try {
         const cards = await m.generate(
           { rng: studioRng, centroid, spread, briefing, tier: "strong", tension },
-          BATCH,
+          OVERSCAN,
         );
-        return { cards, sceneOk: true };
+        const ranked = await judgeRank(cards, briefing);
+        return { cards: ranked.slice(0, BATCH), sceneOk: true };
       } catch {
         /* fall through to Engine A */
       }
     }
   }
 
-  const skeletons = autoEngine.generate(centroid, { batchSize: BATCH, spread }, studioRng);
+  const skeletons = autoEngine.generate(centroid, { batchSize: OVERSCAN, spread }, studioRng);
   try {
     const scenes = await renderBatch(
       skeletons.map((c) => ({
@@ -50,16 +54,15 @@ async function generateBatch(
         briefing,
       })),
     );
-    return {
-      cards: skeletons.map((c, i) =>
-        scenes[i]
-          ? { ...c, leitwert: scenes[i].leitwert, mood: scenes[i].mood, scene: scenes[i].scene }
-          : c,
-      ),
-      sceneOk: true,
-    };
+    const rendered = skeletons.map((c, i) =>
+      scenes[i]
+        ? { ...c, leitwert: scenes[i].leitwert, mood: scenes[i].mood, scene: scenes[i].scene }
+        : c,
+    );
+    const ranked = await judgeRank(rendered, briefing);
+    return { cards: ranked.slice(0, BATCH), sceneOk: true };
   } catch {
-    return { cards: skeletons, sceneOk: false }; // offline / rate-limited fallback
+    return { cards: skeletons.slice(0, BATCH), sceneOk: false }; // offline / rate-limited fallback
   }
 }
 
