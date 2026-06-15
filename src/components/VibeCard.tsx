@@ -107,17 +107,17 @@ export function VibeCard({
 
       <footer className="magnets">
         <button type="button" className="magnet magnet--minus" onClick={onRepel}>
-          Abstoßen −
+          Weniger so
         </button>
         <button
           type="button"
           className={`magnet magnet--commit${committed ? " is-committed" : ""}`}
           onClick={onCommit}
         >
-          {committed ? "✓ Committed" : "Commit ★"}
+          {committed ? "✓ Gemerkt" : "Merken ★"}
         </button>
         <button type="button" className="magnet magnet--plus" onClick={onAttract}>
-          Anziehen +
+          Mehr so
         </button>
       </footer>
     </article>

@@ -1,9 +1,9 @@
 import type { Lens } from "../store/useVibeStore";
 
 const LENSES: { id: Lens; label: string; hint: string }[] = [
-  { id: "auto", label: "Auto", hint: "Engine A · Regel (schnell)" },
-  { id: "B", label: "B", hint: "Embeddings · Metrik" },
-  { id: "C", label: "C", hint: "Persona · Person" },
+  { id: "auto", label: "Katalog", hint: "Feste Stil-Liste, per Regel kombiniert" },
+  { id: "B", label: "Generativ", hint: "Modell erfindet Begriffe, mischt per Bedeutungs-Nähe" },
+  { id: "C", label: "Persona", hint: "Modell erfindet einen Urheber, daraus folgt der Stil" },
 ];
 
 /** Adaptive Advanced controls: engine lens + the safe↔experimental tension knob. */
