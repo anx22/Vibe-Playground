@@ -36,3 +36,12 @@ export const personaSchema = z.object({
   mood: z.string(),
   vector: axisVectorSchema,
 });
+
+/** Quality judgement of one direction against the briefing (1..5 each). */
+export const judgeSchema = z.object({
+  coherence: z.number().min(1).max(5).describe("Kollision kohärent (geteilte Spannung) statt Lärm?"),
+  trigger: z.number().min(1).max(5).describe("Löst der Leitwert eine starke, spezifische Designwelt aus?"),
+  fit: z.number().min(1).max(5).describe("Passt es zum Briefing?"),
+  freshness: z.number().min(1).max(5).describe("Eigenständig statt Klischee/generischer Stilname?"),
+  note: z.string().describe("ein kurzer Satz Begründung"),
+});

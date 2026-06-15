@@ -11,12 +11,28 @@
  */
 import { AXES, type AxisVector } from "../src/engine";
 import { METHODS, offlineMethods, runLab, type Briefing } from "../src/lab";
-import { setApiBase } from "../src/llm/client";
+import { judge, setApiBase } from "../src/llm/client";
 
+/**
+ * Real sentence-briefings — what a designer actually types, not the product noun.
+ * The product/category is in the sentence; the output (a Leitwert) is what we generate.
+ */
 const BRIEFINGS: Briefing[] = [
-  { id: "coffee", label: "Kaffeerösterei", text: "handwerklich warm editorial, modern vertrauenswürdig minimal" },
-  { id: "co2", label: "CO₂-Dashboard", text: "tech futuristisch dicht, nicht steril warm" },
-  { id: "festival", label: "Musikfestival", text: "laut roh brutal, retro vintage dicht" },
+  {
+    id: "synth",
+    label: "Synth-Label",
+    text: "Rebrand für ein Synthesizer-Label, das von Software auf modulare Hardware umstellt — technisch, aber mit Handschrift.",
+  },
+  {
+    id: "kanzlei",
+    label: "Kanzlei",
+    text: "Website für eine Anwaltskanzlei, traditionsbewusst und seriös, aber komplett digital und zugänglich.",
+  },
+  {
+    id: "festival",
+    label: "Festival",
+    text: "Identität für ein Elektronik-Festival in einer alten Industriehalle — laut, roh, körperlich.",
+  },
   { id: "blank", label: "Blank Slate", text: "" },
 ];
 
@@ -38,6 +54,7 @@ async function main() {
   const seed = arg("--seed", 42);
   const batch = arg("--batch", 5);
   const useLLM = has("--llm");
+  const useJudge = has("--judge");
   const tier: "cheap" | "strong" = has("--strong") ? "strong" : "cheap";
   const base = process.env.VIBE_API_BASE ?? "";
   if (base) setApiBase(base);
@@ -102,6 +119,53 @@ async function main() {
     );
   }
   console.log("");
+
+  // ── LLM-judge scorecard — the quality fitness function (1..5 per criterion) ──
+  if (useJudge) {
+    if (!base) {
+      console.error("  --judge needs a live gateway: set VIBE_API_BASE=https://<app>.vercel.app");
+      process.exit(1);
+    }
+    console.log(`${"─".repeat(78)}\n  QUALITY (LLM-judge, 1–5, avg across briefings × cards)`);
+    console.log(`    ${"method".padEnd(18)} coher trig  fit  fresh   overall`);
+
+    type Agg = { coh: number; trig: number; fit: number; fresh: number; n: number };
+    let judgeCalls = 0;
+    for (const mid of run.methodIds) {
+      const agg: Agg = { coh: 0, trig: 0, fit: 0, fresh: 0, n: 0 };
+      for (const b of BRIEFINGS) {
+        const cell = run.cells[mid]?.[b.id];
+        if (!cell || cell.error) continue;
+        for (const c of cell.cards) {
+          try {
+            const s = await judge(
+              { briefing: b.text, leitwert: c.leitwert, scene: c.scene, mood: c.mood },
+              tier,
+            );
+            judgeCalls++;
+            agg.coh += s.coherence;
+            agg.trig += s.trigger;
+            agg.fit += s.fit;
+            agg.fresh += s.freshness;
+            agg.n++;
+          } catch (err) {
+            console.log(`      ✗ judge ${mid}/${b.id}: ${String(err)}`);
+          }
+        }
+      }
+      if (!agg.n) continue;
+      const coh = agg.coh / agg.n;
+      const trig = agg.trig / agg.n;
+      const fit = agg.fit / agg.n;
+      const fresh = agg.fresh / agg.n;
+      const overall = (coh + trig + fit + fresh) / 4;
+      const f = (x: number) => x.toFixed(2).padStart(5);
+      console.log(
+        `    ${mid.padEnd(18)}${f(coh)}${f(trig)}${f(fit)}${f(fresh)}   ${bar(overall, 1, 5)} ${overall.toFixed(2)}`,
+      );
+    }
+    console.log(`\n  ~${judgeCalls} judge calls (tier=${tier})\n`);
+  }
 }
 
 main().catch((e) => {

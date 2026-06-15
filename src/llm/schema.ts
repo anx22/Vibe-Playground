@@ -42,3 +42,13 @@ export const personaSchema = z.object({
   vector: axisVectorSchema,
 });
 export type Persona = z.infer<typeof personaSchema>;
+
+/** Quality judgement of one direction against the briefing (1..5 each). */
+export const judgeSchema = z.object({
+  coherence: z.number().min(1).max(5),
+  trigger: z.number().min(1).max(5),
+  fit: z.number().min(1).max(5),
+  freshness: z.number().min(1).max(5),
+  note: z.string(),
+});
+export type JudgeScore = z.infer<typeof judgeSchema>;

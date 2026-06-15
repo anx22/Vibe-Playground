@@ -32,6 +32,13 @@ export const INTERPRET_SYSTEM =
   "futuristisch), structure (organisch..Raster/System), density (sparsam..dicht), " +
   "formality (verspielt/casual..seriös/formell). Gib nur die Zahlen.";
 
+export const JUDGE_SYSTEM =
+  "Du bewertest eine Design-Richtung (Leitwert + Szene) für ein Briefing — streng, 3 = mittelmäßig. " +
+  "Gib je 1–5: coherence (wirkt die Welt-Kollision kohärent/geteilte Spannung statt zufälligem Lärm), " +
+  "trigger (löst der Leitwert eine starke, spezifische Designwelt aus — komprimierter Weltverweis), " +
+  "fit (passt es zum Briefing), freshness (eigenständig statt Klischee/generischer Stilname). " +
+  "Plus note: ein kurzer Satz Begründung.";
+
 export const PERSONA_SYSTEM =
   "Du erzeugst eine fiktive Quelle (Person/Studio/Werkstatt) als 2-Slot-Kollision " +
   "[Herkunft/Handwerk] × [fremder Kontext] + [Macke]. Aus der Person fällt der Vibe von selbst " +
