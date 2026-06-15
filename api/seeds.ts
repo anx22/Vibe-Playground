@@ -18,7 +18,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       model: MODELS.cheap,
       schema: seedGenSchema,
       system: SEED_SYSTEM,
-      prompt: `Briefing: ${briefing || "(blank slate)"}\nErzeuge ${n ?? 14} Welten mit term, connotation und vector.`,
+      prompt: `Briefing: ${briefing || "(blank slate)"}\nErzeuge ${n ?? 14} Welten (term, connotation, vector): die meisten klar zum Briefing-Thema, nur 3–4 bewusst fremde Nachbar-Welten für Spannung.`,
     });
 
     let embeddings: number[][] = [];

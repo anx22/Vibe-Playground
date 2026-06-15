@@ -1,7 +1,7 @@
 import { AXES, clamp, dist, mid, sharedSigns, zero } from "../engine";
 import type { AxisVector } from "../engine";
 import type { World } from "../engine/pools";
-import type { MixStrategy } from "./method";
+import type { MixContext, MixStrategy } from "./method";
 
 function jitter(c: AxisVector, spread: number, rng: () => number): AxisVector {
   const o = zero();
@@ -11,6 +11,21 @@ function jitter(c: AxisVector, spread: number, rng: () => number): AxisVector {
 
 function nearest(pool: World[], target: AxisVector): World {
   return pool.reduce((best, w) => (dist(w.vector, target) < dist(best.vector, target) ? w : best));
+}
+
+/**
+ * Fit-weighted partner pick (E-042). Rewards tension (distance from `home`) but penalizes drift
+ * from the briefing centroid, so the *blend* lands on-briefing while the collision keeps its spark.
+ * fit=0 → pure max-contrast (the old behaviour); fit=1 → strongly hugs the briefing. Picks among
+ * the top few so a batch still varies. Caller must pre-filter `cands` for its own coherence rule.
+ */
+function pickPartner(cands: World[], home: World, ctx: MixContext): World {
+  const fit = ctx.fit ?? 0.55;
+  const scored = cands
+    .map((w) => ({ w, score: dist(w.vector, home.vector) - fit * 2 * dist(w.vector, ctx.centroid) }))
+    .sort((a, b) => b.score - a.score);
+  const topK = Math.min(3, scored.length);
+  return scored[Math.floor(ctx.rng() * topK)].w;
 }
 
 /** A · Bridge-rule: home + the farthest intrusion that shares ≥1 axis sign. */
@@ -24,8 +39,7 @@ export const bridgeMix: MixStrategy = {
       (w) => w.name !== home.name && sharedSigns(home.vector, w.vector).length >= 1,
     );
     if (!cands.length) return null;
-    cands.sort((a, b) => dist(b.vector, home.vector) - dist(a.vector, home.vector));
-    const intr = cands[Math.min(cands.length - 1, Math.floor(ctx.rng() * 3))];
+    const intr = pickPartner(cands, home, ctx);
     const shared = sharedSigns(home.vector, intr.vector);
     return {
       worlds: [home, intr],
@@ -49,7 +63,7 @@ export const lambdaBandMix: MixStrategy = {
       return w.name !== a.name && d >= 1.0 && d <= 2.4; // tension band
     });
     if (!band.length) return null;
-    const b = band[Math.floor(ctx.rng() * band.length)];
+    const b = pickPartner(band, a, ctx);
     const lambda = 0.3 + ctx.rng() * 0.4; // 0.3..0.7
     const vector = zero();
     for (const ax of AXES) vector[ax] = clamp(a.vector[ax] * lambda + b.vector[ax] * (1 - lambda));
@@ -165,7 +179,8 @@ export const latentBandMix: MixStrategy = {
       if (!band.length) {
         band = scored.sort((x, y) => Math.abs(0.4 - x.d) - Math.abs(0.4 - y.d)).slice(0, 3).map((s) => s.w);
       }
-      b = band[Math.floor(ctx.rng() * band.length)];
+      // Semantic cosine band picks the tension; fit-weighting picks the on-briefing one within it.
+      b = pickPartner(band, a, ctx);
       metric = "cos";
     } else {
       const band = pool.filter((w) => {
@@ -173,7 +188,7 @@ export const latentBandMix: MixStrategy = {
         return w.name !== a.name && d >= 1.0 && d <= 2.4;
       });
       if (!band.length) return null;
-      b = band[Math.floor(ctx.rng() * band.length)];
+      b = pickPartner(band, a, ctx);
     }
     if (!b) return null;
 

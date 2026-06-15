@@ -23,6 +23,12 @@ export interface MixContext {
   tier?: "cheap" | "strong";
   /** 0..1 "safe ↔ experimental" — widens the latent tension band. */
   tension?: number;
+  /**
+   * 0..1 — how hard the collision is pulled toward the briefing (E-042). 0 = free tension
+   * (partner chosen for max contrast), 1 = hug the briefing. The eval flagged `fit` as the
+   * weakest sub-score, so the partner pick now trades a little tension for on-briefing landing.
+   */
+  fit?: number;
 }
 
 export interface MixResult {
