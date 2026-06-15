@@ -8,6 +8,7 @@ export const axisVectorSchema = z.object({
   time: z.number().min(-1).max(1),
   structure: z.number().min(-1).max(1),
   density: z.number().min(-1).max(1),
+  formality: z.number().min(-1).max(1),
 });
 
 export const sceneRenderSchema = z.object({

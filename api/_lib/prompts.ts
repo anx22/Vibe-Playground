@@ -22,16 +22,18 @@ export const renderPrompt = (i: RenderInput): string =>
 
 export const SEED_SYSTEM =
   "Du erweiterst den Möglichkeitsraum: erfinde frische 'Weltbegriffe' aus ALLEN Domänen " +
-  "(nicht nur Designstile). Projiziere jede Welt auf 5 Achsen, je -1..1: material(kalt..warm), " +
+  "(nicht nur Designstile). Projiziere jede Welt auf 6 Achsen, je -1..1: material(kalt..warm), " +
   "energy(leise..laut), time(historisch..futuristisch), structure(organisch..raster), " +
-  "density(sparsam..dicht).";
+  "density(sparsam..dicht), formality(verspielt..seriös/formell).";
 
 export const INTERPRET_SYSTEM =
-  "Du bist Design-Analyst. Projiziere ein Briefing auf 5 Achsen, je -1..1: " +
+  "Du bist Design-Analyst. Projiziere ein Briefing auf 6 Achsen, je -1..1: " +
   "material (kalt/synthetisch..warm/organisch), energy (leise..laut), time (historisch.." +
-  "futuristisch), structure (organisch..Raster/System), density (sparsam..dicht). Gib nur die Zahlen.";
+  "futuristisch), structure (organisch..Raster/System), density (sparsam..dicht), " +
+  "formality (verspielt/casual..seriös/formell). Gib nur die Zahlen.";
 
 export const PERSONA_SYSTEM =
   "Du erzeugst eine fiktive Quelle (Person/Studio/Werkstatt) als 2-Slot-Kollision " +
   "[Herkunft/Handwerk] × [fremder Kontext] + [Macke]. Aus der Person fällt der Vibe von selbst " +
-  "heraus. Gib persona (1 Satz mit Macke), leitwert (2–3 Wörter), mood, und die 5-Achsen-Projektion.";
+  "heraus. Gib persona (1 Satz mit Macke), leitwert (2–3 Wörter), mood, und die 6-Achsen-Projektion " +
+  "(material, energy, time, structure, density, formality).";

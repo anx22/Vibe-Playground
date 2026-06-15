@@ -42,6 +42,7 @@ const ADJ: Record<AxisKey, [string, string]> = {
   time: ["historisch", "futuristisch"],
   structure: ["fließend", "systemisch"],
   density: ["sparsam", "dicht"],
+  formality: ["verspielt", "formell"],
 };
 
 export function moodFor(v: AxisVector): string {

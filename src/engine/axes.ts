@@ -1,6 +1,13 @@
 import type { AxisKey, AxisVector } from "./types";
 
-export const AXES: AxisKey[] = ["material", "energy", "time", "structure", "density"];
+export const AXES: AxisKey[] = [
+  "material",
+  "energy",
+  "time",
+  "structure",
+  "density",
+  "formality",
+];
 
 export const POLES: Record<AxisKey, { neg: string; pos: string }> = {
   material: { neg: "kalt/synthetisch", pos: "warm/organisch" },
@@ -8,6 +15,7 @@ export const POLES: Record<AxisKey, { neg: string; pos: string }> = {
   time: { neg: "historisch", pos: "futuristisch" },
   structure: { neg: "organisch", pos: "Raster/System" },
   density: { neg: "sparsam", pos: "dicht" },
+  formality: { neg: "verspielt/casual", pos: "seriös/formell" },
 };
 
 export const zero = (): AxisVector => ({
@@ -16,6 +24,7 @@ export const zero = (): AxisVector => ({
   time: 0,
   structure: 0,
   density: 0,
+  formality: 0,
 });
 
 export const clamp = (n: number, lo = -1, hi = 1): number =>

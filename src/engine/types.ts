@@ -1,4 +1,4 @@
-export type AxisKey = "material" | "energy" | "time" | "structure" | "density";
+export type AxisKey = "material" | "energy" | "time" | "structure" | "density" | "formality";
 
 /** A point in the 5-axis Vibe Space, each component in [-1, 1]. */
 export type AxisVector = Record<AxisKey, number>;

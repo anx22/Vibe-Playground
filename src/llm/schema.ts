@@ -8,6 +8,7 @@ export const axisVectorSchema = z.object({
   time: z.number().min(-1).max(1),
   structure: z.number().min(-1).max(1),
   density: z.number().min(-1).max(1),
+  formality: z.number().min(-1).max(1),
 });
 
 /** The LLM render: structure proposes a skeleton, the LLM renders the evocative vibe (E-028). */
