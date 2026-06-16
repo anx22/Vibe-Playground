@@ -26,7 +26,13 @@ const v = (
   formality: number,
 ): AxisVector => ({ material, energy, time, structure, density, formality });
 
-/** Intentionally small for prototyping — Engine B (embeddings) lifts the novelty ceiling. */
+/**
+ * Curated world pool (Katalog). Grown to ~40 well-spread worlds (E-043) after the judged eval:
+ * fit-weighting toward the briefing needs enough on-briefing partners, and the small list was
+ * starving variety (a-scene diversity fell to 0.56). Worlds span domains and fill the axis space —
+ * warm/formal, historic/loud, cold/playful, sparse/cold corners that the first 18 missed.
+ * Engine B (embeddings) still lifts the ceiling beyond any finite list.
+ */
 export const WORLDS: World[] = [
   { name: "Editorial", vector: v(-0.1, -0.4, -0.2, 0.7, 0.3, 0.5) },
   { name: "Tech", vector: v(-0.7, 0.2, 0.8, 0.6, 0.4, 0.2) },
@@ -46,6 +52,29 @@ export const WORLDS: World[] = [
   { name: "Constructivist", vector: v(-0.3, 0.6, -0.4, 0.7, 0.5, 0.5) },
   { name: "Ceramic", vector: v(0.7, -0.2, -0.2, -0.3, 0.1, 0.0) },
   { name: "Observatory", vector: v(-0.2, -0.4, 0.5, 0.5, 0.3, 0.5) },
+  // ── E-043 expansion ──────────────────────────────────────────────────────
+  { name: "Risograph", vector: v(0.2, 0.5, -0.3, -0.2, 0.6, -0.5) },
+  { name: "Swiss", vector: v(-0.3, -0.3, 0.1, 0.9, -0.4, 0.6) },
+  { name: "Memphis", vector: v(0.3, 0.7, 0.2, -0.4, 0.6, -0.8) },
+  { name: "Gothic", vector: v(-0.2, -0.4, -0.8, 0.5, 0.7, 0.8) },
+  { name: "Baroque", vector: v(0.5, 0.5, -0.8, -0.3, 0.9, 0.7) },
+  { name: "Punk", vector: v(-0.2, 0.9, -0.3, -0.5, 0.7, -0.7) },
+  { name: "Ma", vector: v(0.5, -0.7, 0.0, -0.2, -0.8, 0.5) },
+  { name: "Deco", vector: v(0.1, 0.2, -0.6, 0.7, 0.6, 0.6) },
+  { name: "Biolab", vector: v(-0.3, -0.2, 0.7, 0.4, 0.3, 0.4) },
+  { name: "Acid", vector: v(-0.6, 0.9, 0.6, -0.3, 0.7, -0.7) },
+  { name: "Pastoral", vector: v(0.8, -0.3, -0.6, -0.6, 0.4, -0.1) },
+  { name: "Civic", vector: v(-0.1, -0.4, -0.1, 0.7, 0.6, 0.8) },
+  { name: "Alchemy", vector: v(0.4, -0.3, -0.7, -0.1, 0.6, 0.5) },
+  { name: "Coastal", vector: v(0.6, 0.3, -0.3, -0.5, -0.2, -0.5) },
+  { name: "Noir", vector: v(-0.3, -0.2, -0.5, 0.4, 0.6, 0.5) },
+  { name: "Atomic", vector: v(-0.2, 0.3, 0.3, 0.5, 0.2, 0.0) },
+  { name: "Mycelial", vector: v(0.5, -0.2, 0.2, -0.8, 0.6, -0.2) },
+  { name: "Isotype", vector: v(-0.2, -0.1, 0.2, 0.8, 0.3, 0.5) },
+  { name: "Bazaar", vector: v(0.7, 0.6, -0.5, -0.5, 0.9, -0.4) },
+  { name: "Glacial", vector: v(-0.6, -0.7, 0.1, -0.3, -0.7, 0.3) },
+  { name: "Liturgical", vector: v(0.0, -0.5, -0.6, 0.7, 0.6, 0.8) },
+  { name: "Y2K", vector: v(-0.4, 0.6, 0.4, -0.2, 0.7, -0.5) },
 ];
 
 export const OBJECTS: ObjectMetaphor[] = [
@@ -67,6 +96,15 @@ export const OBJECTS: ObjectMetaphor[] = [
   { name: "Plakat", vector: v(-0.1, 0.7, 0.0, 0.3, 0.4, -0.3) },
   { name: "Karteikarte", vector: v(0.0, -0.3, -0.2, 0.6, 0.5, 0.5) },
   { name: "Zifferblatt", vector: v(-0.2, -0.2, 0.1, 0.5, 0.2, 0.3) },
+  // ── E-043 expansion (more metaphors for the wider world span) ─────────────
+  { name: "Prisma", vector: v(-0.3, 0.2, 0.5, 0.7, -0.2, 0.2) },
+  { name: "Sonde", vector: v(-0.5, -0.2, 0.8, 0.5, 0.1, 0.4) },
+  { name: "Manuskript", vector: v(0.4, -0.5, -0.8, 0.0, 0.7, 0.6) },
+  { name: "Schablone", vector: v(-0.3, 0.3, 0.0, 0.7, 0.4, 0.0) },
+  { name: "Antenne", vector: v(-0.5, 0.3, 0.7, 0.4, -0.1, 0.0) },
+  { name: "Sigille", vector: v(0.2, -0.2, -0.6, -0.2, 0.6, 0.4) },
+  { name: "Gussform", vector: v(-0.6, 0.3, -0.3, 0.5, 0.6, 0.3) },
+  { name: "Vitrine", vector: v(-0.2, -0.4, 0.1, 0.6, -0.2, 0.6) },
 ];
 
 export const DISPLAY_FONTS: FontDef[] = [

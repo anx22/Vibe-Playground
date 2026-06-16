@@ -17,14 +17,17 @@ function nearest(pool: World[], target: AxisVector): World {
  * Fit-weighted partner pick (E-042). Rewards tension (distance from `home`) but penalizes drift
  * from the briefing centroid, so the *blend* lands on-briefing while the collision keeps its spark.
  * fit=0 → pure max-contrast (the old behaviour); fit=1 → strongly hugs the briefing. Picks among
- * the top few so a batch still varies. Caller must pre-filter `cands` for its own coherence rule.
+ * the top candidates so a batch still varies; the window scales with the pool (E-043) so a bigger
+ * Katalog buys real variety instead of always collapsing onto the same 3 best-scoring partners.
+ * Caller must pre-filter `cands` for its own coherence rule.
  */
 function pickPartner(cands: World[], home: World, ctx: MixContext): World {
   const fit = ctx.fit ?? 0.55;
   const scored = cands
     .map((w) => ({ w, score: dist(w.vector, home.vector) - fit * 2 * dist(w.vector, ctx.centroid) }))
     .sort((a, b) => b.score - a.score);
-  const topK = Math.min(3, scored.length);
+  const window = Math.max(3, Math.round(scored.length * 0.3));
+  const topK = Math.min(window, scored.length);
   return scored[Math.floor(ctx.rng() * topK)].w;
 }
 
