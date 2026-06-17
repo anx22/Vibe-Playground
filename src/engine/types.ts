@@ -22,6 +22,15 @@ export interface VibeCard {
   vector: AxisVector;
   coherence: { sharedAxes: AxisKey[]; ok: boolean };
   origin: { home: string; intrusion: string; object: string; engineNote: string };
+  /** Which methodology produced this block — drives the constellation clustering (E-047). */
+  source?: string;
+  /** Rich expand detail (Engine D bridge: the worlds, their rhyme, object, derivation, affordances). */
+  detail?: {
+    worlds?: { name: string; role: string; rhyme: string }[];
+    object?: string;
+    derivation?: string;
+    affordances?: string[];
+  };
   /** LLM-judge score (1..5 each + overall), attached by the judge-select step (E-041). */
   quality?: Quality;
 }

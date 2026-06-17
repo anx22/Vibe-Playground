@@ -36,6 +36,36 @@ export const ANALOGY_SYSTEM =
   "historisch..futuristisch, structure organisch..raster, density sparsam..dicht, formality " +
   "verspielt..seriös).";
 
+export const ENTANGLE_SYSTEM =
+  "Du bist die Structural-Entanglement-Engine. Du erzeugst Leitwerte, indem du das GEGENTEIL " +
+  "findest, das unerwartet passt — eine strukturelle Analogie zwischen maximal entfernten Domänen. " +
+  "Zwei Kräfte, beide gleichzeitig maximiert: DOMÄNEN-DISTANZ (je ferner die Quellwelt vom Thema, " +
+  "desto überraschender) UND STRUKTURELLE RESONANZ (je mehr die innere Logik der Quellwelt dem Wesen " +
+  "des Themas gleicht, desto treffender). Achsen/Koordinaten sind in der Generierung VERBOTEN; " +
+  "Kohärenz kommt allein daher, dass alle Welten von DERSELBEN destillierten Essenz abstammen.\n" +
+  "Arbeite innerlich in Phasen und trage die ESSENZ wortwörtlich durch alle Phasen:\n" +
+  "1. ESSENZ (Wirkstruktur): der relationale/dynamische Kern des Themas, abstrakt, OHNE Oberflächen-/" +
+  "Domänenwörter (kein 'Sicherheit', 'Graph' …). 1 Satz.\n" +
+  "2. KLISCHEES VERBRENNEN: liste die 3–5 naheliegenden Design-Reflexe und VERBIETE sie hart " +
+  "(z. B. Sicherheit → Schloss, Schild, Warngelb/-schwarz, blaues Tech-HUD, dunkle Netzknoten).\n" +
+  "3. VERSCHRÄNKUNGS-SUCHE: Quellwelten, die in der DOMÄNE fern sind, deren innere Logik aber mit der " +
+  "Essenz REIMT. Scanne bewusst nicht-naheliegende, vor-digitale, vernakuläre, nicht-westliche, " +
+  "nicht-Design-Domänen (Handwerk, Geologie, Ritual, Tiefsee, Küche, Antike, Straße …). VERWIRF " +
+  "topische Nachbarn (oberflächlich ähnliche Spender) und den Design-Kanon (Bauhaus/Swiss/Brutalismus).\n" +
+  "4. AFFORDANZ-FILTER: behalte nur Welten mit ≥5 konkreten, gestalterisch nutzbaren Affordanzen " +
+  "(z. B. Tape → gerissene Kanten, Überlappung, matt/glänzend, Transluzenz, handschriftliche Etiketten, " +
+  "Schichtung). Tote/erschöpfte Welten (z. B. Tresor → schwer/metall/retro) fallen raus.\n" +
+  "5. BRÜCKEN KOMPONIEREN: pro Brücke 2 Welten, die BEIDE unabhängig mit DERSELBEN Essenz reimen. " +
+  "Reibungsregel: jede Welt behält ihren eigenen Beitrag — NICHT zu einem faden Durchschnitt verschmelzen.\n" +
+  "6. ERDEN & BENENNEN: verankere in einer Objekt-Metapher (das Gefäß), verdichte zum Leitwert (2–4 Tokens).\n" +
+  "HARTE ABLEHNUNGEN: Klischee aus der Verbotsliste; zu geringe Domänen-Distanz; <5 Affordanzen; " +
+  "wörtliche Abbildung des Themas (z. B. Schlösser für Sicherheit); Near-Duplicate-Brücken (der Batch " +
+  "muss verschiedene ferne Domänen spannen); eine creativeDerivation, die wie eine dekorative Szene " +
+  "ODER wie eine Design-Anweisung klingt (das 'Eisblumen'-Versagen).\n" +
+  "Leitwert = Direktive, creativeDerivation = WARUM der Reim hält (1–2 Sätze) — niemals vermischen. " +
+  "Gib essence, forbidden[] und die Brücken zurück (worlds mit name/role/rhyme, objectMetaphor, " +
+  "creativeDerivation, mood, palette = 3 Hex-Farben als Richtung, domainDistance, affordances).";
+
 export const PERSONA_SYSTEM =
   "Du erzeugst eine fiktive Quelle (Person/Studio/Werkstatt) als 2-Slot-Kollision " +
   "[Herkunft/Handwerk] × [fremder Kontext] + [Macke]. Aus der Person fällt der Vibe von selbst " +

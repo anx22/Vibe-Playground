@@ -1,9 +1,11 @@
 import {
   analogySchema,
   axisVectorSchema,
+  entangleSchema,
   judgeSchema,
   personaSchema,
   type Direction,
+  type Entangle,
   type JudgeScore,
   type Persona,
 } from "./schema";
@@ -49,6 +51,17 @@ export const generateAnalogies = (input: {
   n?: number;
   tier?: Tier;
 }): Promise<Direction[]> => post("/api/analogy", input, analogySchema).then((r) => r.directions);
+
+/**
+ * Engine D — Structural Entanglement (ENGINE-D-SPEC). Distill essence → burn clichés → far-but-
+ * rhyming worlds → affordance filter → bridge → name. Returns essence + forbidden + bridges.
+ */
+export const generateBridges = (input: {
+  briefing: string;
+  n?: number;
+  steer?: string;
+  tier?: Tier;
+}): Promise<Entangle> => post("/api/entangle", input, entangleSchema);
 
 /** Briefing → axis vector via the LLM (E-026), so the briefing actually steers the structure. */
 export const interpretBriefing = (briefing: string, tier: Tier = "cheap"): Promise<AxisVector> =>

@@ -20,6 +20,25 @@ export const personaSchema = z.object({
 });
 export type Persona = z.infer<typeof personaSchema>;
 
+/** Engine D — Structural Entanglement. A bridge = essence ↔ N far-but-rhyming worlds + object. */
+export const bridgeSchema = z.object({
+  leitwert: z.string(),
+  worlds: z.array(z.object({ name: z.string(), role: z.string(), rhyme: z.string() })),
+  objectMetaphor: z.string(),
+  creativeDerivation: z.string(),
+  mood: z.string(),
+  palette: z.array(z.string()),
+  domainDistance: z.string(),
+  affordances: z.array(z.string()),
+});
+export const entangleSchema = z.object({
+  essence: z.string(),
+  forbidden: z.array(z.string()),
+  bridges: z.array(bridgeSchema),
+});
+export type Bridge = z.infer<typeof bridgeSchema>;
+export type Entangle = z.infer<typeof entangleSchema>;
+
 /** A single design direction from the Analogy Engine (the new core). */
 export const directionSchema = z.object({
   leitwert: z.string(),

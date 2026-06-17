@@ -1,153 +1,140 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { AxisVector, Signal, VibeCard } from "../engine";
-import { AXES, add, clamp, zero, LEXICON } from "../engine";
+import { zero } from "../engine";
+import type { VibeCard } from "../engine";
 import { paletteFor, typoFor } from "../engine/derive";
-import { generateAnalogies, generatePersona, interpretBriefing } from "../llm/client";
-import type { Direction, Persona } from "../llm/schema";
+import { generateBridges, generatePersona } from "../llm/client";
+import type { Bridge, Persona } from "../llm/schema";
 import { judgeRank } from "../llm/select";
 
-const BATCH = 5;
-/** Generate a few extra, then judge-select down to BATCH — the production fitness step (E-041). */
-const OVERSCAN = BATCH + 2;
-const studioRng = () => Math.random();
+/** Per method we generate a few extra and judge-select the strongest into the cluster (E-041). */
+const PER_METHOD = 6;
+const OVERSCAN = PER_METHOD + 2;
+const MAX_ANCHORS = 5;
+const rng = () => Math.random();
 
-/** The two creative derivations (E-046). Analogie = functional-core analogy; Persona = fictional source. */
-export type Mode = "analogy" | "persona";
+const HEX = /^#?[0-9a-fA-F]{3,8}$/;
+function palette3(p: string[] | undefined): [string, string, string] {
+  const ok = (p ?? []).filter((c) => HEX.test(c)).map((c) => (c.startsWith("#") ? c : `#${c}`));
+  return [ok[0] ?? "#1c1c1c", ok[1] ?? "#6b6b6b", ok[2] ?? "#d9d4cc"];
+}
 
-/** One analogy direction → a Studio card (palette/typo derive from its 6-axis projection). */
-function directionToCard(d: Direction): VibeCard {
+function bridgeToCard(b: Bridge, source: string): VibeCard {
   return {
-    id: `${d.leitwert}-${Math.floor(studioRng() * 1e6)}`,
-    leitwert: d.leitwert,
-    mood: d.mood,
-    scene: d.scene,
-    typography: typoFor(d.vector, studioRng),
-    palette: paletteFor(d.vector),
-    vector: d.vector,
+    id: `${source}-${b.leitwert}-${Math.floor(rng() * 1e6)}`,
+    leitwert: b.leitwert,
+    mood: b.mood,
+    scene: b.creativeDerivation,
+    typography: typoFor(zero(), rng),
+    palette: palette3(b.palette),
+    vector: zero(),
     coherence: { sharedAxes: [], ok: true },
-    origin: { home: d.world, intrusion: "—", object: "—", engineNote: d.core },
+    origin: {
+      home: b.worlds.map((w) => w.name).join(" × "),
+      intrusion: b.objectMetaphor,
+      object: b.objectMetaphor,
+      engineNote: b.creativeDerivation,
+    },
+    source,
+    detail: {
+      worlds: b.worlds,
+      object: b.objectMetaphor,
+      derivation: b.creativeDerivation,
+      affordances: b.affordances,
+    },
   };
 }
 
-/** One persona → a Studio card (the fictional originator whose aesthetic falls out as the vibe). */
-function personaToCard(p: Persona): VibeCard {
+function personaToCard(p: Persona, source: string): VibeCard {
   return {
-    id: `${p.leitwert}-${Math.floor(studioRng() * 1e6)}`,
+    id: `${source}-${p.leitwert}-${Math.floor(rng() * 1e6)}`,
     leitwert: p.leitwert,
     mood: p.mood,
     scene: p.persona,
-    typography: typoFor(p.vector, studioRng),
+    typography: typoFor(p.vector, rng),
     palette: paletteFor(p.vector),
     vector: p.vector,
     coherence: { sharedAxes: [], ok: true },
     origin: { home: "Persona", intrusion: "—", object: "—", engineNote: p.persona },
+    source,
+    detail: { derivation: p.persona },
   };
 }
 
-/** Steering folded into the brief: pull toward kept directions, away from rejected ones. */
-function steerText(signals: Signal[]): string {
-  const near = signals.filter((s) => s.kind === "attract").map((s) => s.label);
-  const far = signals.filter((s) => s.kind === "repel").map((s) => s.label);
-  if (!near.length && !far.length) return "";
-  let t = "\nSteuerung —";
-  if (near.length) t += ` näher an Richtungen wie: ${near.join(", ")};`;
-  if (far.length) t += ` weg von: ${far.join(", ")};`;
-  return `${t} der funktionale Kern bleibt.`;
+/** The creative derivations, each its own constellation cluster (E-047). Pluggable — add a source here. */
+export interface Source {
+  id: string;
+  label: string;
+  accent: string;
+  gen: (briefing: string, steer: string, n: number) => Promise<VibeCard[]>;
 }
 
-/**
- * Studio generate (E-046). Two creative derivations, both judge-selected best-first:
- *  - "analogy": brief → functional core → a DISTANT domain with the same core → Leitwert.
- *  - "persona": a fictional source whose aesthetic falls out as a coherent vibe.
- * Returns empty + a banner flag when the gateway is unreachable (no offline collision fallback).
- */
-async function generateBatch(
-  mode: Mode,
+export const SOURCES: Source[] = [
+  {
+    id: "entanglement",
+    label: "Verschränkung",
+    accent: "#E86A4B",
+    gen: async (briefing, steer, n) =>
+      (await generateBridges({ briefing, steer, n, tier: "strong" })).bridges.map((b) =>
+        bridgeToCard(b, "entanglement"),
+      ),
+  },
+  {
+    id: "persona",
+    label: "Persona",
+    accent: "#5B8BD6",
+    gen: async (briefing, steer, n) =>
+      (
+        await Promise.all(
+          Array.from({ length: n }, () => generatePersona({ briefing: briefing + steer, tier: "strong" })),
+        )
+      ).map((p) => personaToCard(p, "persona")),
+  },
+];
+
+/** Steering folded into the brief: the anchored gold blocks pull the next wave toward them. */
+function gravityText(anchors: VibeCard[]): string {
+  if (!anchors.length) return "";
+  return `\nGravitation — leite die nächsten Richtungen aus diesen Ankern ab, ohne den Kern zu verlassen: ${anchors
+    .map((a) => a.leitwert)
+    .join(", ")}.`;
+}
+
+/** Run every active source in parallel; each cluster keeps its judge-selected best. */
+async function generateField(
   briefing: string,
   steer: string,
-): Promise<{ cards: VibeCard[]; sceneOk: boolean }> {
-  try {
-    let cards: VibeCard[];
-    if (mode === "persona") {
-      const ps = await Promise.all(
-        Array.from({ length: OVERSCAN }, () =>
-          generatePersona({ briefing: briefing + steer, tier: "strong" }),
-        ),
-      );
-      cards = ps.map(personaToCard);
-    } else {
-      const dirs = await generateAnalogies({ briefing: briefing + steer, n: OVERSCAN, tier: "strong" });
-      cards = dirs.map(directionToCard);
-    }
-    const ranked = await judgeRank(cards, briefing);
-    return { cards: ranked.slice(0, BATCH), sceneOk: true };
-  } catch {
-    return { cards: [], sceneOk: false }; // gateway unreachable / rate-limited
-  }
+): Promise<{ cards: VibeCard[]; ok: boolean }> {
+  const clusters = await Promise.all(
+    SOURCES.map(async (src) => {
+      try {
+        const cards = await src.gen(briefing, steer, OVERSCAN);
+        const ranked = await judgeRank(cards, briefing);
+        return ranked.slice(0, PER_METHOD);
+      } catch {
+        return [] as VibeCard[];
+      }
+    }),
+  );
+  const flat = clusters.flat();
+  return { cards: flat, ok: flat.length > 0 };
 }
-
-function seedVector(word: string): AxisVector {
-  const v = zero();
-  const w = word.trim().toLowerCase();
-  if (!w) return v;
-  for (const key of Object.keys(LEXICON)) {
-    if (!w.includes(key)) continue;
-    const bias = LEXICON[key];
-    for (const ax of AXES) {
-      const b = bias[ax];
-      if (b !== undefined) v[ax] = clamp(v[ax] + b);
-    }
-  }
-  return v;
-}
-
-function centroidOf(seed: AxisVector, signals: Signal[]): AxisVector {
-  let c: AxisVector = { ...seed };
-  for (const s of signals) c = add(c, s.vector, s.kind === "attract" ? 0.4 : -0.4);
-  return c;
-}
-
-/** Spread = the "safe ↔ experimental" tension knob, tightened as steering signals accumulate. */
-const spreadFromTension = (tension: number, signals: Signal[]) =>
-  clamp(0.3 + tension * 0.6 - signals.length * 0.05, 0.22, 0.95);
-
-let sigCount = 0;
-const newSignal = (kind: Signal["kind"], card: VibeCard): Signal => ({
-  id: `sig-${++sigCount}`,
-  kind,
-  vector: card.vector,
-  label: card.leitwert,
-});
 
 interface VibeState {
   phase: "blank" | "studio";
   seed: string;
-  seedVec: AxisVector;
-  signals: Signal[];
-  centroid: AxisVector;
-  spread: number;
   cards: VibeCard[];
-  library: VibeCard[];
+  anchors: VibeCard[];
   focusId: string | null;
-  commits: number;
+  generation: number;
   loading: boolean;
-  /** True when the last generate fell back to skeletons (rate-limited / gateway unreachable). */
   llmFallback: boolean;
-  // Advanced (adaptive): unlocks on first steer; persisted.
-  advanced: boolean;
-  mode: Mode;
-  tension: number;
 
   setSeed: (w: string) => void;
-  setMode: (m: Mode) => void;
-  setTension: (t: number) => void;
   explore: () => Promise<void>;
   iterate: () => Promise<void>;
-  attract: (c: VibeCard) => void;
-  repel: (c: VibeCard) => void;
-  commit: (c: VibeCard) => void;
-  focus: (id: string) => void;
+  toggleAnchor: (c: VibeCard) => void;
+  focus: (id: string | null) => void;
   reset: () => void;
 }
 
@@ -156,103 +143,46 @@ export const useVibeStore = create<VibeState>()(
     (set, get) => ({
       phase: "blank",
       seed: "",
-      seedVec: zero(),
-      signals: [],
-      centroid: zero(),
-      spread: 0.57,
       cards: [],
-      library: [],
+      anchors: [],
       focusId: null,
-      commits: 0,
+      generation: 0,
       loading: false,
       llmFallback: false,
-      advanced: false,
-      mode: "analogy",
-      tension: 0.45,
 
-      setSeed: (w) => set({ seed: w, seedVec: seedVector(w) }),
-      setMode: (m) => set({ mode: m }),
-      setTension: (t) =>
-        set({ tension: t, spread: spreadFromTension(t, get().signals) }),
+      setSeed: (w) => set({ seed: w }),
 
       explore: async () => {
         const briefing = get().seed;
-        set({ phase: "studio", signals: [], focusId: null, cards: [], loading: true });
-        let seedVec = seedVector(briefing);
-        if (briefing.trim()) {
-          try {
-            seedVec = await interpretBriefing(briefing);
-          } catch {
-            /* keep lexicon fallback */
-          }
-        }
-        const { tension, mode } = get();
-        const spread = spreadFromTension(tension, []);
-        const centroid = centroidOf(seedVec, []);
-        set({ seedVec, centroid, spread });
-        const { cards, sceneOk } = await generateBatch(mode, briefing, "");
-        set({ cards, loading: false, llmFallback: !sceneOk });
+        set({ phase: "studio", cards: [], anchors: [], focusId: null, generation: 1, loading: true });
+        const { cards, ok } = await generateField(briefing, "");
+        set({ cards, loading: false, llmFallback: !ok });
       },
 
       iterate: async () => {
-        const { seed, signals, mode } = get();
+        const { seed, anchors, generation } = get();
         set({ loading: true });
-        const { cards, sceneOk } = await generateBatch(mode, seed, steerText(signals));
-        set({ cards, focusId: null, loading: false, llmFallback: !sceneOk });
+        const { cards, ok } = await generateField(seed, gravityText(anchors));
+        set({ cards, focusId: null, generation: generation + 1, loading: false, llmFallback: !ok });
       },
 
-      // Live-reflow (E-022): signals re-bias centroid + spread, cards stay put. First steer unlocks Advanced.
-      attract: (c) => {
-        const signals = [...get().signals, newSignal("attract", c)];
-        set({
-          signals,
-          centroid: centroidOf(get().seedVec, signals),
-          spread: spreadFromTension(get().tension, signals),
-          focusId: c.id,
-          advanced: true,
-        });
-      },
-      repel: (c) => {
-        const signals = [...get().signals, newSignal("repel", c)];
-        set({
-          signals,
-          centroid: centroidOf(get().seedVec, signals),
-          spread: spreadFromTension(get().tension, signals),
-          focusId: c.id,
-          advanced: true,
-        });
-      },
-
-      commit: (c) => {
-        const { library, commits } = get();
-        if (library.some((l) => l.id === c.id)) return;
-        set({ library: [c, ...library], commits: commits + 1, focusId: c.id, advanced: true });
+      toggleAnchor: (c) => {
+        const anchors = get().anchors;
+        const has = anchors.some((a) => a.id === c.id);
+        if (has) set({ anchors: anchors.filter((a) => a.id !== c.id) });
+        else if (anchors.length < MAX_ANCHORS) set({ anchors: [...anchors, c] });
       },
 
       focus: (id) => set({ focusId: id }),
 
       reset: () =>
-        set({
-          phase: "blank",
-          seed: "",
-          seedVec: zero(),
-          signals: [],
-          centroid: zero(),
-          spread: spreadFromTension(get().tension, []),
-          cards: [],
-          focusId: null,
-          loading: false,
-        }),
+        set({ phase: "blank", seed: "", cards: [], anchors: [], focusId: null, generation: 0, loading: false }),
     }),
     {
       name: "vibe-playground",
-      partialize: (s) => ({
-        library: s.library,
-        commits: s.commits,
-        advanced: s.advanced,
-        mode: s.mode,
-        tension: s.tension,
-      }),
+      partialize: (s) => ({ anchors: s.anchors }),
     },
   ),
 );
+
+export { MAX_ANCHORS };

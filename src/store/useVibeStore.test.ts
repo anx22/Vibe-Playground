@@ -1,41 +1,35 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { dist, zero } from "../engine";
 import type { VibeCard } from "../engine";
-import { useVibeStore } from "./useVibeStore";
+import { zero } from "../engine";
+import { MAX_ANCHORS, useVibeStore } from "./useVibeStore";
 
-/**
- * Locks the steering invariant: attract (👍) pulls the centroid toward a card, repel (👎)
- * pushes it away — the re-biased centroid is what the next Iterate carries. Pure state math,
- * no network (generation now needs the live gateway).
- */
-const fakeCard = (): VibeCard => ({
-  id: "t1",
-  leitwert: "Test-Welt",
+/** Anchors are the gold-set primitive (E-047): toggle on/off, capped at MAX_ANCHORS. */
+const fakeCard = (id: string): VibeCard => ({
+  id,
+  leitwert: id,
   mood: "x",
   scene: "x",
   typography: { display: {} as never, body: {} as never, data: {} as never },
   palette: ["#000", "#111", "#222"],
-  vector: { material: 0.8, energy: 0.6, time: 0.4, structure: 0.5, density: 0.3, formality: 0.2 },
+  vector: zero(),
   coherence: { sharedAxes: [], ok: true },
   origin: { home: "—", intrusion: "—", object: "—", engineNote: "—" },
+  source: "entanglement",
 });
 
-describe("studio steering re-biases the centroid", () => {
+describe("anchors", () => {
   beforeEach(() => useVibeStore.getState().reset());
 
-  it("attract pulls the centroid toward the card", () => {
-    const target = fakeCard();
-    const before = zero();
-    useVibeStore.getState().attract(target);
-    const after = useVibeStore.getState().centroid;
-    expect(dist(after, target.vector)).toBeLessThan(dist(before, target.vector));
+  it("toggles a card on and off the anchor set", () => {
+    const c = fakeCard("a");
+    useVibeStore.getState().toggleAnchor(c);
+    expect(useVibeStore.getState().anchors.map((a) => a.id)).toEqual(["a"]);
+    useVibeStore.getState().toggleAnchor(c);
+    expect(useVibeStore.getState().anchors).toHaveLength(0);
   });
 
-  it("repel pushes the centroid away from the card", () => {
-    const target = fakeCard();
-    const before = zero();
-    useVibeStore.getState().repel(target);
-    const after = useVibeStore.getState().centroid;
-    expect(dist(after, target.vector)).toBeGreaterThan(dist(before, target.vector));
+  it("caps the anchor set at MAX_ANCHORS", () => {
+    for (let i = 0; i < MAX_ANCHORS + 3; i++) useVibeStore.getState().toggleAnchor(fakeCard(`c${i}`));
+    expect(useVibeStore.getState().anchors).toHaveLength(MAX_ANCHORS);
   });
 });
