@@ -45,14 +45,21 @@ success metric (E-018); north star is speed to a credible direction (E-014). Cos
 - **Axis sliders & model/batch controls** in Advanced — deferred (kept the surface lean).
 - **Stacking** the three paths (Persona → Generativ → Katalog as one pipeline) — currently you pick one.
 
+## Quality, measured (E-041…E-044)
+
+The eval has a real **LLM-judge** fitness function. Validated on the strict **Opus** grader
+(9 briefings, 88 calls): the three LLM paths (Generativ 3.68 · Persona 3.61 · Katalog 3.60) sit a
+clear ~0.65 above the offline template baselines (~2.95). The **fit fix (E-042) is confirmed** —
+`fit` went from the weakest sub-score to the strongest (b-llm 4.08). Remaining lower bound is
+**freshness** (~3.2): the next quality lever, if we chase one, is originality — not fit or the mixer.
+
 ## Next Steps (in order)
 
 1. **Watch judge-select cost/latency** in the Studio: OVERSCAN = BATCH+2 (7 renders → keep 5) + 7
    parallel cheap judges per round. If latency hurts the "speed to direction" north star, drop OVERSCAN
    to BATCH (rank-only) or make it opt-in.
-2. **Use the judge to drive the next algorithm changes**: the eval is now a real fitness function —
-   close the `fit` gap (briefing match was the weakest sub-score) and decide whether the curated
-   Katalog pool earns its place vs. Generativ/Persona.
+2. **(Optional) Freshness lever** — push renders away from cliché toward more singular worlds
+   (the only sub-score the strict judge still marks down).
 3. **Tune the tension band** (Generativ) against real briefings so "safe ↔ experimental" is felt.
 4. Optional: a "stacking" path; accounts/persistence-backend if public.
 
