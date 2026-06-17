@@ -101,8 +101,8 @@ export function VibeCard({
         <p className="origin-note">{card.origin.engineNote}</p>
         {card.quality && (
           <p className="qbreak">
-            Kohärenz {card.quality.coherence} · Trigger {card.quality.trigger} · Fit{" "}
-            {card.quality.fit} · Frische {card.quality.freshness}
+            Treffer {card.quality.onTarget} · Überraschung {card.quality.surprise} · Handwerk{" "}
+            {card.quality.craft}
             <br />
             <span className="qnote">{card.quality.note}</span>
           </p>

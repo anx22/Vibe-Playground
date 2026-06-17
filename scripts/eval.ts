@@ -185,12 +185,12 @@ async function main() {
     console.log(
       `${"─".repeat(78)}\n  QUALITY (LLM-judge=${judgeTier}, 1–5, avg across ${BRIEFINGS.length} briefings × cards)`,
     );
-    console.log(`    ${"method".padEnd(18)} coher trig  fit  fresh   overall`);
+    console.log(`    ${"method".padEnd(18)} onTgt surp craft   overall`);
 
-    type Agg = { coh: number; trig: number; fit: number; fresh: number; n: number };
+    type Agg = { tgt: number; surp: number; craft: number; n: number };
     let judgeCalls = 0;
     for (const mid of run.methodIds) {
-      const agg: Agg = { coh: 0, trig: 0, fit: 0, fresh: 0, n: 0 };
+      const agg: Agg = { tgt: 0, surp: 0, craft: 0, n: 0 };
       for (const b of BRIEFINGS) {
         const cell = run.cells[mid]?.[b.id];
         if (!cell || cell.error) continue;
@@ -201,10 +201,9 @@ async function main() {
               judgeTier,
             );
             judgeCalls++;
-            agg.coh += s.coherence;
-            agg.trig += s.trigger;
-            agg.fit += s.fit;
-            agg.fresh += s.freshness;
+            agg.tgt += s.onTarget;
+            agg.surp += s.surprise;
+            agg.craft += s.craft;
             agg.n++;
           } catch (err) {
             console.log(`      ✗ judge ${mid}/${b.id}: ${String(err)}`);
@@ -212,14 +211,13 @@ async function main() {
         }
       }
       if (!agg.n) continue;
-      const coh = agg.coh / agg.n;
-      const trig = agg.trig / agg.n;
-      const fit = agg.fit / agg.n;
-      const fresh = agg.fresh / agg.n;
-      const overall = (coh + trig + fit + fresh) / 4;
+      const tgt = agg.tgt / agg.n;
+      const surp = agg.surp / agg.n;
+      const craft = agg.craft / agg.n;
+      const overall = (tgt + surp + craft) / 3;
       const f = (x: number) => x.toFixed(2).padStart(5);
       console.log(
-        `    ${mid.padEnd(18)}${f(coh)}${f(trig)}${f(fit)}${f(fresh)}   ${bar(overall, 1, 5)} ${overall.toFixed(2)}`,
+        `    ${mid.padEnd(18)}${f(tgt)}${f(surp)}${f(craft)}   ${bar(overall, 1, 5)} ${overall.toFixed(2)}`,
       );
     }
     console.log(`\n  ~${judgeCalls} judge calls (judge-tier=${judgeTier})\n`);

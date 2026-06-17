@@ -26,12 +26,11 @@ export interface VibeCard {
   quality?: Quality;
 }
 
-/** The judge's verdict on one card — the production fitness signal (E-041). */
+/** The judge's verdict on one card — the production fitness signal (E-046: on-target × surprise × craft). */
 export interface Quality {
-  coherence: number;
-  trigger: number;
-  fit: number;
-  freshness: number;
+  onTarget: number;
+  surprise: number;
+  craft: number;
   overall: number;
   note: string;
 }

@@ -26,7 +26,7 @@ export async function judgeRank(
           { briefing, leitwert: c.leitwert, scene: c.scene, mood: c.mood },
           tier,
         );
-        const overall = (s.coherence + s.trigger + s.fit + s.freshness) / 4;
+        const overall = (s.onTarget + s.surprise + s.craft) / 3;
         return { ...c, quality: { ...s, overall } };
       } catch {
         return c; // unscored — sinks to the bottom, never blocks the loop

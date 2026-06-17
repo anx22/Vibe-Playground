@@ -43,12 +43,23 @@ export const personaSchema = z.object({
 });
 export type Persona = z.infer<typeof personaSchema>;
 
-/** Quality judgement of one direction against the briefing (1..5 each). */
+/** A single design direction from the Analogy Engine (the new core). */
+export const directionSchema = z.object({
+  leitwert: z.string(),
+  world: z.string(),
+  core: z.string(),
+  scene: z.string(),
+  mood: z.string(),
+  vector: axisVectorSchema,
+});
+export const analogySchema = z.object({ directions: z.array(directionSchema) });
+export type Direction = z.infer<typeof directionSchema>;
+
+/** Quality judgement: on-target × surprise × craft (would a senior AD pitch it to THIS client?). */
 export const judgeSchema = z.object({
-  coherence: z.number().min(1).max(5),
-  trigger: z.number().min(1).max(5),
-  fit: z.number().min(1).max(5),
-  freshness: z.number().min(1).max(5),
+  onTarget: z.number().min(1).max(5),
+  surprise: z.number().min(1).max(5),
+  craft: z.number().min(1).max(5),
   note: z.string(),
 });
 export type JudgeScore = z.infer<typeof judgeSchema>;

@@ -1,10 +1,12 @@
 import {
+  analogySchema,
   axisVectorSchema,
   batchResultSchema,
   judgeSchema,
   personaSchema,
   sceneRenderSchema,
   seedListSchema,
+  type Direction,
   type JudgeScore,
   type Persona,
   type SceneRender,
@@ -63,6 +65,16 @@ export const expandSeeds = (input: {
 
 export const generatePersona = (input: { briefing: string; tier?: Tier }): Promise<Persona> =>
   post("/api/persona", input, personaSchema);
+
+/**
+ * Analogy Engine (the new core, E-046): briefing → functional core → distant domains that embody
+ * the SAME core → N Leitwerte. On-target and surprising at once. One call returns the whole round.
+ */
+export const generateAnalogies = (input: {
+  briefing: string;
+  n?: number;
+  tier?: Tier;
+}): Promise<Direction[]> => post("/api/analogy", input, analogySchema).then((r) => r.directions);
 
 /** Briefing → axis vector via the LLM (E-026), so the briefing actually steers the structure. */
 export const interpretBriefing = (briefing: string, tier: Tier = "cheap"): Promise<AxisVector> =>
