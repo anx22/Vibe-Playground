@@ -110,19 +110,22 @@ export const WORKBENCH_SYSTEM =
   LEITWERT_RULE;
 
 export const PERSONA_SYSTEM =
-  "Du erfindest eine fiktive QUELLE als 2-Slot-Kollision auf Werkstatt-Ebene: " +
-  "[Herkunft/Handwerk] × [fremder Kontext]. Zwei konkrete, SICHTBARE Welten, knapp kollidiert — im " +
-  "Maßstab dieser Vorbilder:\n" +
+  "Du erfindest eine fiktive PERSON — eine:n Macher:in/Handwerker:in — als Kollision aus " +
+  "[Beruf/Herkunft/Handwerk] × [fremder Kontext/Bruch]. Das Subjekt ist IMMER ein MENSCH (mit Beruf, " +
+  "Hand, Werkzeug, Material), NIEMALS ein Ort, eine Firma, ein Studio, eine Werkstatt, eine " +
+  "Manufaktur, ein Archiv, eine Datenbank, eine Mühle oder ein Atelier als Subjekt. Form IMMER: " +
+  "'Ein:e [Mensch mit Handwerk/Herkunft], der/die jetzt [fremder Kontext].' Vorbilder:\n" +
   "• 'Ein pensionierter Schweizer Kartograf, der jetzt Synthesizer-Module baut.'\n" +
-  "• 'Eine Buchbinderei in Kyoto, die nur noch für Software-Firmen arbeitet.'\n" +
-  "Aus so einer Quelle fällt der gesamte Vibe von selbst: Material, Typografie, Farbe, Textur, Tiefe.\n" +
-  "EISERNE REGELN: (1) GENAU EIN knapper Satz, konkret und bildhaft — keine zweite Hälfte, kein " +
-  "Nachsatz. (2) Beide Slots sind greifbare Handwerks-/Material-Welten (Werkzeug, Material, Verfahren, " +
-  "Ort) — die Kollision MUSS man gestalterisch SEHEN können. (3) KEINE Seifenoper: keine Gefühle, " +
-  "keine Charakter-Macken, kein Sozialverhalten ('schweigt auf Calls', 'grüblerisch', 'einsam', " +
-  "'introvertiert') — nichts Unsichtbares, keine Psychologie. Die 'Macke' ist ALLEIN der " +
-  "Werk-/Medien-Bruch (Kartograf → Synths), nie ein Persönlichkeitszug. (4) Kein bekannter Stilname. " +
-  "Gib persona (der EINE Satz), leitwert (2–3 Tokens, WELT-VERWEIS — Format unten, aus den beiden " +
-  "Welten der Quelle abgeleitet, z. B. 'Kartograf-Synth', 'Kyoto-Bindung'), mood (2–4 Wörter), und " +
-  "die 6-Achsen-Projektion (material, energy, time, structure, density, formality)." +
+  "• 'Eine Buchbinderin aus Kyoto, die nur noch für Software-Firmen arbeitet.'\n" +
+  "• 'Ein Geigenbauer, der auf chirurgische Prothesen umgestiegen ist.'\n" +
+  "Aus DIESER PERSON fällt der gesamte Vibe von selbst: Material, Typografie, Farbe, Textur, Tiefe.\n" +
+  "EISERNE REGELN: (1) GENAU EIN knapper Satz; beginnt mit 'Ein'/'Eine' + einer PERSON (Beruf), nicht " +
+  "mit einem Ort/Betrieb. (2) Beide Slots sind greifbare Handwerks-/Material-Welten — die Kollision " +
+  "MUSS man gestalterisch SEHEN können. (3) KEINE Seifenoper: keine Gefühle, Charakter-Macken, " +
+  "Sozialverhalten ('schweigt auf Calls', 'grüblerisch', 'introvertiert') — nichts Unsichtbares, " +
+  "keine Psychologie. Die 'Macke' ist ALLEIN der Werk-/Medien-Bruch (Kartograf → Synths). (4) Subjekt " +
+  "= die Person, nie ihr Ort/Betrieb. (5) Kein bekannter Stilname. " +
+  "Gib persona (der EINE Satz mit der Person), leitwert (2–3 Tokens, WELT-VERWEIS aus den beiden " +
+  "Welten, z. B. 'Kartograf-Synth', 'Geigen-Prothese'), mood (2–4 Wörter), und die 6-Achsen-Projektion " +
+  "(material, energy, time, structure, density, formality)." +
   LEITWERT_RULE;
