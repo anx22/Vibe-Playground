@@ -1306,3 +1306,90 @@ body {
 .flyout-tags { display: flex; gap: 8px; margin: 2px 0 14px; }
 .flyout-tags span { font-size: 11px; padding: 3px 9px; border-radius: 999px; background: rgba(20,26,40,.07); color: var(--ink-soft); border: 1px solid rgba(255,255,255,.7); }
 .constellation-hint { position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%); color: #f3efe7; font-size: 13px; opacity: .8; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.16); padding: 8px 16px; border-radius: 999px; backdrop-filter: blur(10px); pointer-events: none; }
+
+/* ════════════════ Frontend-design pass — "Observatory" (grounds the UI in the subject) ════════════════ */
+/* Away from the AI defaults (cream-paper / near-black+one-accent): a cool star-chart instrument. */
+:root {
+  --ink: #0f1422;
+  --ink-soft: #59617a;
+  --line: #d2d8e6;
+  --paper: #f3f5fa;            /* cool drafting paper, not cream */
+  --accent: #ff6a45;
+  --accent-2: #ff8d63;
+  --instrument: 184, 199, 230; /* faint slate for rings/ticks (rgb) */
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-mono: "Space Mono", "IBM Plex Mono", monospace;
+  --font-body: "Newsreader", Georgia, serif;
+}
+body {
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+  background:
+    radial-gradient(900px 600px at 50% -8%, #ffffff 0%, #eef1f8 55%, #e6eaf3 100%) fixed;
+}
+
+/* type roles — deliberate pairing, not a neutral delivery vehicle */
+.stage-title, .center-text, .node-name, .flyout-name { font-family: var(--font-display); letter-spacing: -0.015em; }
+.center-kicker, .cluster-label, .flyout-src, .flyout-block h3, .flyout-tags span,
+.gen-badge, .anchor-badge, .node-anchor { font-family: var(--font-mono); }
+.flyout-mood, .flyout-block p, .flyout-block li { font-family: var(--font-body); }
+.flyout-block p { font-size: 15px; line-height: 1.5; }
+
+/* the instrument: deep observatory field + concentric measurement rings + anchor orbit */
+.constellation {
+  background:
+    radial-gradient(1.5px 1.5px at 20% 30%, rgba(var(--instrument), 0.16) 50%, transparent 51%) 0 0/140px 140px,
+    radial-gradient(1.5px 1.5px at 70% 60%, rgba(var(--instrument), 0.12) 50%, transparent 51%) 0 0/190px 190px,
+    radial-gradient(135% 120% at 50% 42%, #16203a 0%, #0e1426 58%, #090d18 100%);
+}
+.instrument {
+  position: absolute; left: 0; top: 0; width: 900px; height: 900px;
+  transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none;
+  background: repeating-radial-gradient(circle at center, transparent 0 88px, rgba(var(--instrument), 0.05) 88px 89px);
+}
+.instrument::after {
+  content: ""; position: absolute; left: 50%; top: 50%; width: 300px; height: 300px;
+  transform: translate(-50%, -50%); border-radius: 50%;
+  border: 1px dashed rgba(var(--instrument), 0.22);
+}
+
+/* center chip — instrument readout, cool not warm */
+.node--center { background: linear-gradient(165deg, #ffffff, #eef1f8 70%, #e3e8f4); }
+.center-kicker { letter-spacing: 0.26em; }
+.cluster-label { font-weight: 700; letter-spacing: 0.22em; }
+
+/* blocks: quiet plates, the name carries it */
+.node-name { font-weight: 700; }
+
+/* on-block anchor affordance — pick the five gold ideas without opening the flyout */
+.node-anchor {
+  position: absolute; top: 9%; left: 50%; transform: translateX(-50%);
+  width: 24px; height: 24px; border-radius: 50%; border: none; cursor: pointer;
+  display: grid; place-items: center; font-size: 13px; line-height: 1;
+  background: rgba(8, 12, 22, 0.5); color: #fff; opacity: 0;
+  transition: opacity 0.15s ease, transform 0.15s ease; backdrop-filter: blur(4px);
+}
+.node--block:hover .node-anchor,
+.node--block:focus-visible .node-anchor,
+.node-anchor.on { opacity: 1; }
+.node-anchor.on { background: var(--accent); box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 60%, transparent); }
+.node-anchor:disabled { cursor: not-allowed; }
+.node--block:hover .node-anchor:disabled { opacity: 0.3; }
+
+/* quality floor: visible keyboard focus */
+.node--block:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.btn:focus-visible, .btn-primary:focus-visible, .btn-iterate:focus-visible,
+.btn-anchor:focus-visible, .node-anchor:focus-visible, .flyout-x:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px;
+}
+
+/* respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+/* mobile */
+@media (max-width: 640px) {
+  .flyout { width: 100%; }
+  .topbar-right { gap: 6px; flex-wrap: wrap; }
+  .stage-title { font-size: clamp(24px, 7vw, 34px); }
+}

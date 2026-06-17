@@ -1,5 +1,5 @@
-import { useMemo, type CSSProperties } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useMemo, type CSSProperties } from "react";
+import { MotionConfig, motion } from "framer-motion";
 import type { VibeCard } from "../engine";
 import { SOURCES, MAX_ANCHORS, useVibeStore } from "../store/useVibeStore";
 
@@ -74,7 +74,10 @@ export function Constellation({ onExport }: { onExport: (c: VibeCard) => void })
     [],
   );
 
+  const anchorsFull = anchors.length >= MAX_ANCHORS;
+
   return (
+    <MotionConfig reducedMotion="user">
     <div className="constellation">
       <motion.div
         className="constellation-canvas"
@@ -84,7 +87,9 @@ export function Constellation({ onExport }: { onExport: (c: VibeCard) => void })
         dragConstraints={{ left: -640, right: 640, top: -520, bottom: 520 }}
         style={{ x: 0, y: 0 }}
       >
-        {/* connector spokes */}
+        {/* instrument: concentric measurement rings around the centre + the anchor orbit */}
+        <div className="instrument" aria-hidden />
+        {/* connector sightlines */}
         <svg className="spokes" width="2000" height="2000" viewBox="-1000 -1000 2000 2000">
           {placed.map((p) => (
             <line key={`s-${p.card.id}`} x1={0} y1={0} x2={p.x} y2={p.y} stroke={p.accent} strokeOpacity={anchorIds.has(p.card.id) ? 0.5 : 0.12} strokeWidth={anchorIds.has(p.card.id) ? 1.5 : 1} />
@@ -110,15 +115,26 @@ export function Constellation({ onExport }: { onExport: (c: VibeCard) => void })
         {placed.map((p) => {
           const isAnchor = anchorIds.has(p.card.id);
           const isFocus = p.card.id === focusId;
+          const canAnchor = isAnchor || !anchorsFull;
           return (
-            <motion.button
+            <motion.div
               key={p.card.id}
+              role="button"
+              tabIndex={0}
+              aria-pressed={isFocus}
+              aria-label={`${p.card.leitwert} — Details`}
               initial={{ opacity: 0, scale: 0.4, x: 0, y: 0 }}
               animate={{ opacity: 1, scale: 1, x: p.x, y: p.y }}
               transition={{ type: "spring", stiffness: 200, damping: 24 }}
               className={`node node--block${isAnchor ? " is-anchor" : ""}${isFocus ? " is-focus" : ""}`}
               style={{ width: p.size, height: p.size, marginLeft: -p.size / 2, marginTop: -p.size / 2, clipPath: hex, ["--accent" as string]: p.accent } as CSSProperties}
               onClick={() => focus(isFocus ? null : p.card.id)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  focus(isFocus ? null : p.card.id);
+                }
+              }}
             >
               <span className="node-name">{p.card.leitwert}</span>
               <span className="node-palette">
@@ -126,7 +142,19 @@ export function Constellation({ onExport }: { onExport: (c: VibeCard) => void })
                   <span key={i} style={{ background: c }} />
                 ))}
               </span>
-            </motion.button>
+              <button
+                type="button"
+                className={`node-anchor${isAnchor ? " on" : ""}`}
+                aria-label={isAnchor ? "Anker entfernen" : "Als Anker setzen"}
+                disabled={!canAnchor}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleAnchor(p.card);
+                }}
+              >
+                {isAnchor ? "★" : "☆"}
+              </button>
+            </motion.div>
           );
         })}
       </motion.div>
@@ -136,8 +164,9 @@ export function Constellation({ onExport }: { onExport: (c: VibeCard) => void })
         <div className="constellation-hint">Block wählen → ☆ Anker setzen → „Aus Ankern ableiten"</div>
       )}
 
-      <FocusFlyout onExport={onExport} isAnchored={(id) => anchorIds.has(id)} onAnchor={toggleAnchor} anchorsFull={anchors.length >= MAX_ANCHORS} />
+      <FocusFlyout onExport={onExport} isAnchored={(id) => anchorIds.has(id)} onAnchor={toggleAnchor} anchorsFull={anchorsFull} />
     </div>
+    </MotionConfig>
   );
 }
 
@@ -160,6 +189,11 @@ function FocusFlyout({
     () => cards.find((c) => c.id === focusId) ?? anchors.find((c) => c.id === focusId),
     [cards, anchors, focusId],
   );
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && focus(null);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [focus]);
   if (!card) return null;
   const anchored = isAnchored(card.id);
   const d = card.detail;
