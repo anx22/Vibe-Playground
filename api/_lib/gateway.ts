@@ -1,4 +1,4 @@
-import { generateObject } from "ai";
+import { embedMany, gateway, generateObject } from "ai";
 import type { z } from "zod";
 
 /**
@@ -69,6 +69,27 @@ export async function genObject<T>(opts: {
 
   if (!opts.noCache) cache.set(ck, { at: Date.now(), value: object });
   return object as T;
+}
+
+/** Real semantic embeddings (Engine E measures "far" with these). Auth via the gateway/OIDC. */
+const EMBED_MODEL = "openai/text-embedding-3-small";
+export async function embed(texts: string[]): Promise<number[][]> {
+  if (!texts.length) return [];
+  const { embeddings } = await embedMany({ model: gateway.textEmbeddingModel(EMBED_MODEL), values: texts });
+  return embeddings;
+}
+
+/** Cosine distance (0 = identical direction … 2 = opposite). */
+export function cosineDist(a: number[], b: number[]): number {
+  let dot = 0;
+  let na = 0;
+  let nb = 0;
+  for (let i = 0; i < a.length; i++) {
+    dot += a[i] * b[i];
+    na += a[i] * a[i];
+    nb += b[i] * b[i];
+  }
+  return na && nb ? 1 - dot / (Math.sqrt(na) * Math.sqrt(nb)) : 1;
 }
 
 /** Concurrency-limited fan-out — the synchronous "batch" path through the gateway. */

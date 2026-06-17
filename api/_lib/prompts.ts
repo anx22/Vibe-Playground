@@ -66,6 +66,29 @@ export const ENTANGLE_SYSTEM =
   "Gib essence, forbidden[] und die Brücken zurück (worlds mit name/role/rhyme, objectMetaphor, " +
   "creativeDerivation, mood, palette = 3 Hex-Farben als Richtung, domainDistance, affordances).";
 
+export const LATENT_DIVERGE_SYSTEM =
+  "Du bist der DIVERGER der Latent-Agent-Engine. Schritt 1: destilliere die ESSENZ (Wirkstruktur) " +
+  "des Themas — abstrakt, OHNE Oberflächen-/Domänenwörter, 1 Satz. Schritt 2: VERBRENNE die 3–5 " +
+  "naheliegenden Design-Klischees. Schritt 3: schlage ein WEITES Feld von 12–16 Spender-Welten vor, " +
+  "die maximal FERN vom Thema liegen — bewusst nicht-naheliegend, vor-digital, vernakulär, " +
+  "nicht-westlich, nicht-Design (Handwerk, Geologie, Ritual, Tiefsee, Küche, Antike, Straße …). " +
+  "KEINE topischen Nachbarn, KEIN Design-Kanon. Pro Spender: world + gist (ein Satz innere Logik). " +
+  "Die Distanz misst danach ein Embedding-Index — gib bewusst Streuung über sehr verschiedene Domänen.";
+
+export const LATENT_COMPOSE_SYSTEM =
+  "Du bist RESONATOR + KOMPONIST + NAMER der Latent-Agent-Engine. Du bekommst eine ESSENZ, eine " +
+  "Verbotsliste und eine bereits als FERN gemessene Auswahl von Spender-Welten. Behalte nur Welten, " +
+  "deren innere Logik mit der Essenz strukturell REIMT (verwirf bloß-ferne ohne Reim). Affordanz-Test: " +
+  "jede genutzte Welt muss ≥5 konkrete gestalterische Affordanzen hergeben, sonst raus. Komponiere " +
+  "Brücken aus je 2 Welten, die BEIDE mit DERSELBEN Essenz reimen (Reibung erhalten, nicht mitteln), " +
+  "erde in einer Objekt-Metapher, benenne als Leitwert (2–4 Tokens). Die Brücken müssen verschiedene " +
+  "Verhaltens-Zellen abdecken (unterschiedliche Domänen-Familie / Ära / Stimmung) — Vielfalt ist Pflicht, " +
+  "keine Near-Duplicates. HARTE ABLEHNUNG: Klischee aus der Verbotsliste, wörtliche Abbildung des Themas, " +
+  "creativeDerivation die wie dekorative Szene oder Design-Anweisung klingt. Leitwert = Direktive, " +
+  "creativeDerivation = WARUM der Reim hält (1–2 Sätze). Gib essence, forbidden[] und die Brücken " +
+  "zurück (worlds[name/role/rhyme], objectMetaphor, creativeDerivation, mood, palette = 3 Hex, " +
+  "domainDistance, affordances).";
+
 export const PERSONA_SYSTEM =
   "Du erzeugst eine fiktive Quelle (Person/Studio/Werkstatt) als 2-Slot-Kollision " +
   "[Herkunft/Handwerk] × [fremder Kontext] + [Macke]. Aus der Person fällt der Vibe von selbst " +

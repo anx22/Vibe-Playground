@@ -3,7 +3,7 @@ import { persist } from "zustand/middleware";
 import { zero } from "../engine";
 import type { VibeCard } from "../engine";
 import { paletteFor, typoFor } from "../engine/derive";
-import { generateBridges, generatePersona } from "../llm/client";
+import { generateBridges, generateLatent, generatePersona } from "../llm/client";
 import type { Bridge, Persona } from "../llm/schema";
 import { judgeRank } from "../llm/select";
 
@@ -78,6 +78,13 @@ export const SOURCES: Source[] = [
       (await generateBridges({ briefing, steer, n, tier: "strong" })).bridges.map((b) =>
         bridgeToCard(b, "entanglement"),
       ),
+  },
+  {
+    id: "latent",
+    label: "Latent-Agent",
+    accent: "#7FA66B",
+    gen: async (briefing, steer, n) =>
+      (await generateLatent({ briefing, steer, n })).bridges.map((b) => bridgeToCard(b, "latent")),
   },
   {
     id: "persona",

@@ -18,6 +18,18 @@ export const personaSchema = z.object({
   vector: axisVectorSchema,
 });
 
+/** Engine E phase 1 — Diverger: essence, burnt clichés, and a WIDE field of far donor worlds. */
+export const divergeSchema = z.object({
+  essence: z.string().describe("Wirkstruktur — abstract relational core, no surface-domain words"),
+  forbidden: z.array(z.string()).describe("burnt cliché list"),
+  donors: z.array(
+    z.object({
+      world: z.string(),
+      gist: z.string().describe("one line: the world's inner logic (used to embed + measure distance)"),
+    }),
+  ).describe("12–16 deliberately diverse, far, non-canonical donor worlds"),
+});
+
 /** Engine D — Structural Entanglement. One batch: distilled essence, burnt clichés, and bridges. */
 export const entangleSchema = z.object({
   essence: z.string().describe("Wirkstruktur — the topic's relational core, abstract, no surface-domain words"),
