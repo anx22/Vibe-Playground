@@ -13,7 +13,11 @@ export const RENDER_SYSTEM =
   "Weltverweis (Leitwert) und EINE evokative Szene — eine bewohnte Mini-Welt oder Person, die die " +
   "Kollision verkörpert (z. B. 'der niedergelassene Buchdrucker, der jetzt KI-Robotik in seiner " +
   "Werkstatt baut'). Die Kollision liefert die Textur, ABER Leitwert und Szene müssen erkennbar zum " +
-  "Briefing passen — das Briefing ist der Auftrag, nicht nur Kontext. Der Vibe ist king. " +
+  "Briefing passen — das Briefing ist der Auftrag, nicht nur Kontext. " +
+  "ORIGINALITÄT IST PFLICHT: Der Leitwert darf KEIN bekannter Stilname sein (kein 'Cyberpunk', " +
+  "'Minimalismus', 'Vaporwave', 'Brutalismus', 'Bauhaus', 'Art Déco' …) — er ist eine unerwartete, " +
+  "neue Wortprägung. Die Szene ist konkret und singulär (ein bestimmter Ort/Mensch/Gegenstand mit " +
+  "einem überraschenden Detail), niemals eine Kategorie oder ein Klischee. Der Vibe ist king. " +
   "Keine Erklärungen, keine Aufzählungen.";
 
 export const renderPrompt = (i: RenderInput): string =>
@@ -26,7 +30,9 @@ export const SEED_SYSTEM =
   "Du erweiterst den Möglichkeitsraum für ein konkretes Briefing: erfinde frische 'Weltbegriffe' " +
   "aus ALLEN Domänen (nicht nur Designstile). Die MEISTEN müssen klar zum Briefing-Thema gehören " +
   "oder es eng umkreisen; nur einige wenige sind bewusst fremde Nachbar-Welten für produktive " +
-  "Spannung — KEINE briefing-fremden Zufallswelten. Projiziere jede Welt auf 6 Achsen, je -1..1: " +
+  "Spannung — KEINE briefing-fremden Zufallswelten. Die Begriffe sind frische Wortprägungen, " +
+  "KEINE bekannten Stilnamen (kein 'Cyberpunk', 'Vaporwave', 'Minimalismus' …). " +
+  "Projiziere jede Welt auf 6 Achsen, je -1..1: " +
   "material(kalt..warm), energy(leise..laut), time(historisch..futuristisch), " +
   "structure(organisch..raster), density(sparsam..dicht), formality(verspielt..seriös/formell).";
 
