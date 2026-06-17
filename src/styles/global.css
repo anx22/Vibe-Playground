@@ -1180,3 +1180,124 @@ body {
 .btn-anchor:disabled { opacity: 0.4; cursor: not-allowed; }
 .btn-iterate { background: var(--ink); color: var(--paper); border: none; padding: 9px 16px; border-radius: 10px; font-weight: 700; cursor: pointer; }
 .btn-iterate:disabled { opacity: 0.55; cursor: wait; }
+
+/* ════════════════ Glossy-plastic reskin (overrides the paper look) ════════════════ */
+:root {
+  --ink: #171a21;
+  --ink-soft: #5a6270;
+  --line: #d6dbe6;
+  --accent: #ff6a45;
+  --accent-2: #ff8d5e;
+}
+body {
+  background:
+    radial-gradient(1200px 700px at 50% -10%, #ffffff 0%, #eef1f7 45%, #e4e8f1 100%) fixed;
+  color: var(--ink);
+}
+
+/* glassy top bar */
+.topbar {
+  background: rgba(255, 255, 255, 0.62);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 6px 24px -16px rgba(20, 26, 40, 0.5);
+}
+.gen-badge, .anchor-badge {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 2px 6px -3px rgba(20, 26, 40, 0.4);
+}
+
+/* glossy plastic buttons */
+.btn, .btn-primary, .btn-iterate, .btn-anchor, .btn-ghost {
+  border-radius: 13px !important;
+  border: none !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.12),
+    0 8px 18px -8px rgba(20, 26, 40, 0.55) !important;
+  transition: transform 0.12s ease, filter 0.18s ease, box-shadow 0.18s ease;
+}
+.btn-primary, .btn-iterate {
+  background: linear-gradient(180deg, var(--accent-2) 0%, var(--accent) 55%, #e8542f 100%) !important;
+  color: #fff !important;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.18);
+}
+.btn-ghost, .btn-anchor {
+  background: linear-gradient(180deg, #ffffff 0%, #eef1f7 100%) !important;
+  color: var(--ink) !important;
+}
+.btn-anchor.is-on {
+  background: linear-gradient(180deg, var(--accent-2), var(--accent)) !important;
+  color: #fff !important;
+}
+.btn:hover, .btn-primary:hover, .btn-iterate:hover, .btn-anchor:hover, .btn-ghost:hover { filter: brightness(1.06); }
+.btn:active, .btn-primary:active, .btn-iterate:active, .btn-anchor:active, .btn-ghost:active { transform: translateY(1px); filter: brightness(0.98); }
+
+/* blank stage gets a soft sheen */
+.stage-title { background: linear-gradient(180deg, #1b1f29, #444c5e); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.seed-input {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+  border-radius: 14px !important;
+  box-shadow: inset 0 2px 6px rgba(20, 26, 40, 0.12), inset 0 1px 0 rgba(255,255,255,.8), 0 10px 30px -16px rgba(20,26,40,.5) !important;
+  backdrop-filter: blur(8px);
+}
+
+/* cooler, deeper constellation canvas */
+.constellation {
+  background:
+    radial-gradient(130% 120% at 50% 38%, #20242e 0%, #15171e 60%, #0c0d12 100%);
+}
+
+/* center hexagon = white glossy plastic chip */
+.node--center {
+  background: linear-gradient(160deg, #ffffff 0%, #f0f2f7 60%, #e2e6ef 100%);
+  box-shadow:
+    inset 0 2px 1px rgba(255, 255, 255, 0.95),
+    inset 0 -10px 24px rgba(20, 26, 40, 0.12),
+    0 18px 50px -14px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.6);
+}
+
+/* glossy plastic tiles with a top sheen */
+.node--block {
+  background: linear-gradient(157deg, #3a3f4d 0%, #2a2e39 48%, #20242d 100%);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -14px 26px rgba(0, 0, 0, 0.3),
+    0 14px 30px -12px rgba(0, 0, 0, 0.7),
+    0 0 0 1.5px color-mix(in srgb, var(--accent) 55%, transparent);
+  position: relative;
+}
+.node--block::before {
+  content: "";
+  position: absolute; inset: 0;
+  clip-path: inherit;
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.04) 38%, transparent 60%);
+  pointer-events: none;
+}
+.node--block.is-anchor {
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.28),
+    0 0 0 2.5px var(--accent),
+    0 0 30px color-mix(in srgb, var(--accent) 60%, transparent),
+    0 16px 34px -12px rgba(0, 0, 0, 0.7);
+}
+.node-name { text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45); }
+.node-palette { box-shadow: inset 0 0 0 1px rgba(255,255,255,.25); }
+
+/* frosted-glass flyout */
+.flyout {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(22px) saturate(1.5);
+  -webkit-backdrop-filter: blur(22px) saturate(1.5);
+  border-left: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: -24px 0 60px -20px rgba(0, 0, 0, 0.45);
+}
+.flyout-name { background: linear-gradient(180deg, #1b1f29, #3d4658); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.flyout-palette { box-shadow: inset 0 1px 0 rgba(255,255,255,.6), 0 6px 16px -8px rgba(20,26,40,.5); border: 1px solid rgba(255,255,255,.8); }
+
+/* loading chip */
+.constellation-loading { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.18); backdrop-filter: blur(10px); }
