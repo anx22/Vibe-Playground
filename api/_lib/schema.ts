@@ -30,28 +30,32 @@ export const divergeSchema = z.object({
   ).describe("12–16 deliberately diverse, far, non-canonical donor worlds"),
 });
 
+/** A single bridge — the shared output unit of Engine D and Engine E. */
+export const bridgeShape = z.object({
+  leitwert: z.string().describe("2–4 token compound — the design directive"),
+  worlds: z.array(
+    z.object({
+      name: z.string(),
+      role: z.string().describe("what this world donates"),
+      rhyme: z.string().describe("how its inner logic rhymes with the essence"),
+    }),
+  ),
+  objectMetaphor: z.string().describe("the vessel object grounding the bridge"),
+  creativeDerivation: z.string().describe("1–2 sentences: WHY the rhyme holds — not a scene, not a design instruction"),
+  mood: z.string(),
+  palette: z.array(z.string()).describe("3 hex colors, directional"),
+  domainDistance: z.string().describe("hoch / mittel"),
+  affordances: z.array(z.string()).describe("≥5 concrete, design-actionable affordances"),
+});
+
+/** Just the bridges — what Engine E's compose call emits (essence/forbidden already in hand). */
+export const bridgesSchema = z.object({ bridges: z.array(bridgeShape) });
+
 /** Engine D — Structural Entanglement. One batch: distilled essence, burnt clichés, and bridges. */
 export const entangleSchema = z.object({
   essence: z.string().describe("Wirkstruktur — the topic's relational core, abstract, no surface-domain words"),
   forbidden: z.array(z.string()).describe("the burnt cliché list — hard-excluded design reflexes"),
-  bridges: z.array(
-    z.object({
-      leitwert: z.string().describe("2–4 token compound — the design directive"),
-      worlds: z.array(
-        z.object({
-          name: z.string(),
-          role: z.string().describe("what this world donates"),
-          rhyme: z.string().describe("how its inner logic rhymes with the essence"),
-        }),
-      ),
-      objectMetaphor: z.string().describe("the vessel object grounding the bridge"),
-      creativeDerivation: z.string().describe("1–2 sentences: WHY the rhyme holds — not a scene, not a design instruction"),
-      mood: z.string(),
-      palette: z.array(z.string()).describe("3 hex colors, directional"),
-      domainDistance: z.string().describe("hoch / mittel"),
-      affordances: z.array(z.string()).describe("≥5 concrete, design-actionable affordances"),
-    }),
-  ),
+  bridges: z.array(bridgeShape),
 });
 
 /** Analogy engine: brief's functional core → a distant domain that embodies the SAME core. */

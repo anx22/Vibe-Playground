@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { divergeSchema, entangleSchema } from "./_lib/schema.js";
+import { bridgesSchema, divergeSchema } from "./_lib/schema.js";
 import { cosineDist, embed, genObject, modelFor } from "./_lib/gateway.js";
 import { LATENT_COMPOSE_SYSTEM, LATENT_DIVERGE_SYSTEM } from "./_lib/prompts.js";
 
@@ -43,9 +43,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // Phase 3 — Resonator + Composer + Namer (strong): rhyme filter → bridges.
-    const out = await genObject({
+    const composed = await genObject({
       model: modelFor("strong"),
-      schema: entangleSchema,
+      schema: bridgesSchema,
       system: LATENT_COMPOSE_SYSTEM,
       prompt:
         `ESSENZ: ${diverge.essence}\nVERBOTEN: ${diverge.forbidden.join(", ")}\n` +
@@ -53,7 +53,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         `Komponiere ${n ?? 6} Brücken über VERSCHIEDENE Verhaltens-Zellen.`,
       noCache: true,
     });
-    return res.status(200).json(out);
+    return res.status(200).json({
+      essence: diverge.essence,
+      forbidden: diverge.forbidden,
+      bridges: composed.bridges,
+    });
   } catch (err) {
     return res.status(502).json({ error: String(err) });
   }
