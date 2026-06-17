@@ -12,7 +12,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       leitwert?: string;
       scene?: string;
       mood?: string;
-      tier?: "cheap" | "strong";
+      tier?: "cheap" | "strong" | "premium";
     };
     const out = await genObject({
       model: modelFor(tier ?? "cheap"),
@@ -21,6 +21,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       prompt:
         `Briefing: ${briefing || "(blank slate)"}\n` +
         `Leitwert: ${leitwert}\nSzene: ${scene ?? "—"}\nMood: ${mood ?? "—"}\nBewerte.`,
+      // Strict measurement: never serve a cached score for the premium judge run.
+      noCache: tier === "premium",
     });
     return res.status(200).json(out);
   } catch (err) {
@@ -28,4 +30,4 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 }
 
-export const config = { maxDuration: 30 };
+export const config = { maxDuration: 60 };

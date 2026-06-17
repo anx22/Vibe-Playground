@@ -37,8 +37,8 @@ async function post<T>(path: string, body: unknown, schema: { parse(x: unknown):
   return schema.parse(await res.json());
 }
 
-/** Model tier — `strong` (Sonnet) for the user-facing Studio, `cheap` (Haiku) for Lab evals. */
-export type Tier = "cheap" | "strong";
+/** Model tier — `strong` (Sonnet) for the user-facing Studio, `cheap` (Haiku) for Lab evals, `premium` (Opus) for the strict judge run. */
+export type Tier = "cheap" | "strong" | "premium";
 
 export interface RenderJob {
   leitwert: string;

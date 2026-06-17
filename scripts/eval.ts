@@ -33,6 +33,31 @@ const BRIEFINGS: Briefing[] = [
     label: "Festival",
     text: "Identität für ein Elektronik-Festival in einer alten Industriehalle — laut, roh, körperlich.",
   },
+  {
+    id: "roesterei",
+    label: "Rösterei",
+    text: "Verpackung für eine Spezialitätenkaffee-Rösterei, handwerklich und warm, die sich von Retro-Nostalgie absetzen will.",
+  },
+  {
+    id: "fintech",
+    label: "Fintech",
+    text: "App für eine nachhaltige Pension-Fintech, vertrauenswürdig und ruhig, ohne den üblichen kalten Banken-Look.",
+  },
+  {
+    id: "museum",
+    label: "Museum",
+    text: "Leitsystem für ein archäologisches Museum, das antike Funde mit zeitgenössischer Ausstellungsarchitektur kontrastiert.",
+  },
+  {
+    id: "skincare",
+    label: "Skincare",
+    text: "Marke für eine klinische Skincare-Linie, präzise und minimal, aber nicht steril oder seelenlos.",
+  },
+  {
+    id: "gamestudio",
+    label: "Game-Studio",
+    text: "Identität für ein Indie-Game-Studio, verspielt und experimentell, das Pixel-Nostalgie mit moderner Technik mischt.",
+  },
   { id: "blank", label: "Blank Slate", text: "" },
 ];
 
@@ -41,6 +66,10 @@ const arg = (flag: string, def: number) => {
   return i >= 0 ? Number(process.argv[i + 1]) : def;
 };
 const has = (flag: string) => process.argv.includes(flag);
+const argStr = (flag: string, def: string) => {
+  const i = process.argv.indexOf(flag);
+  return i >= 0 ? String(process.argv[i + 1]) : def;
+};
 
 const vec = (v: AxisVector) =>
   AXES.map((a) => `${a.slice(0, 3)}${v[a] >= 0 ? "+" : ""}${v[a].toFixed(1)}`).join(" ");
@@ -56,6 +85,8 @@ async function main() {
   const useLLM = has("--llm");
   const useJudge = has("--judge");
   const tier: "cheap" | "strong" = has("--strong") ? "strong" : "cheap";
+  // The judge can run on a stronger model than generation — `--judge-tier premium` = Opus.
+  const judgeTier = argStr("--judge-tier", "cheap") as "cheap" | "strong" | "premium";
   const base = process.env.VIBE_API_BASE ?? "";
   if (base) setApiBase(base);
 
@@ -126,7 +157,9 @@ async function main() {
       console.error("  --judge needs a live gateway: set VIBE_API_BASE=https://<app>.vercel.app");
       process.exit(1);
     }
-    console.log(`${"─".repeat(78)}\n  QUALITY (LLM-judge, 1–5, avg across briefings × cards)`);
+    console.log(
+      `${"─".repeat(78)}\n  QUALITY (LLM-judge=${judgeTier}, 1–5, avg across ${BRIEFINGS.length} briefings × cards)`,
+    );
     console.log(`    ${"method".padEnd(18)} coher trig  fit  fresh   overall`);
 
     type Agg = { coh: number; trig: number; fit: number; fresh: number; n: number };
@@ -140,7 +173,7 @@ async function main() {
           try {
             const s = await judge(
               { briefing: b.text, leitwert: c.leitwert, scene: c.scene, mood: c.mood },
-              tier,
+              judgeTier,
             );
             judgeCalls++;
             agg.coh += s.coherence;
@@ -164,7 +197,7 @@ async function main() {
         `    ${mid.padEnd(18)}${f(coh)}${f(trig)}${f(fit)}${f(fresh)}   ${bar(overall, 1, 5)} ${overall.toFixed(2)}`,
       );
     }
-    console.log(`\n  ~${judgeCalls} judge calls (tier=${tier})\n`);
+    console.log(`\n  ~${judgeCalls} judge calls (judge-tier=${judgeTier})\n`);
   }
 }
 
