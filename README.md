@@ -1,86 +1,65 @@
 # Vibe Playground
 
-A **design-direction generator** for professional designers and art directors.
-It produces **Leitwerte** — compressed world-references (e.g. “Editorial-Tech-Atlas”) that
-translate into coherent design output when fed to an LLM. Core job: get from zero to a
-credible design direction, fast.
+A **design-direction generator** for professional designers/art directors. It produces **Leitwerte**
+— compressed world-references (e.g. *Black-Box-Vigilanz*) that translate into coherent, non-cliché
+design output when fed to a design AI. Core job: zero → a credible, *surprising-yet-apt* direction,
+fast.
 
 ## Docs
 
 | Doc | Purpose |
 |-----|---------|
-| [`PROJECT.md`](./PROJECT.md) | Stable facts — architecture, core concept, tech stack |
-| [`KONZEPT.md`](./KONZEPT.md) | Living concept doc (German) |
-| [`DECISIONS.md`](./DECISIONS.md) | Append-only decision log |
-| [`NOW.md`](./NOW.md) | Current goal, next steps, known issues |
-| [`ALT-KONZEPT-ARCHIV.md`](./ALT-KONZEPT-ARCHIV.md) | Legacy Playground 3.0 archive |
+| [`PROJECT.md`](./PROJECT.md) | Stable facts — concept, engines, tech |
+| [`KONZEPT.md`](./KONZEPT.md) | Concept (German) |
+| [`DESIGN.md`](./DESIGN.md) | The constellation UI |
+| [`DECISIONS.md`](./DECISIONS.md) | Decision log |
+| [`NOW.md`](./NOW.md) | Current state, deferred, watch-outs |
+| [`docs/engines/`](./docs/engines) | Engine specs D · E · F |
 
 ## Run
 
 ```bash
 npm install
-npm run dev      # Vite dev server
-npm run build    # typecheck + production build
-npm test         # vitest (Lab harness)
+npm run dev            # Vite dev server (app only; engines need the gateway)
+npm run build          # typecheck + production build
+npm test               # vitest
+npm run typecheck:api  # type-check the serverless functions
+VIBE_API_BASE=https://<app>.vercel.app npm run eval -- --judge   # compare engines on the judge
 ```
 
-## Lab — method framework (open creative space)
+## Engines (one harness)
 
-The Lab (toggle top-right) is the eval harness, built as swappable parts so the creative space
-stays open — **not** hardwired to the C→B→A stack:
+Each engine is a serverless endpoint emitting the shared **bridge contract**; the client maps it via
+`bridgeToCard` into the constellation. Adding one = **1 endpoint + 1 client fn + 1 `Source` entry**.
 
-```
-WorldSource  →  MixStrategy  →  Renderer        (one wiring = one "Method")
-curated (A)     bridge (A)       template (offline)
-llm-seed (B)    distance+λ (B)   llm-scene (E-028, needs key)
-persona (C)     triad / contrast / …
-```
+- **D · Verschränkung** (`api/entangle`) — essence → burn clichés → far-but-rhyming worlds → bridge.
+- **E · Latent-Agent** (`api/latent`) — LLM leaps; **embeddings measure "far"** (percentile rank).
+- **F · Werkbank** (`api/workbench`) — Volume→Filter→Curation; over-generate, cut ⅔, taste-directions.
+- **Persona** (`api/persona`) — a fictional originator.
 
-Add a new mixing idea, world source, or composition as a registry entry in `src/lab/methods.ts` —
-single engines, 2-/3-/N-way blends and experiments all show side by side, each scored on
-**coherence · diversity · novelty**. LLM-gated methods activate via the "LLM aktiv" toggle once the
-gateway proxy is reachable. Briefings drive the run (offline keyword stand-in for the LLM
-orchestration, E-026).
+No invented axes in generation. Quality via the **LLM-judge** (on-target × surprise × craft):
+judge-select in the Studio, `--judge` in the eval.
 
-## LLM layer — Vercel AI Gateway (E-029)
+## LLM layer — Vercel AI Gateway
 
-One key for every model, **no per-provider token management**. A thin serverless proxy (`api/`) holds
-the key and talks to the gateway via the AI SDK; the key is **never client-side**.
+One key for every model, no per-provider tokens. A thin proxy (`api/`) holds the key (never
+client-side; `VERCEL_OIDC_TOKEN` injected on Vercel). `MODELS` tiers: cheap=Haiku, strong=Sonnet,
+premium=Opus (judge only). `caching:'auto'` + per-instance cache + model failover.
 
-```
-src/llm/      schema (zod, shared) · client (fetchers, graceful offline fallback)
-api/          health · interpret (briefing→axes, E-034) · render (scene, E-028) · seeds · persona · batch
-api/_lib/     gateway (model registry · caching:'auto' · model fallbacks · in-instance cache) · prompts
-```
-
-- **Caching:** `providerOptions.gateway.caching: 'auto'` adds Anthropic `cache_control` automatically;
-  plus a per-instance response cache. Token-level savings come from the gateway.
-- **Model management:** `MODELS` registry (cheap = Haiku, strong = Sonnet, premium = Opus) with
-  per-model failover (`gateway.models`) and `sort: 'cost'` — swap a role in one place.
-- **Batch:** `api/batch` fans out renders with a concurrency limit. (The async 50%-off Anthropic
-  Batch API needs a direct key + polling; left as a future BYOK adapter — same interface.)
-
-**Run locally with LLM:** set `AI_GATEWAY_API_KEY` in `.env.local`, then `vercel dev` (plain `vite`
-serves the app; the offline methods work without any key). On Vercel, `VERCEL_OIDC_TOKEN` is injected
-automatically — no key to manage.
-
-## Status
-
-First slice of the Studio is live: **Vite + React + TypeScript**, client-side only — no backend,
-no auth, in-memory state. Engine A (`src/engine/`) runs combinatorially behind the shared `Engine`
-interface (no real LLM yet). The Studio implements the blank-slate → Explore → live-reflow Steer →
-Iterate → Commit loop with the live Pentagon, Vibe Cards, and the Speed-to-Direction tacho.
-See `DESIGN.md` for the interface concept and `NOW.md` for the current focus.
-
-### Layout
+## Layout
 
 ```
 src/
-  engine/      types · axes · pools · derive (palette/typo/mood) · engineA · index (registry)
-  lab/         method framework (WorldSource·MixStrategy·Renderer) · mix · sources · render
-               · metrics · runner · methods (registry) · lab.test.ts
-  store/       useVibeStore (zustand) — signals → centroid/spread, live-reflow, view toggle
-  hooks/       useTweenVector — the pentagon's spring
-  components/  Pentagon · VibeCard · Collapser · Tacho · Lab
-  App.tsx      Studio loop + Library drawer + Lab view
+  engine/      types · axes · derive (palette/typo) · pools (fonts + lexicon) · index
+  llm/         schema (zod, shared) · client (fetchers) · select (judge-rank)
+  store/       useVibeStore (zustand) — SOURCES registry, anchors, explore/iterate
+  components/  Constellation (the canvas) · ExportModal
+  export.ts    block → ready design-brief prompt
+api/           entangle · latent · workbench · persona · judge · interpret · health
+  _lib/        gateway (tiers · caching · embed · cosineDist) · prompts · schema
+scripts/eval.ts   headless engine comparison on the judge
 ```
+
+## Deploy
+
+Claude → GitHub → Vercel. Production builds from `main` (`vercel.json`: pinned install, `dist`).

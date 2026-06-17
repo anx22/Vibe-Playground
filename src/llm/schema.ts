@@ -48,18 +48,6 @@ export const workbenchCandidateSchema = bridgeSchema.extend({
 export const workbenchSchema = z.object({ candidates: z.array(workbenchCandidateSchema) });
 export type WorkbenchCandidate = z.infer<typeof workbenchCandidateSchema>;
 
-/** A single design direction from the Analogy Engine (the new core). */
-export const directionSchema = z.object({
-  leitwert: z.string(),
-  world: z.string(),
-  core: z.string(),
-  scene: z.string(),
-  mood: z.string(),
-  vector: axisVectorSchema,
-});
-export const analogySchema = z.object({ directions: z.array(directionSchema) });
-export type Direction = z.infer<typeof directionSchema>;
-
 /** Quality judgement: on-target × surprise × craft (would a senior AD pitch it to THIS client?). */
 export const judgeSchema = z.object({
   onTarget: z.number().min(1).max(5),

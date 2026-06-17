@@ -1,11 +1,9 @@
 import {
-  analogySchema,
   axisVectorSchema,
   entangleSchema,
   judgeSchema,
   personaSchema,
   workbenchSchema,
-  type Direction,
   type Entangle,
   type JudgeScore,
   type Persona,
@@ -43,16 +41,6 @@ export type Tier = "cheap" | "strong" | "premium";
 
 export const generatePersona = (input: { briefing: string; tier?: Tier }): Promise<Persona> =>
   post("/api/persona", input, personaSchema);
-
-/**
- * Analogy Engine (the new core, E-046): briefing → functional core → distant domains that embody
- * the SAME core → N Leitwerte. On-target and surprising at once. One call returns the whole round.
- */
-export const generateAnalogies = (input: {
-  briefing: string;
-  n?: number;
-  tier?: Tier;
-}): Promise<Direction[]> => post("/api/analogy", input, analogySchema).then((r) => r.directions);
 
 /**
  * Engine D — Structural Entanglement (ENGINE-D-SPEC). Distill essence → burn clichés → far-but-

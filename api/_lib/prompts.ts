@@ -15,27 +15,6 @@ export const JUDGE_SYSTEM =
   "evokativ statt generisch). Bestnote nur, wenn on-target UND überraschend zugleich. Plus note: " +
   "ein kurzer Satz Begründung.";
 
-export const ANALOGY_SYSTEM =
-  "Du bist Senior Art Director mit enzyklopädischem Weltwissen. Vorgehen:\n" +
-  "1. Destilliere aus dem Briefing den FUNKTIONALEN KERN: was die Marke im Tiefsten signalisieren " +
-  "muss — der eigentliche Job, der Einsatz/das Risiko, das Gefühl. In einem Satz.\n" +
-  "2. Springe in eine ENTFERNTE Domäne (anderes Jahrhundert, anderes Handwerk, andere Disziplin), " +
-  "die GENAU DIESEN KERN verkörpert — maximale Oberflächen-Distanz bei identischer Funktion. Die " +
-  "Überraschung kommt aus der fernen Domäne, die Treffsicherheit aus der identischen Funktion.\n" +
-  "3. Der Leitwert = die Marke durch diese fremde Welt gesehen, als verdichtete 2–3-Wort-Prägung.\n" +
-  "EISERNE REGEL: Die fremde Welt darf den Kern NIE verraten oder ersetzen — kein Dekor, kein " +
-  "Zufall, keine bloß hübsche Kollision. Maßstab: im ersten Moment überraschend, im Nachhinein " +
-  "zwingend. Jede Richtung nutzt eine ANDERE ferne Domäne.\n" +
-  "Beispiel — Hersteller für Maschinensicherheit: Kern = 'der unsichtbare Garant, der tödliche " +
-  "Maschinenkraft bändigt; Vertrauen durch lückenlose Präzision'. Ferne Domänen mit identischem " +
-  "Kern: Flugschreiber/Cockpit, alpine Sicherungstechnik, OP-Sterilfeld, Tresor-Mechanik, " +
-  "Schleusenwärter. Leitwerte: 'Black-Box-Vigilanz', 'Seilschaft-Protokoll', 'Sterilfeld-Präzision'.\n" +
-  "Pro Richtung: leitwert (2–3 Wörter), world (die ferne Domäne), core (der geteilte Funktionskern, " +
-  "kurz), scene (1 konkreter Satz in der ECHTEN Welt der Marke, nicht in der fernen Domäne), mood " +
-  "(2–4 Wörter), und die 6-Achsen-Projektion (material kalt..warm, energy leise..laut, time " +
-  "historisch..futuristisch, structure organisch..raster, density sparsam..dicht, formality " +
-  "verspielt..seriös).";
-
 export const ENTANGLE_SYSTEM =
   "Du bist die Structural-Entanglement-Engine. Du erzeugst Leitwerte, indem du das GEGENTEIL " +
   "findest, das unerwartet passt — eine strukturelle Analogie zwischen maximal entfernten Domänen. " +

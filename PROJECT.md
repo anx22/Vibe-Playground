@@ -1,102 +1,59 @@
 # PROJECT.md — Vibe Playground
 
-> Stable facts. Do not encode transient chat history. Update when architecture changes.
+> Stable facts. No chat history. Update when architecture changes.
 
-## What This Is
+## What this is
 
-A **design-direction generator** for professional designers and art directors.
-It produces **Leitwerte** (compressed world-references like “Editorial-Tech-Atlas”) that reliably translate into coherent design output when fed to an LLM.
-Core job: get from zero to a credible design direction, fast.
+A **design-direction generator** for professional designers/art directors. It produces
+**Leitwerte** — compressed world-references (e.g. *Black-Box-Vigilanz*) that translate into
+coherent, non-cliché design output when fed to a design AI. Core job: zero → a credible,
+*surprising-yet-apt* direction, fast.
 
-## The Core Concept
+## The core idea
 
-### Leitwert Anatomy
+A Leitwert names **the opposite that unexpectedly fits**: the brief's deep structure (Wirkstruktur)
+leapt into a far-off domain that *rhymes* with it. Surprise comes from **domain distance**, aptness
+from **structural resonance** — decoupled, so both maximize at once. Two non-negotiables:
 
-A Leitwert is NOT a style label — it’s a **collision of two worlds + a grounding object metaphor**:
+- **No invented axes in generation.** Coordinates flatten analogy and breed cliché. Coherence comes
+  from one distilled essence, not a shared coordinate. (Axes may live only in measurement/steering.)
+- **Leitwert (directive) ≠ Creative Derivation (why it holds).** Never blur them — that prevents the
+  "decorative scene as if it were a spec" failure (the *Eisblumen* trap).
 
-- `[Home world] × [Intrusion] → [Object metaphor]` → e.g. “Editorial-Tech-Atlas”
-- The collision creates tension; the shared axis between the two worlds makes it coherent (not noise).
+## The engines (each a creative derivation; one harness)
 
-### Vibe Space (5 axes, each –1..1)
+| Engine | Principle | Cost |
+|---|---|---|
+| **D · Verschränkung** | essence → burn clichés → far-but-rhyming worlds → affordance≥5 → bridge → name. One call. | fast |
+| **E · Latent-Agent** | LLM leaps; **real embeddings measure "far"** (percentile rank). Diverge → embed/rank → resonate. | slow (2 calls + embed) |
+| **F · Werkbank** | Volume→Filter→Curation: wide field × operators, over-generate 3× / cut ⅔, cluster into orthogonal taste-directions. | fastest, pure prompt |
+| **Persona** | a fictional originator whose aesthetic falls out as the vibe. | fast |
 
-|Key      |–1              |+1          |
-|---------|----------------|------------|
-|material |cold/synthetic  |warm/organic|
-|energy   |quiet/restrained|loud/raw    |
-|time     |historic        |futuristic  |
-|structure|organic         |grid/system |
-|density  |sparse          |dense       |
+Detailed specs: [`docs/engines/`](./docs/engines). Adding a method = **1 endpoint + 1 client fn +
+1 `Source` entry**; the bridge contract, card mapping and constellation are shared.
 
-### Coherence Rule
+## Interface — the constellation
 
-Two worlds may only collide if they **share at least one axis sign**. Shared value = bridge. No shared axis = incoherent noise.
+The **Leitidee** (briefing) sits at the center; each engine forms its own accent-coded **cluster**
+around it. Up to **5 gold anchors** pull into a ring near the center and gravitate the next wave
+(center stays). Click a block → flyout (worlds + rhyme, object, derivation, affordances, palette) →
+**anchor** or **copy/export** as a ready design-brief prompt. The control primitive is the anchor;
+all feedback resolves there.
 
-## Three Engines (all produce Leitwerte, different coherence principles)
+## Quality measurement
 
-|Engine          |Principle                                                                       |Status                             |
-|----------------|--------------------------------------------------------------------------------|-----------------------------------|
-|A · Grammar     |Curated pools + bridge rule (≥1–2 shared axes)                                  |✅ Implemented (client-side)        |
-|B · Latent-Space|Cosine distance bands (0.4–0.7 = tension), λ-interpolation, novelty filter      |🟡 Simulated, no real embeddings yet|
-|C · Author      |Fictional persona (origin × client × quirk); coherence via narrative consistency|🟡 Simulated                        |
+An **LLM-judge** scores each block (on-target × surprise × craft) and selects the strongest per
+cluster (judge-select). Headless eval: `npm run eval -- --judge [--judge-tier premium]` compares
+engines on the same briefings; Opus is the strict grader. Human verdict is primary.
 
-**Stacking plan (future):** C seeds → B ensures distance/novelty → A pools act as safety net.
+## Tech
 
-## Control Primitive (single, app-wide)
+- **Vite + React + TS**, client-side; **Framer-Motion** for the constellation.
+- **Vercel AI Gateway** via a thin `api/` serverless proxy (key never client-side; OIDC on Vercel).
+  Model tiers: cheap=Haiku, strong=Sonnet, premium=Opus (judge only).
+- **Deploy chain:** Claude → GitHub → Vercel. Production builds from `main`.
 
-Everything collapses into **attract (+) / repel (−)**:
+## Reference docs
 
-- Typed goal word = attract
-- Typed exclusion = repel
-- 👍 on a card = attract
-- 👎 on a card = repel
-  All signals bias the axis-space sampling. No other input type needed.
-
-## User Flow
-
-`Explore → Steer → Iterate → Commit`
-
-1. Optional context input (theme word) or blank slate — both valid
-1. Explore: max spread batch (novelty logic)
-1. Steer: attract/repel signals accumulate
-1. Iterate: re-generate, narrower
-1. Commit: keep one direction → Library
-
-## Two Faces of the App
-
-- **Studio** — user-facing generation loop
-- **Lab** — internal eval harness (us); batch runs, quality assessment, pool tuning
-
-## Simple / Advanced Mode (app-wide toggle)
-
-- **Simple:** engine hidden, clean loop only
-- **Advanced:** engine lens (A/B/C), axis controls, distance band, λ, temperature, Lab access
-
-## Minimum Output per Direction (Vibe Card)
-
-**The vibe is the deliverable** — the Leitwert/scene is the product; the rest is co-generated and additive (E-024).
-
-Floor (E-027):
-- Leitwert (the evocative world-collision)
-- Mood modifier
-- Typography trio: Display font / Body font / Data font (with roles)
-
-Additive (generated, not part of the floor):
-- 3-tone palette derived from axis vector
-
-## Primary User
-
-Professional designers / art directors. High standards, want control + speed. Advanced mode is core for them, not a niche feature.
-
-## Tech Stack (current)
-
-- React + TypeScript (Vite), client-side only
-- No backend, no auth, no persistence (in-memory)
-- Engines run combinatorially (Engine A); the LLM layer (scene-render + B/C) is planned via a thin gateway proxy — key never client-side
-- App + Lab method framework live in `src/` (see `README.md`)
-
-## Reference Docs
-
-- `KONZEPT.md` — full living concept doc (German)
-- `DECISIONS.md` — append-only decision log
-- `NOW.md` — current goal, next steps, known issues
-- `ALT-KONZEPT-ARCHIV.md` — legacy Playground 3.0 archive (salvage candidates)
+`README.md` (run + layout) · `KONZEPT.md` (concept) · `DESIGN.md` (UI) · `DECISIONS.md` (decisions) ·
+`NOW.md` (state) · `docs/engines/` (engine specs D/E/F).

@@ -69,20 +69,6 @@ export const entangleSchema = z.object({
   bridges: z.array(bridgeShape),
 });
 
-/** Analogy engine: brief's functional core → a distant domain that embodies the SAME core. */
-export const analogySchema = z.object({
-  directions: z.array(
-    z.object({
-      leitwert: z.string().describe("2–3 word compound — the brand seen through the distant world"),
-      world: z.string().describe("the distant reference domain (aviation, surgery, alpine safety …)"),
-      core: z.string().describe("the shared functional core, short — why the far world fits exactly"),
-      scene: z.string().describe("one concrete sentence set in the brand's REAL world, not the far one"),
-      mood: z.string().describe("2–4 words"),
-      vector: axisVectorSchema,
-    }),
-  ),
-});
-
 /** Quality judgement of one direction against the briefing (on-target × non-obvious). */
 export const judgeSchema = z.object({
   onTarget: z.number().min(1).max(5).describe("Würde ein Senior-AD das DIESEM Kunden hinlegen? Trifft es den Kern?"),
