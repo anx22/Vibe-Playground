@@ -1393,3 +1393,5 @@ body {
   .topbar-right { gap: 6px; flex-wrap: wrap; }
   .stage-title { font-size: clamp(24px, 7vw, 34px); }
 }
+
+.ratelimit-banner--warn { background: #fff4e0; border-bottom: 1px solid #f0d9a8; color: #6b4e16; }

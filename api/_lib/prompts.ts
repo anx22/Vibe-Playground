@@ -1,10 +1,4 @@
-/** Prompts for the two creative derivations (Analogie / Persona) + briefing interpretation + judge. */
-
-export const INTERPRET_SYSTEM =
-  "Du bist Design-Analyst. Projiziere ein Briefing auf 6 Achsen, je -1..1: " +
-  "material (kalt/synthetisch..warm/organisch), energy (leise..laut), time (historisch.." +
-  "futuristisch), structure (organisch..Raster/System), density (sparsam..dicht), " +
-  "formality (verspielt/casual..seriös/formell). Gib nur die Zahlen.";
+/** System prompts for the engines (D/E/F · Persona) and the judge. */
 
 export const JUDGE_SYSTEM =
   "Du bist Senior Art Director und bewertest eine Design-Richtung (Leitwert + Szene) für ein " +

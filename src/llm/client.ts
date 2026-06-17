@@ -1,5 +1,4 @@
 import {
-  axisVectorSchema,
   entangleSchema,
   judgeSchema,
   personaListSchema,
@@ -9,7 +8,6 @@ import {
   type Persona,
   type WorkbenchCandidate,
 } from "./schema";
-import type { AxisVector } from "../engine";
 
 /**
  * Client-side fetchers. They call our serverless proxy (api/), which holds the
@@ -75,15 +73,7 @@ export const generateWorkbench = (input: {
 }): Promise<WorkbenchCandidate[]> =>
   post("/api/workbench", input, workbenchSchema).then((r) => r.candidates);
 
-/** Briefing → axis vector via the LLM (E-026), so the briefing actually steers the structure. */
-export const interpretBriefing = (briefing: string, tier: Tier = "cheap"): Promise<AxisVector> =>
-  post("/api/interpret", { briefing, tier }, axisVectorSchema) as Promise<AxisVector>;
-
-/**
- * LLM quality judge — scores one direction against the briefing (1..5 on coherence/trigger/
- * fit/freshness). This is the eval's fitness function: it lets us measure whether a method's
- * output is actually good, not just structurally diverse.
- */
+/** LLM quality judge — scores one direction against the briefing (on-target × surprise × craft). */
 export const judge = (
   input: { briefing: string; leitwert: string; scene?: string; mood: string },
   tier: Tier = "cheap",

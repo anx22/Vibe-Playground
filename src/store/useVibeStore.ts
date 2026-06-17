@@ -11,8 +11,11 @@ import { judgeRank } from "../llm/select";
 const PER_METHOD = 5;
 const OVERSCAN = PER_METHOD + 1;
 const MAX_ANCHORS = 5;
+// Session-unique prefix so cards minted this session can never collide with persisted cards/anchors
+// rehydrated from a previous one (which restart their own counter at 0). Fixes a dup-key/anchor bug.
+const SID = Math.random().toString(36).slice(2, 8);
 let idSeq = 0;
-const nextId = (source: string) => `${source}-${idSeq++}`;
+const nextId = (source: string) => `${source}-${SID}-${idSeq++}`;
 const rng = () => Math.random();
 
 const HEX = /^#?[0-9a-fA-F]{3,8}$/;
@@ -130,20 +133,23 @@ function gravityText(anchors: VibeCard[]): string {
 async function generateField(
   briefing: string,
   steer: string,
-): Promise<{ cards: VibeCard[]; ok: boolean }> {
+): Promise<{ cards: VibeCard[]; ok: boolean; failed: string[] }> {
+  const failed: string[] = [];
   const clusters = await Promise.all(
     SOURCES.map(async (src) => {
       try {
         const cards = await src.gen(briefing, steer, OVERSCAN);
         const ranked = await judgeRank(cards, briefing);
         return ranked.slice(0, PER_METHOD);
-      } catch {
+      } catch (e) {
+        failed.push(src.label);
+        console.warn(`[${src.id}] generation failed`, e);
         return [] as VibeCard[];
       }
     }),
   );
   const flat = clusters.flat();
-  return { cards: flat, ok: flat.length > 0 };
+  return { cards: flat, ok: flat.length > 0, failed };
 }
 
 interface VibeState {
@@ -155,6 +161,8 @@ interface VibeState {
   generation: number;
   loading: boolean;
   llmFallback: boolean;
+  /** Engine cluster labels that failed in the last round (empty when all succeeded). */
+  failedSources: string[];
 
   setSeed: (w: string) => void;
   explore: () => Promise<void>;
@@ -175,21 +183,22 @@ export const useVibeStore = create<VibeState>()(
       generation: 0,
       loading: false,
       llmFallback: false,
+      failedSources: [],
 
       setSeed: (w) => set({ seed: w }),
 
       explore: async () => {
         const briefing = get().seed;
-        set({ phase: "studio", cards: [], anchors: [], focusId: null, generation: 1, loading: true });
-        const { cards, ok } = await generateField(briefing, "");
-        set({ cards, loading: false, llmFallback: !ok });
+        set({ phase: "studio", cards: [], anchors: [], focusId: null, generation: 1, loading: true, failedSources: [] });
+        const { cards, ok, failed } = await generateField(briefing, "");
+        set({ cards, loading: false, llmFallback: !ok, failedSources: failed });
       },
 
       iterate: async () => {
         const { seed, anchors, generation } = get();
         set({ loading: true });
-        const { cards, ok } = await generateField(seed, gravityText(anchors));
-        set({ cards, focusId: null, generation: generation + 1, loading: false, llmFallback: !ok });
+        const { cards, ok, failed } = await generateField(seed, gravityText(anchors));
+        set({ cards, focusId: null, generation: generation + 1, loading: false, llmFallback: !ok, failedSources: failed });
       },
 
       toggleAnchor: (c) => {
@@ -202,7 +211,7 @@ export const useVibeStore = create<VibeState>()(
       focus: (id) => set({ focusId: id }),
 
       reset: () =>
-        set({ phase: "blank", seed: "", cards: [], anchors: [], focusId: null, generation: 0, loading: false }),
+        set({ phase: "blank", seed: "", cards: [], anchors: [], focusId: null, generation: 0, loading: false, failedSources: [] }),
     }),
     {
       name: "vibe-playground",

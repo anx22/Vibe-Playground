@@ -40,6 +40,12 @@ export default function App() {
         </div>
       )}
 
+      {s.phase === "studio" && !s.llmFallback && s.failedSources.length > 0 && !s.loading && (
+        <div className="ratelimit-banner ratelimit-banner--warn">
+          <span><b>{s.failedSources.join(", ")}</b> {s.failedSources.length > 1 ? "lieferten" : "lieferte"} diese Runde nichts — die anderen Cluster stehen.</span>
+        </div>
+      )}
+
       {s.phase === "blank" ? (
         <main className="stage">
           <div className="stage-hero">

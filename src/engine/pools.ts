@@ -37,23 +37,3 @@ export const DATA_FONTS: FontDef[] = [
   { name: "JetBrains Mono", family: "'JetBrains Mono', monospace", vector: v(-0.6, 0.1, 0.6, 0.6, 0.3, 0.1) },
   { name: "Spline Sans Mono", family: "'Spline Sans Mono', monospace", vector: v(-0.2, 0.2, 0.4, 0.4, 0.0, 0.0) },
 ];
-
-/** Fallback keyword → axis bias, so a briefing still tilts the hexagon when the LLM is offline. */
-export const LEXICON: Record<string, Partial<AxisVector>> = {
-  tech: { time: 0.7, material: -0.6, structure: 0.5 },
-  editorial: { structure: 0.6, density: 0.3, energy: -0.3, formality: 0.4 },
-  natur: { material: 0.8, structure: -0.6 },
-  organisch: { material: 0.8, structure: -0.6 },
-  brutal: { energy: 0.8, material: -0.5, density: 0.6 },
-  retro: { time: -0.7 },
-  vintage: { time: -0.7, material: 0.3 },
-  minimal: { density: -0.7, energy: -0.5 },
-  laut: { energy: 0.8 },
-  ruhig: { energy: -0.7 },
-  futuristisch: { time: 0.8 },
-  warm: { material: 0.7 },
-  dicht: { density: 0.8 },
-  seriös: { formality: 0.7 },
-  verspielt: { formality: -0.7 },
-  formell: { formality: 0.8 },
-};

@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { bridgesSchema, divergeSchema } from "./_lib/schema.js";
 import { cosineDist, embed, genObject, modelFor } from "./_lib/gateway.js";
 import { LATENT_COMPOSE_SYSTEM, LATENT_DIVERGE_SYSTEM } from "./_lib/prompts.js";
+import { clampN, clampStr } from "./_lib/guard.js";
 
 /**
  * Engine E — Latent Agent (ENGINE-E-SPEC, Tier-0). The honest split: the LLM makes the analogical
@@ -14,8 +15,10 @@ import { LATENT_COMPOSE_SYSTEM, LATENT_DIVERGE_SYSTEM } from "./_lib/prompts.js"
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
   try {
-    const { briefing, n, steer } = (req.body ?? {}) as { briefing?: string; n?: number; steer?: string };
-    const ctx = briefing?.trim()
+    const briefing = clampStr(req.body?.briefing);
+    const steer = clampStr(req.body?.steer);
+    const n = clampN(req.body?.n);
+    const ctx = briefing.trim()
       ? briefing
       : "(blank slate — wähle diverse, weit gestreute Essenzen aus unverwandten Lebensdomänen)";
 
@@ -24,7 +27,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       model: modelFor("strong"),
       schema: divergeSchema,
       system: LATENT_DIVERGE_SYSTEM,
-      prompt: `Thema/Briefing: ${ctx}.${steer ?? ""}\nLiefere essence, forbidden[] und 14 weit gestreute Spender-Welten.`,
+      prompt: `Thema/Briefing: ${ctx}.${steer}\nLiefere essence, forbidden[] und 14 weit gestreute Spender-Welten.`,
       noCache: true,
     });
 
@@ -42,8 +45,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         // Keep the far ~55% by RANK (robust to tied distances), never fewer than 4.
         const keep = Math.max(4, Math.round(scored.length * 0.55));
         if (scored.length) shortlist = scored.slice(0, keep).map((s) => s.d);
-      } catch {
-        /* embeddings unavailable → fall back to the full donor field */
+      } catch (e) {
+        // embeddings unavailable → fall back to the full donor field (the "measure far" stage is a no-op)
+        console.log("[latent] embed unavailable, using full donor field:", String(e));
       }
     }
 
@@ -55,7 +59,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       prompt:
         `ESSENZ: ${diverge.essence}\nVERBOTEN: ${diverge.forbidden.join(", ")}\n` +
         `Gemessen-FERNE Spender-Welten:\n${shortlist.map((d) => `- ${d.world}: ${d.gist}`).join("\n")}\n` +
-        `Komponiere ${n ?? 6} Brücken über VERSCHIEDENE Verhaltens-Zellen.`,
+        `Komponiere ${n} Brücken über VERSCHIEDENE Verhaltens-Zellen.`,
       noCache: true,
     });
     return res.status(200).json({

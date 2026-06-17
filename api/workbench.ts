@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { workbenchSchema } from "./_lib/schema.js";
 import { genObject, modelFor } from "./_lib/gateway.js";
 import { WORKBENCH_SYSTEM } from "./_lib/prompts.js";
+import { clampN, clampStr } from "./_lib/guard.js";
 
 /**
  * Engine F — Technique Workbench (ENGINE-F-SPEC). The fast, pure-prompt engine: Volume → Filter →
@@ -11,8 +12,10 @@ import { WORKBENCH_SYSTEM } from "./_lib/prompts.js";
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
   try {
-    const { briefing, n, steer } = (req.body ?? {}) as { briefing?: string; n?: number; steer?: string };
-    const ctx = briefing?.trim()
+    const briefing = clampStr(req.body?.briefing);
+    const steer = clampStr(req.body?.steer);
+    const n = clampN(req.body?.n);
+    const ctx = briefing.trim()
       ? briefing
       : "(blank slate — wähle ein starkes Strategie-Profil und ein weit gestreutes Feld selbst)";
     const out = await genObject({
@@ -20,8 +23,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       schema: workbenchSchema,
       system: WORKBENCH_SYSTEM,
       prompt:
-        `Briefing: ${ctx}.${steer ?? ""}\n` +
-        `Über-generiere intern (≥3×), eliminiere ≥⅔, und gib ${n ?? 6} kuratierte Kandidaten über ` +
+        `Briefing: ${ctx}.${steer}\n` +
+        `Über-generiere intern (≥3×), eliminiere ≥⅔, und gib ${n} kuratierte Kandidaten über ` +
         `3–4 orthogonale Geschmacksrichtungen zurück.`,
       noCache: true,
     });

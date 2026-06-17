@@ -51,24 +51,3 @@ export function dist(a: AxisVector, b: AxisVector): number {
   return Math.sqrt(s);
 }
 
-/** Axes where both vectors are decisive and agree in sign — the bridge (E-003). */
-export function sharedSigns(a: AxisVector, b: AxisVector, th = 0.15): AxisKey[] {
-  return AXES.filter(
-    (ax) =>
-      Math.abs(a[ax]) > th &&
-      Math.abs(b[ax]) > th &&
-      Math.sign(a[ax]) === Math.sign(b[ax]),
-  );
-}
-
-/** Deterministic, seedable PRNG (mulberry32) — Lab needs reproducible batches. */
-export function mulberry32(seed: number): () => number {
-  let a = seed >>> 0;
-  return () => {
-    a |= 0;
-    a = (a + 0x6d2b79f5) | 0;
-    let t = Math.imul(a ^ (a >>> 15), 1 | a);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
