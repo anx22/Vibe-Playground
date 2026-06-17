@@ -39,6 +39,15 @@ export const entangleSchema = z.object({
 export type Bridge = z.infer<typeof bridgeSchema>;
 export type Entangle = z.infer<typeof entangleSchema>;
 
+/** Engine F — Technique Workbench: a bridge plus its taste-direction + pots used. */
+export const workbenchCandidateSchema = bridgeSchema.extend({
+  tasteDirection: z.string(),
+  operators: z.array(z.string()),
+  comfortRating: z.string(),
+});
+export const workbenchSchema = z.object({ candidates: z.array(workbenchCandidateSchema) });
+export type WorkbenchCandidate = z.infer<typeof workbenchCandidateSchema>;
+
 /** A single design direction from the Analogy Engine (the new core). */
 export const directionSchema = z.object({
   leitwert: z.string(),

@@ -51,6 +51,17 @@ export const bridgeShape = z.object({
 /** Just the bridges — what Engine E's compose call emits (essence/forbidden already in hand). */
 export const bridgesSchema = z.object({ bridges: z.array(bridgeShape) });
 
+/** Engine F — Technique Workbench. Curated survivors, each tagged with its taste-direction + pots. */
+export const workbenchSchema = z.object({
+  candidates: z.array(
+    bridgeShape.extend({
+      tasteDirection: z.string().describe("one of 3–4 ORTHOGONAL taste-direction labels"),
+      operators: z.array(z.string()).describe("which pots/chains produced it"),
+      comfortRating: z.string().describe("sicher … unbequem (Placek comfort-test)"),
+    }),
+  ),
+});
+
 /** Engine D — Structural Entanglement. One batch: distilled essence, burnt clichés, and bridges. */
 export const entangleSchema = z.object({
   essence: z.string().describe("Wirkstruktur — the topic's relational core, abstract, no surface-domain words"),

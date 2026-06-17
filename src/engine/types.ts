@@ -30,6 +30,9 @@ export interface VibeCard {
     object?: string;
     derivation?: string;
     affordances?: string[];
+    /** Engine F: the orthogonal taste-direction this candidate belongs to, and the pots used. */
+    tasteDirection?: string;
+    operators?: string[];
   };
   /** LLM-judge score (1..5 each + overall), attached by the judge-select step (E-041). */
   quality?: Quality;

@@ -164,9 +164,12 @@ function FocusFlyout({
       style={{ ["--accent" as string]: accentOf(card.source) } as CSSProperties}
     >
       <button className="flyout-x" onClick={() => focus(null)} aria-label="schließen">✕</button>
-      <div className="flyout-src">{SOURCES.find((s) => s.id === card.source)?.label}</div>
+      <div className="flyout-src">
+        {SOURCES.find((s) => s.id === card.source)?.label}
+        {d?.tasteDirection ? ` · ${d.tasteDirection}` : ""}
+      </div>
       <h2 className="flyout-name">{card.leitwert}</h2>
-      <div className="flyout-mood">{card.mood}</div>
+      <div className="flyout-mood">{card.mood}{d?.operators?.length ? ` · ${d.operators.join(" + ")}` : ""}</div>
 
       <div className="flyout-palette">
         {card.palette.map((c, i) => (

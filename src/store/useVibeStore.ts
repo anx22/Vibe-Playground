@@ -3,8 +3,8 @@ import { persist } from "zustand/middleware";
 import { zero } from "../engine";
 import type { VibeCard } from "../engine";
 import { paletteFor, typoFor } from "../engine/derive";
-import { generateBridges, generateLatent, generatePersona } from "../llm/client";
-import type { Bridge, Persona } from "../llm/schema";
+import { generateBridges, generateLatent, generatePersona, generateWorkbench } from "../llm/client";
+import type { Bridge, Persona, WorkbenchCandidate } from "../llm/schema";
 import { judgeRank } from "../llm/select";
 
 /** Per method we generate a few extra and judge-select the strongest into the cluster (E-041). */
@@ -61,6 +61,12 @@ function personaToCard(p: Persona, source: string): VibeCard {
   };
 }
 
+function candidateToCard(c: WorkbenchCandidate, source: string): VibeCard {
+  const card = bridgeToCard(c, source);
+  card.detail = { ...card.detail, tasteDirection: c.tasteDirection, operators: c.operators };
+  return card;
+}
+
 /** The creative derivations, each its own constellation cluster (E-047). Pluggable — add a source here. */
 export interface Source {
   id: string;
@@ -78,6 +84,13 @@ export const SOURCES: Source[] = [
       (await generateBridges({ briefing, steer, n, tier: "strong" })).bridges.map((b) =>
         bridgeToCard(b, "entanglement"),
       ),
+  },
+  {
+    id: "workbench",
+    label: "Werkbank",
+    accent: "#C77DFF",
+    gen: async (briefing, steer, n) =>
+      (await generateWorkbench({ briefing, steer, n })).map((c) => candidateToCard(c, "workbench")),
   },
   {
     id: "latent",

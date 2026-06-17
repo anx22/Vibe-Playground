@@ -4,10 +4,12 @@ import {
   entangleSchema,
   judgeSchema,
   personaSchema,
+  workbenchSchema,
   type Direction,
   type Entangle,
   type JudgeScore,
   type Persona,
+  type WorkbenchCandidate,
 } from "./schema";
 import type { AxisVector } from "../engine";
 
@@ -72,6 +74,17 @@ export const generateLatent = (input: {
   n?: number;
   steer?: string;
 }): Promise<Entangle> => post("/api/latent", input, entangleSchema);
+
+/**
+ * Engine F — Technique Workbench (ENGINE-F-SPEC). Fast, pure-prompt Volume → Filter → Curation;
+ * returns curated candidates clustered into orthogonal taste-directions. The speed path.
+ */
+export const generateWorkbench = (input: {
+  briefing: string;
+  n?: number;
+  steer?: string;
+}): Promise<WorkbenchCandidate[]> =>
+  post("/api/workbench", input, workbenchSchema).then((r) => r.candidates);
 
 /** Briefing → axis vector via the LLM (E-026), so the briefing actually steers the structure. */
 export const interpretBriefing = (briefing: string, tier: Tier = "cheap"): Promise<AxisVector> =>
