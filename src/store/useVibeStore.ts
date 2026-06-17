@@ -2,8 +2,9 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { AxisVector, Signal, VibeCard } from "../engine";
 import { AXES, add, autoEngine, clamp, zero, LEXICON } from "../engine";
-import { METHODS } from "../lab";
-import { interpretBriefing, renderBatch } from "../llm/client";
+import { paletteFor, typoFor } from "../engine/derive";
+import { generateAnalogies, interpretBriefing } from "../llm/client";
+import type { Direction } from "../llm/schema";
 import { judgeRank } from "../llm/select";
 
 const BATCH = 5;
@@ -11,58 +12,54 @@ const BATCH = 5;
 const OVERSCAN = BATCH + 2;
 const studioRng = () => Math.random();
 
+/** Kept for persistence back-compat; the single Analogy Engine ignores it (E-046). */
 export type Lens = "auto" | "B" | "C";
 
-const methodFor = (lens: Lens) => METHODS.find((m) => m.id === (lens === "B" ? "b-llm" : "c-persona"));
+/** One analogy direction → a Studio card (palette/typo derive from its 6-axis projection). */
+function directionToCard(d: Direction): VibeCard {
+  return {
+    id: `${d.leitwert}-${Math.floor(studioRng() * 1e6)}`,
+    leitwert: d.leitwert,
+    mood: d.mood,
+    scene: d.scene,
+    typography: typoFor(d.vector, studioRng),
+    palette: paletteFor(d.vector),
+    vector: d.vector,
+    coherence: { sharedAxes: [], ok: true },
+    origin: { home: d.world, intrusion: "—", object: "—", engineNote: d.core },
+  };
+}
+
+/** Steering folded into the brief: pull toward kept directions, away from rejected ones. */
+function steerText(signals: Signal[]): string {
+  const near = signals.filter((s) => s.kind === "attract").map((s) => s.label);
+  const far = signals.filter((s) => s.kind === "repel").map((s) => s.label);
+  if (!near.length && !far.length) return "";
+  let t = "\nSteuerung —";
+  if (near.length) t += ` näher an Richtungen wie: ${near.join(", ")};`;
+  if (far.length) t += ` weg von: ${far.join(", ")};`;
+  return `${t} der funktionale Kern bleibt.`;
+}
 
 /**
- * Studio generate. Lens "auto" = Engine A skeleton + one batch LLM scene-render (fast).
- * Lens "B"/"C" = the live Lab method (embeddings / persona) at the strong tier. Always falls
- * back to the offline skeleton when the gateway is unreachable, so the loop never dead-ends.
+ * Studio generate — the Analogy Engine (E-046): brief → functional core → distant domains that
+ * embody the same core → Leitwerte, judge-selected best-first. Falls back to the offline skeleton
+ * only when the gateway is unreachable, so the loop never dead-ends.
  */
 async function generateBatch(
-  centroid: AxisVector,
-  spread: number,
   briefing: string,
-  lens: Lens,
-  tension: number,
+  steer: string,
+  fallbackCentroid: AxisVector,
+  spread: number,
 ): Promise<{ cards: VibeCard[]; sceneOk: boolean }> {
-  if (lens !== "auto") {
-    const m = methodFor(lens);
-    if (m) {
-      try {
-        const cards = await m.generate(
-          { rng: studioRng, centroid, spread, briefing, tier: "strong", tension },
-          OVERSCAN,
-        );
-        const ranked = await judgeRank(cards, briefing);
-        return { cards: ranked.slice(0, BATCH), sceneOk: true };
-      } catch {
-        /* fall through to Engine A */
-      }
-    }
-  }
-
-  const skeletons = autoEngine.generate(centroid, { batchSize: OVERSCAN, spread }, studioRng);
   try {
-    const scenes = await renderBatch(
-      skeletons.map((c) => ({
-        leitwert: c.leitwert,
-        worlds: [c.origin.home, c.origin.intrusion],
-        mood: c.mood,
-        note: c.origin.engineNote,
-        briefing,
-      })),
-    );
-    const rendered = skeletons.map((c, i) =>
-      scenes[i]
-        ? { ...c, leitwert: scenes[i].leitwert, mood: scenes[i].mood, scene: scenes[i].scene }
-        : c,
-    );
-    const ranked = await judgeRank(rendered, briefing);
+    const dirs = await generateAnalogies({ briefing: briefing + steer, n: OVERSCAN, tier: "strong" });
+    const cards = dirs.map(directionToCard);
+    const ranked = await judgeRank(cards, briefing);
     return { cards: ranked.slice(0, BATCH), sceneOk: true };
   } catch {
-    return { cards: skeletons.slice(0, BATCH), sceneOk: false }; // offline / rate-limited fallback
+    const skeletons = autoEngine.generate(fallbackCentroid, { batchSize: BATCH, spread }, studioRng);
+    return { cards: skeletons, sceneOk: false }; // offline / rate-limited fallback
   }
 }
 
@@ -169,18 +166,18 @@ export const useVibeStore = create<VibeState>()(
             /* keep lexicon fallback */
           }
         }
-        const { tension, lens } = get();
+        const { tension } = get();
         const spread = spreadFromTension(tension, []);
         const centroid = centroidOf(seedVec, []);
         set({ seedVec, centroid, spread });
-        const { cards, sceneOk } = await generateBatch(centroid, spread, briefing, lens, tension);
+        const { cards, sceneOk } = await generateBatch(briefing, "", centroid, spread);
         set({ cards, loading: false, llmFallback: !sceneOk });
       },
 
       iterate: async () => {
-        const { centroid, spread, seed, lens, tension } = get();
+        const { centroid, spread, seed, signals } = get();
         set({ loading: true });
-        const { cards, sceneOk } = await generateBatch(centroid, spread, seed, lens, tension);
+        const { cards, sceneOk } = await generateBatch(seed, steerText(signals), centroid, spread);
         set({ cards, focusId: null, loading: false, llmFallback: !sceneOk });
       },
 
