@@ -1496,3 +1496,71 @@ body {
 .flyout-src { color: var(--accent); }
 .flyout-tags span { background: #f3f5fc; border: 2px solid #eef1f9; color: var(--ink-soft); }
 .flyout-palette { border: 2px solid #eef1f9; box-shadow: 0 6px 14px -8px rgba(43,45,66,.3); }
+
+/* ════════════════ GEM (light, glossy 3D) — E-053 constellation look ════════════════ */
+.constellation {
+  position: relative; height: calc(100dvh - 64px); overflow: hidden;
+  background:
+    radial-gradient(2px 2px at 24% 30%, rgba(60,70,120,.05) 50%, transparent 51%) 0 0/160px 160px,
+    radial-gradient(1300px 860px at 50% 32%, #ffffff 0%, #eef1fb 58%, #e6eaf6 100%);
+}
+.cst-canvas { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
+.cst-links { position: absolute; left: -720px; top: -460px; width: 1440px; height: 920px; overflow: visible; pointer-events: none; }
+
+.gem {
+  position: absolute; left: 0; top: 0; border: none; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  color: #fff; border-radius: 27px; padding: 0 10px; text-align: center;
+  font-family: "Nunito", system-ui, sans-serif;
+  background: linear-gradient(176deg,
+    color-mix(in srgb, var(--accent) 42%, white) 0%, var(--accent) 42%,
+    color-mix(in srgb, var(--accent) 70%, black) 100%);
+  box-shadow:
+    inset 0 4px 2px rgba(255,255,255,.95),
+    inset 0 -16px 20px rgba(0,0,0,.30),
+    inset 0 0 0 2.5px color-mix(in srgb, var(--accent) 16%, white),
+    0 18px 28px -8px color-mix(in srgb, var(--accent) 62%, transparent),
+    0 9px 16px -6px rgba(25,25,55,.30);
+  transition: transform .14s ease, filter .16s ease;
+}
+.gem::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(125% 62% at 50% 1%, rgba(255,255,255,.92), rgba(255,255,255,.2) 36%, transparent 58%);
+}
+.gem:hover { transform: translateY(-2px); filter: brightness(1.05) saturate(1.05); }
+
+.gem--center {
+  transform: translate(-50%, -50%);
+  background: linear-gradient(165deg, #ffc06a 0%, #ff7a59 46%, #ff4d6d 100%);
+  box-shadow:
+    inset 0 4px 2px rgba(255,255,255,.9), inset 0 -18px 26px rgba(120,10,40,.3),
+    inset 0 0 0 3px rgba(255,255,255,.35),
+    0 26px 50px -14px rgba(255,90,90,.5), 0 10px 24px -6px rgba(40,20,40,.3);
+  gap: 4px;
+}
+.gem--center .gem-title { font-size: 15px; font-weight: 800; line-height: 1.16; padding: 0 20px; text-shadow: 0 1px 3px rgba(120,20,40,.4); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+.gem-eyebrow { font-family: "Nunito"; font-weight: 800; font-size: 9.5px; letter-spacing: .16em; text-transform: uppercase; opacity: .92; text-shadow: 0 1px 2px rgba(0,0,0,.25); }
+.gem-name { font-weight: 800; line-height: 1.1; text-shadow: 0 1px 2px rgba(0,0,0,.3); overflow: hidden; }
+.gem--hub .gem-name { font-size: 14.5px; max-height: 52px; }
+.gem--sat .gem-name { font-size: 12px; max-height: 44px; }
+.gem--anchor .gem-name { font-size: 11px; max-height: 30px; }
+.gem-palette { display: flex; width: 52%; height: 7px; border-radius: 99px; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(255,255,255,.55), 0 1px 2px rgba(0,0,0,.25); }
+.gem-palette span { flex: 1; }
+
+.gem-anchor {
+  position: absolute; top: 7px; right: 7px; width: 22px; height: 22px; border-radius: 50%; border: none;
+  display: grid; place-items: center; font-size: 12px; cursor: pointer; opacity: 0;
+  background: rgba(255,255,255,.92); color: var(--accent); box-shadow: 0 2px 6px rgba(0,0,0,.25);
+  transition: opacity .14s ease; font-family: "Nunito";
+}
+.gem:hover .gem-anchor, .gem:focus-visible .gem-anchor, .gem-anchor.on { opacity: 1; }
+.gem-anchor.on { background: #ffb020; color: #fff; }
+.gem-anchor:disabled { opacity: 0; cursor: not-allowed; }
+.gem:hover .gem-anchor:disabled { opacity: .35; }
+
+.gem.is-anchor { box-shadow: inset 0 3px 2px rgba(255,255,255,.85), 0 0 0 3px #ffb020, 0 0 22px rgba(255,176,32,.6), 0 8px 16px -6px rgba(25,25,55,.3); }
+.gem.is-focus { box-shadow: inset 0 3px 2px rgba(255,255,255,.9), 0 0 0 3px #fff, 0 18px 30px -8px rgba(20,20,55,.4); transform: translateY(-2px); }
+.gem:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+
+.cst-loading, .cst-hint { position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%); background: #fff; color: var(--ink-soft); border: 2px solid #eef1f9; box-shadow: 0 8px 18px -8px rgba(43,45,66,.4); padding: 9px 18px; border-radius: 99px; font-weight: 700; font-family: "Nunito"; }

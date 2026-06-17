@@ -13,6 +13,16 @@ export default function App() {
     if (!s.llmFallback) setBannerDismissed(false);
   }, [s.llmFallback]);
 
+  // Dev-only: #preview renders the canvas with mock cards (for headless screenshots, no LLM).
+  useEffect(() => {
+    if (typeof location !== "undefined" && location.hash.includes("preview")) {
+      void Promise.all([import("./store/useVibeStore"), import("./preview")]).then(
+        ([{ useVibeStore: store }, { MOCK_CARDS, MOCK_SEED }]) =>
+          store.setState({ phase: "studio", seed: MOCK_SEED, cards: MOCK_CARDS, generation: 1, loading: false }),
+      );
+    }
+  }, []);
+
   return (
     <div className="app">
       <header className="topbar">

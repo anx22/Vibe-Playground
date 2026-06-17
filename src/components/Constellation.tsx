@@ -4,31 +4,38 @@ import type { VibeCard } from "../engine";
 import { SOURCES, MAX_ANCHORS, useVibeStore } from "../store/useVibeStore";
 
 /**
- * The constellation canvas (E-047): the Leitidee sits at the center; each methodology forms its
- * own hex-flower cluster around it; anchored gold blocks pull into a tight ring near the center
- * and gravitate the next wave. Positions are computed polar coordinates, animated with Framer-Motion.
+ * Constellation canvas (E-053): the Leitidee is a big glossy gem at the centre; each methodology
+ * is a quadrant cluster — a hub gem (its strongest block) ringed by satellite gems — wired to the
+ * centre with glowing connectors. Glossy rounded gems, light premium ground. Framer-Motion bloom.
  */
 
-// Spacing chosen so cluster tiles never overlap each other, the anchor ring, or the centre:
-// within-cluster gap = 2·R_LOCAL·sin30 − TILE = 28px; inner cluster edge (R_CLUSTER−R_LOCAL−TILE/2)
-// sits well outside the anchor ring.
-const CENTER = 150; // center hexagon px
-const TILE = 112; // cluster tile px
-const ANCHOR = 92; // anchored tile px
-const R_CLUSTER = 470; // distance to each cluster's centre
-const R_LOCAL = 140; // tile spread within a cluster
-const R_ANCHOR = 210; // anchored ring radius
+const CENTER = 190;
+const HUB = 124;
+const TILE = 98;
+const ANCHOR = 84;
+const R_CLUSTER = 340; // quadrant cluster centre distance
+const R_SAT = 120; // satellite ring radius around a hub
+const R_ANCHOR = 150; // anchored gold ring radius
 
-interface Placed {
+const accentOf = (id?: string) => SOURCES.find((s) => s.id === id)?.accent ?? "#999";
+const labelOf = (id?: string) => SOURCES.find((s) => s.id === id)?.label ?? "";
+
+interface Node {
   card: VibeCard;
   x: number;
   y: number;
   size: number;
   accent: string;
+  kind: "hub" | "sat" | "anchor";
 }
-
-const accentOf = (id?: string) => SOURCES.find((s) => s.id === id)?.accent ?? "#999";
-const hex = "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)";
+interface Link {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  accent: string;
+  dotted: boolean;
+}
 
 export function Constellation({ onExport }: { onExport: (c: VibeCard) => void }) {
   const cards = useVibeStore((s) => s.cards);
@@ -38,137 +45,121 @@ export function Constellation({ onExport }: { onExport: (c: VibeCard) => void })
   const focus = useVibeStore((s) => s.focus);
   const toggleAnchor = useVibeStore((s) => s.toggleAnchor);
   const loading = useVibeStore((s) => s.loading);
+  const anchorsFull = anchors.length >= MAX_ANCHORS;
 
   const anchorIds = useMemo(() => new Set(anchors.map((a) => a.id)), [anchors]);
 
-  const placed = useMemo<Placed[]>(() => {
-    const out: Placed[] = [];
-    // Anchored gold ring near the center.
+  const { nodes, links } = useMemo(() => {
+    const nodes: Node[] = [];
+    const links: Link[] = [];
+    const m = SOURCES.length;
+
     anchors.forEach((card, j) => {
       const t = (j / Math.max(anchors.length, 1)) * Math.PI * 2 - Math.PI / 2;
-      out.push({ card, x: Math.cos(t) * R_ANCHOR, y: Math.sin(t) * R_ANCHOR, size: ANCHOR, accent: accentOf(card.source) });
+      nodes.push({ card, x: Math.cos(t) * R_ANCHOR, y: Math.sin(t) * R_ANCHOR, size: ANCHOR, accent: accentOf(card.source), kind: "anchor" });
     });
-    // One hex-flower cluster per methodology, in its own angular sector.
-    const m = SOURCES.length;
+
     SOURCES.forEach((src, i) => {
-      const ang = (i / m) * Math.PI * 2; // 0 = right, π = left …
+      const ang = (i / m) * Math.PI * 2 + Math.PI / m - Math.PI / 2; // sit in the diagonals
       const cx = Math.cos(ang) * R_CLUSTER;
       const cy = Math.sin(ang) * R_CLUSTER;
       const group = cards.filter((c) => c.source === src.id && !anchorIds.has(c.id));
-      group.forEach((card, k) => {
-        let lx = 0;
-        let ly = 0;
-        if (k < 6) {
-          const t = (k / 6) * Math.PI * 2 - Math.PI / 2;
-          lx = Math.cos(t) * R_LOCAL;
-          ly = Math.sin(t) * R_LOCAL;
-        }
-        out.push({ card, x: cx + lx, y: cy + ly, size: TILE, accent: src.accent });
+      if (!group.length) return;
+      const [hub, ...sats] = group;
+      nodes.push({ card: hub, x: cx, y: cy, size: HUB, accent: src.accent, kind: "hub" });
+      links.push({ x1: 0, y1: 0, x2: cx, y2: cy, accent: src.accent, dotted: false });
+      sats.forEach((card, k) => {
+        const t = (k / sats.length) * Math.PI * 2 - Math.PI / 2;
+        const x = cx + Math.cos(t) * R_SAT;
+        const y = cy + Math.sin(t) * R_SAT;
+        nodes.push({ card, x, y, size: TILE, accent: src.accent, kind: "sat" });
+        links.push({ x1: cx, y1: cy, x2: x, y2: y, accent: src.accent, dotted: true });
       });
     });
-    return out;
+    return { nodes, links };
   }, [cards, anchors, anchorIds]);
-
-  const clusterLabels = useMemo(
-    () => SOURCES.map((src, i) => {
-      const ang = (i / SOURCES.length) * Math.PI * 2;
-      return { src, x: Math.cos(ang) * (R_CLUSTER + R_LOCAL + 54), y: Math.sin(ang) * (R_CLUSTER + R_LOCAL + 54) };
-    }),
-    [],
-  );
-
-  const anchorsFull = anchors.length >= MAX_ANCHORS;
 
   return (
     <MotionConfig reducedMotion="user">
-    <div className="constellation">
-      <motion.div
-        className="constellation-canvas"
-        drag
-        dragMomentum={false}
-        dragElastic={0.12}
-        dragConstraints={{ left: -820, right: 820, top: -680, bottom: 680 }}
-        style={{ x: 0, y: 0 }}
-      >
-        {/* instrument: concentric measurement rings around the centre + the anchor orbit */}
-        <div className="instrument" aria-hidden />
-        {/* connector sightlines */}
-        <svg className="spokes" width="2000" height="2000" viewBox="-1000 -1000 2000 2000">
-          {placed.map((p) => (
-            <line key={`s-${p.card.id}`} x1={0} y1={0} x2={p.x} y2={p.y} stroke={p.accent} strokeOpacity={anchorIds.has(p.card.id) ? 0.5 : 0.12} strokeWidth={anchorIds.has(p.card.id) ? 1.5 : 1} />
-          ))}
-        </svg>
+      <div className="constellation">
+        <div className="cst-canvas">
+          <svg className="cst-links" viewBox="-720 -460 1440 920" preserveAspectRatio="xMidYMid meet">
+            {links.map((l, i) => (
+              <line
+                key={i}
+                x1={l.x1}
+                y1={l.y1}
+                x2={l.x2}
+                y2={l.y2}
+                stroke={l.accent}
+                strokeWidth={l.dotted ? 1.5 : 2.5}
+                strokeOpacity={l.dotted ? 0.45 : 0.7}
+                strokeDasharray={l.dotted ? "1 7" : undefined}
+                strokeLinecap="round"
+              />
+            ))}
+          </svg>
 
-        {/* cluster labels */}
-        {clusterLabels.map(({ src, x, y }) => (
-          <div key={src.id} className="cluster-label" style={{ left: "50%", top: "50%", transform: `translate(-50%,-50%) translate(${x}px,${y}px)`, color: src.accent }}>
-            {src.label}
+          {/* centre: the Leitidee gem */}
+          <div className="gem gem--center" style={{ width: CENTER, height: CENTER }}>
+            <span className="gem-eyebrow">Leitidee</span>
+            <span className="gem-title">{seed.trim() || "Blank Slate"}</span>
           </div>
-        ))}
 
-        {/* center: the Leitidee */}
-        <div className="node node--center" style={{ width: CENTER, height: CENTER, clipPath: hex }}>
-          <div className="center-inner">
-            <span className="center-kicker">Leitidee</span>
-            <span className="center-text">{seed.trim() || "Blank Slate"}</span>
-          </div>
-        </div>
-
-        {/* blocks */}
-        {placed.map((p) => {
-          const isAnchor = anchorIds.has(p.card.id);
-          const isFocus = p.card.id === focusId;
-          const canAnchor = isAnchor || !anchorsFull;
-          return (
-            <motion.div
-              key={p.card.id}
-              role="button"
-              tabIndex={0}
-              aria-pressed={isFocus}
-              aria-label={`${p.card.leitwert} — Details`}
-              initial={{ opacity: 0, scale: 0.4, x: 0, y: 0 }}
-              animate={{ opacity: 1, scale: 1, x: p.x, y: p.y }}
-              transition={{ type: "spring", stiffness: 200, damping: 24 }}
-              className={`node node--block${isAnchor ? " is-anchor" : ""}${isFocus ? " is-focus" : ""}`}
-              style={{ width: p.size, height: p.size, marginLeft: -p.size / 2, marginTop: -p.size / 2, clipPath: hex, ["--accent" as string]: p.accent } as CSSProperties}
-              onClick={() => focus(isFocus ? null : p.card.id)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  focus(isFocus ? null : p.card.id);
-                }
-              }}
-            >
-              <span className="node-name">{p.card.leitwert}</span>
-              <span className="node-palette">
-                {p.card.palette.map((c, i) => (
-                  <span key={i} style={{ background: c }} />
-                ))}
-              </span>
-              <button
-                type="button"
-                className={`node-anchor${isAnchor ? " on" : ""}`}
-                aria-label={isAnchor ? "Anker entfernen" : "Als Anker setzen"}
-                disabled={!canAnchor}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  toggleAnchor(p.card);
+          {nodes.map((nd) => {
+            const isAnchor = anchorIds.has(nd.card.id);
+            const isFocus = nd.card.id === focusId;
+            const canAnchor = isAnchor || !anchorsFull;
+            return (
+              <motion.div
+                key={nd.card.id}
+                role="button"
+                tabIndex={0}
+                aria-label={`${nd.card.leitwert} — Details`}
+                initial={{ opacity: 0, scale: 0.5, x: 0, y: 0 }}
+                animate={{ opacity: 1, scale: 1, x: nd.x, y: nd.y }}
+                transition={{ type: "spring", stiffness: 220, damping: 26 }}
+                className={`gem gem--${nd.kind}${isAnchor ? " is-anchor" : ""}${isFocus ? " is-focus" : ""}`}
+                style={{ width: nd.size, height: nd.size, marginLeft: -nd.size / 2, marginTop: -nd.size / 2, ["--accent" as string]: nd.accent } as CSSProperties}
+                onClick={() => focus(isFocus ? null : nd.card.id)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    focus(isFocus ? null : nd.card.id);
+                  }
                 }}
               >
-                {isAnchor ? "★" : "☆"}
-              </button>
-            </motion.div>
-          );
-        })}
-      </motion.div>
+                {nd.kind === "hub" && <span className="gem-eyebrow">{labelOf(nd.card.source)}</span>}
+                <span className="gem-name">{nd.card.leitwert}</span>
+                <span className="gem-palette">
+                  {nd.card.palette.map((c, i) => (
+                    <span key={i} style={{ background: c }} />
+                  ))}
+                </span>
+                <button
+                  type="button"
+                  className={`gem-anchor${isAnchor ? " on" : ""}`}
+                  aria-label={isAnchor ? "Anker entfernen" : "Als Anker setzen"}
+                  disabled={!canAnchor}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleAnchor(nd.card);
+                  }}
+                >
+                  {isAnchor ? "★" : "☆"}
+                </button>
+              </motion.div>
+            );
+          })}
+        </div>
 
-      {loading && <div className="constellation-loading">Bausteine entstehen…</div>}
-      {!loading && !cards.length && !anchors.length && (
-        <div className="constellation-hint">Block wählen → ☆ Anker setzen → „Aus Ankern ableiten"</div>
-      )}
+        {loading && <div className="cst-loading">Bausteine entstehen…</div>}
+        {!loading && !cards.length && !anchors.length && (
+          <div className="cst-hint">Block wählen → ☆ Anker setzen → „Aus Ankern ableiten"</div>
+        )}
 
-      <FocusFlyout onExport={onExport} isAnchored={(id) => anchorIds.has(id)} onAnchor={toggleAnchor} anchorsFull={anchorsFull} />
-    </div>
+        <FocusFlyout onExport={onExport} isAnchored={(id) => anchorIds.has(id)} onAnchor={toggleAnchor} anchorsFull={anchorsFull} />
+      </div>
     </MotionConfig>
   );
 }
@@ -203,15 +194,10 @@ function FocusFlyout({
   const canAnchor = anchored || !anchorsFull;
 
   return (
-    <motion.aside
-      className="flyout"
-      initial={{ x: 40, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      style={{ ["--accent" as string]: accentOf(card.source) } as CSSProperties}
-    >
+    <motion.aside className="flyout" initial={{ x: 40, opacity: 0 }} animate={{ x: 0, opacity: 1 }} style={{ ["--accent" as string]: accentOf(card.source) } as CSSProperties}>
       <button className="flyout-x" onClick={() => focus(null)} aria-label="schließen">✕</button>
       <div className="flyout-src">
-        {SOURCES.find((s) => s.id === card.source)?.label}
+        {labelOf(card.source)}
         {d?.tasteDirection ? ` · ${d.tasteDirection}` : ""}
       </div>
       <h2 className="flyout-name">{card.leitwert}</h2>
@@ -238,20 +224,12 @@ function FocusFlyout({
         </div>
       ) : null}
 
-      {d?.object && d.object !== "—" && (
-        <div className="flyout-block"><h3>Objekt</h3><p>{d.object}</p></div>
-      )}
+      {d?.object && d.object !== "—" && <div className="flyout-block"><h3>Objekt</h3><p>{d.object}</p></div>}
 
-      <div className="flyout-block">
-        <h3>Herleitung</h3>
-        <p>{d?.derivation ?? card.scene}</p>
-      </div>
+      <div className="flyout-block"><h3>Herleitung</h3><p>{d?.derivation ?? card.scene}</p></div>
 
       {d?.affordances?.length ? (
-        <div className="flyout-block">
-          <h3>Affordanzen</h3>
-          <ul>{d.affordances.map((a, i) => <li key={i}>{a}</li>)}</ul>
-        </div>
+        <div className="flyout-block"><h3>Affordanzen</h3><ul>{d.affordances.map((a, i) => <li key={i}>{a}</li>)}</ul></div>
       ) : null}
 
       <div className="flyout-actions">
