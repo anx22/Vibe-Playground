@@ -90,7 +90,7 @@ export const SOURCES: Source[] = [
   {
     id: "entanglement",
     label: "Verschränkung",
-    accent: "#E86A4B",
+    accent: "#FF6B5E",
     gen: async (briefing, steer, n) =>
       (await generateBridges({ briefing, steer, n, tier: "strong" })).bridges.map((b) =>
         bridgeToCard(b, "entanglement"),
@@ -99,21 +99,21 @@ export const SOURCES: Source[] = [
   {
     id: "workbench",
     label: "Werkbank",
-    accent: "#C77DFF",
+    accent: "#B57BFF",
     gen: async (briefing, steer, n) =>
       (await generateWorkbench({ briefing, steer, n })).map((c) => candidateToCard(c, "workbench")),
   },
   {
     id: "latent",
     label: "Latent-Agent",
-    accent: "#7FA66B",
+    accent: "#34D17E",
     gen: async (briefing, steer, n) =>
       (await generateLatent({ briefing, steer, n })).bridges.map((b) => bridgeToCard(b, "latent")),
   },
   {
     id: "persona",
     label: "Persona",
-    accent: "#5B8BD6",
+    accent: "#46A6FF",
     gen: async (briefing, steer, n) =>
       (await generatePersonas({ briefing: briefing + steer, n, tier: "strong" })).map((p) =>
         personaToCard(p, "persona"),

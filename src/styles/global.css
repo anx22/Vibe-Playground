@@ -1395,3 +1395,104 @@ body {
 }
 
 .ratelimit-banner--warn { background: #fff4e0; border-bottom: 1px solid #f0d9a8; color: #6b4e16; }
+
+/* ════════════════ CANDY (light, glossy, tactile) — final look, overrides earlier layers ════════════════ */
+/* Direction: glossy candy jelly (claymorphism) on a bright, friendly base. Duolingo-tactile. */
+:root {
+  --font-display: "Nunito", system-ui, sans-serif;
+  --ink: #2b2d42;
+  --ink-soft: #7a7f99;
+  --paper: #ffffff;
+  --go: #2fc66d;        /* Duolingo-green primary action */
+  --go-dark: #23a259;
+}
+body {
+  font-family: "Nunito", system-ui, sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(1100px 700px at 50% -12%, #ffffff 0%, #f3f6ff 55%, #eaeefb 100%) fixed;
+}
+.stage-title, .center-text, .node-name, .flyout-name, .brand { font-family: var(--font-display); font-weight: 800; letter-spacing: -0.01em; }
+.center-kicker, .cluster-label, .flyout-src, .flyout-block h3, .flyout-tags span, .gen-badge, .anchor-badge { font-family: "Nunito", sans-serif; font-weight: 800; }
+.flyout-mood, .flyout-block p, .flyout-block li { font-family: "Nunito", sans-serif; }
+
+/* chrome */
+.topbar { background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid #e7ebf7; box-shadow: 0 6px 20px -16px rgba(43,45,66,.4); }
+.gen-badge, .anchor-badge { background: #fff; border: 2px solid #e7ebf7; color: var(--ink-soft); box-shadow: 0 2px 0 #e7ebf7; }
+.anchor-badge { color: #f0a000; border-color: #ffe3a8; box-shadow: 0 2px 0 #ffe3a8; }
+
+/* chunky Duolingo buttons: solid fill + hard bottom edge, press on :active */
+.btn, .btn-primary, .btn-iterate, .btn-ghost, .btn-anchor {
+  border: none !important; border-radius: 16px !important; font-weight: 800 !important;
+  box-shadow: none !important; transition: transform .06s ease, filter .15s ease;
+}
+.btn-primary, .btn-iterate { background: var(--go) !important; color: #fff !important; box-shadow: 0 4px 0 var(--go-dark) !important; }
+.btn-ghost, .btn-anchor { background: #fff !important; color: var(--ink) !important; box-shadow: 0 4px 0 #e1e6f2 !important; border: 2px solid #eef1f9 !important; }
+.btn-anchor.is-on { background: #ffb020 !important; color: #fff !important; box-shadow: 0 4px 0 #d98e00 !important; }
+.btn:active, .btn-primary:active, .btn-iterate:active, .btn-ghost:active, .btn-anchor:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--go-dark) !important; }
+.btn-ghost:active, .btn-anchor:active { box-shadow: 0 2px 0 #e1e6f2 !important; }
+.btn:hover, .btn-primary:hover, .btn-iterate:hover, .btn-ghost:hover, .btn-anchor:hover { filter: brightness(1.03); }
+
+/* blank stage */
+.stage-title { background: none; -webkit-text-fill-color: currentColor; color: var(--ink); font-size: clamp(30px, 4.4vw, 52px); }
+.seed-input { background: #fff !important; border: 2px solid #e7ebf7 !important; border-radius: 16px !important; box-shadow: 0 4px 0 #eef1f9 !important; color: var(--ink) !important; backdrop-filter: none; }
+
+/* LIGHT, friendly canvas (override the dark observatory) */
+.constellation {
+  background:
+    radial-gradient(2px 2px at 22% 28%, rgba(43,45,66,.05) 50%, transparent 51%) 0 0/150px 150px,
+    radial-gradient(1100px 760px at 50% 40%, #ffffff 0%, #eef2fd 60%, #e6ebfa 100%);
+}
+.instrument { background: repeating-radial-gradient(circle at center, transparent 0 92px, rgba(43,45,66,.05) 92px 93px); }
+.instrument::after { border: 2px dashed rgba(43,45,66,.10); }
+
+/* CENTER: white glossy candy chip with a soft multicolor glow */
+.node--center {
+  background: linear-gradient(165deg, #ffffff, #f4f6ff 70%, #e9edfb);
+  color: var(--ink);
+  box-shadow:
+    inset 0 4px 0 rgba(255,255,255,.9),
+    inset 0 -14px 22px rgba(43,45,66,.08),
+    0 18px 36px -12px rgba(43,45,66,.35),
+    0 0 0 6px rgba(255,255,255,.6),
+    0 0 46px rgba(120,140,255,.22);
+}
+.center-kicker { color: var(--ink-soft); letter-spacing: 0.2em; }
+.center-text { color: var(--ink); }
+
+/* BLOCKS: glossy candy jelly (claymorphism). --accent is set per tile inline. */
+.node--block {
+  color: #fff;
+  background: linear-gradient(157deg,
+    color-mix(in srgb, var(--accent) 78%, white) 0%,
+    var(--accent) 52%,
+    color-mix(in srgb, var(--accent) 80%, black) 100%);
+  box-shadow:
+    inset 0 6px 0 rgba(255,255,255,.5),
+    inset 0 -16px 22px rgba(0,0,0,.20),
+    0 16px 28px -8px color-mix(in srgb, var(--accent) 55%, transparent),
+    0 4px 0 color-mix(in srgb, var(--accent) 70%, black);
+}
+.node--block::before {
+  content: ""; position: absolute; inset: 0; clip-path: inherit; pointer-events: none;
+  background: radial-gradient(120% 70% at 50% 6%, rgba(255,255,255,.55), rgba(255,255,255,.12) 34%, transparent 56%);
+}
+.node--block.is-anchor { box-shadow: inset 0 6px 0 rgba(255,255,255,.55), 0 0 0 4px #ffb020, 0 0 26px rgba(255,176,32,.6), 0 6px 0 color-mix(in srgb, var(--accent) 70%, black); }
+.node--block.is-focus { box-shadow: inset 0 6px 0 rgba(255,255,255,.6), 0 0 0 4px #fff, 0 18px 30px -8px rgba(0,0,0,.3); }
+.node-name { font-weight: 800; text-shadow: 0 1px 2px rgba(0,0,0,.28); }
+.node-palette { box-shadow: inset 0 0 0 1px rgba(255,255,255,.5); }
+.node-anchor { background: rgba(255,255,255,.9); color: var(--accent); box-shadow: 0 3px 8px rgba(0,0,0,.2); }
+.node-anchor.on { background: #ffb020; color: #fff; }
+
+/* cluster labels readable on light */
+.cluster-label { color: color-mix(in srgb, var(--accent) 78%, #2b2d42); font-weight: 800; letter-spacing: .14em; }
+
+/* hint / loading chips on light */
+.constellation-loading, .constellation-hint { background: #fff; color: var(--ink-soft); border: 2px solid #eef1f9; box-shadow: 0 6px 16px -8px rgba(43,45,66,.4); backdrop-filter: none; }
+
+/* FLYOUT: clean white card */
+.flyout { background: #fff; border-left: 2px solid #eef1f9; box-shadow: -24px 0 50px -22px rgba(43,45,66,.3); }
+.flyout-name { background: none; -webkit-text-fill-color: currentColor; color: var(--ink); }
+.flyout-src { color: var(--accent); }
+.flyout-tags span { background: #f3f5fc; border: 2px solid #eef1f9; color: var(--ink-soft); }
+.flyout-palette { border: 2px solid #eef1f9; box-shadow: 0 6px 14px -8px rgba(43,45,66,.3); }

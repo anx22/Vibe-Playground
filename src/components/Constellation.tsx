@@ -9,12 +9,15 @@ import { SOURCES, MAX_ANCHORS, useVibeStore } from "../store/useVibeStore";
  * and gravitate the next wave. Positions are computed polar coordinates, animated with Framer-Motion.
  */
 
-const CENTER = 168; // center hexagon px
-const TILE = 116; // cluster tile px
-const ANCHOR = 96; // anchored tile px
-const R_CLUSTER = 320; // distance to each cluster's center
-const R_LOCAL = 122; // tile spread within a cluster
-const R_ANCHOR = 150; // anchored ring radius
+// Spacing chosen so cluster tiles never overlap each other, the anchor ring, or the centre:
+// within-cluster gap = 2·R_LOCAL·sin30 − TILE = 28px; inner cluster edge (R_CLUSTER−R_LOCAL−TILE/2)
+// sits well outside the anchor ring.
+const CENTER = 150; // center hexagon px
+const TILE = 112; // cluster tile px
+const ANCHOR = 92; // anchored tile px
+const R_CLUSTER = 470; // distance to each cluster's centre
+const R_LOCAL = 140; // tile spread within a cluster
+const R_ANCHOR = 210; // anchored ring radius
 
 interface Placed {
   card: VibeCard;
@@ -84,7 +87,7 @@ export function Constellation({ onExport }: { onExport: (c: VibeCard) => void })
         drag
         dragMomentum={false}
         dragElastic={0.12}
-        dragConstraints={{ left: -640, right: 640, top: -520, bottom: 520 }}
+        dragConstraints={{ left: -820, right: 820, top: -680, bottom: 680 }}
         style={{ x: 0, y: 0 }}
       >
         {/* instrument: concentric measurement rings around the centre + the anchor orbit */}
