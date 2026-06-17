@@ -71,6 +71,31 @@ const argStr = (flag: string, def: string) => {
   return i >= 0 ? String(process.argv[i + 1]) : def;
 };
 
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/**
+ * Judge with retry + exponential backoff. The premium (Opus) tier has tight gateway rate limits,
+ * and rate-limit errors come back as 502 without triggering the gateway's model-fallback — so a
+ * straight sweep drops ~20% of calls. Backoff both recovers the call and throttles the sweep to
+ * stay under the limit, giving a clean, fully-populated scorecard.
+ */
+async function judgeRetry(
+  input: { briefing: string; leitwert: string; scene?: string; mood: string },
+  tier: "cheap" | "strong" | "premium",
+  tries = 5,
+): Promise<Awaited<ReturnType<typeof judge>>> {
+  let lastErr: unknown;
+  for (let i = 0; i < tries; i++) {
+    try {
+      return await judge(input, tier);
+    } catch (err) {
+      lastErr = err;
+      await sleep(2000 * 2 ** i); // 2s, 4s, 8s, 16s, 32s
+    }
+  }
+  throw lastErr;
+}
+
 const vec = (v: AxisVector) =>
   AXES.map((a) => `${a.slice(0, 3)}${v[a] >= 0 ? "+" : ""}${v[a].toFixed(1)}`).join(" ");
 
@@ -171,7 +196,7 @@ async function main() {
         if (!cell || cell.error) continue;
         for (const c of cell.cards) {
           try {
-            const s = await judge(
+            const s = await judgeRetry(
               { briefing: b.text, leitwert: c.leitwert, scene: c.scene, mood: c.mood },
               judgeTier,
             );
