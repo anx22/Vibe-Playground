@@ -19,6 +19,7 @@ export const personaSchema = z.object({
   vector: axisVectorSchema,
 });
 export type Persona = z.infer<typeof personaSchema>;
+export const personaListSchema = z.object({ personas: z.array(personaSchema) });
 
 /** Engine D — Structural Entanglement. A bridge = essence ↔ N far-but-rhyming worlds + object. */
 export const bridgeSchema = z.object({

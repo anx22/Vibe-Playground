@@ -7,14 +7,17 @@ import type { VibeCard } from "./engine";
  */
 export function buildExportPrompt(c: VibeCard): string {
   const d = c.detail;
+  const hasWorlds = !!d?.worlds?.length;
   const lines: string[] = [`Design-Direction: «${c.leitwert}»`, ``];
 
-  if (d?.worlds?.length) {
+  if (hasWorlds) {
     lines.push(`Welten-Verschränkung:`);
-    for (const w of d.worlds) lines.push(`- ${w.name} (${w.role}) — reimt: ${w.rhyme}`);
+    for (const w of d!.worlds!) lines.push(`- ${w.name} (${w.role}) — reimt: ${w.rhyme}`);
     lines.push(``);
   } else if (c.origin.home && c.origin.home !== "Persona") {
     lines.push(`Welt: ${c.origin.home}`, ``);
+  } else {
+    lines.push(`Quelle: fiktive Persona/Urheber (siehe Herleitung)`, ``);
   }
 
   if (d?.object && d.object !== "—") lines.push(`Objekt-Metapher: ${d.object}`);
@@ -29,8 +32,9 @@ export function buildExportPrompt(c: VibeCard): string {
     `Palette (Richtung): ${c.palette.join(" · ")}`,
     ``,
     `Aufgabe: Erzeuge [Artefakt einsetzen — Landing-Page, Poster, App-Screen] strikt in dieser`,
-    `Design-Direction. Setze die Welten-Verschränkung visuell um (nicht wörtlich abbilden), halte`,
-    `Stimmung und Palette-Richtung konsequent; keine generische AI-Ästhetik, keine Klischees.`,
+    `Design-Direction. ${hasWorlds ? "Setze die Welten-Verschränkung" : "Setze diese Welt"} visuell um`,
+    `(nicht wörtlich abbilden), halte Stimmung und Palette-Richtung konsequent; keine generische`,
+    `AI-Ästhetik, keine Klischees.`,
   );
   return lines.join("\n");
 }

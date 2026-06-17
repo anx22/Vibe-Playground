@@ -1,15 +1,21 @@
 /**
- * Headless eval — compare the two creative derivations (Analogie / Persona) on the new judge.
+ * Headless eval — compare the engines (Verschränkung / Latent-Agent / Werkbank / Persona) on the judge.
  *
  *   VIBE_API_BASE=https://vibedesign-two.vercel.app npm run eval -- --judge
  *   …  --judge-tier premium     # grade on Opus (strict)
- *   …  --n 3                     # directions per briefing
+ *   …  --n 3                     # candidates per briefing
  *
- * Per briefing × engine: the Leitwerte (+ world/core/scene) and, with --judge, the quality
+ * Per briefing × engine: the Leitwerte (+ world/scene) and, with --judge, the quality
  * scorecard — onTarget × surprise × craft (would a senior AD pitch this to THIS client?).
  */
-import { generateAnalogies, generatePersona, judge, setApiBase } from "../src/llm/client";
-import type { Direction } from "../src/llm/schema";
+import {
+  generateBridges,
+  generateLatent,
+  generatePersonas,
+  generateWorkbench,
+  judge,
+  setApiBase,
+} from "../src/llm/client";
 
 const BRIEFINGS = [
   { id: "synth", label: "Synth-Label", text: "Rebrand für ein Synthesizer-Label, das von Software auf modulare Hardware umstellt — technisch, aber mit Handschrift." },
@@ -45,15 +51,24 @@ async function judgeRetry(input: { briefing: string; leitwert: string; scene?: s
   throw last;
 }
 
-type Card = { leitwert: string; world: string; core: string; scene: string; mood: string };
+type Card = { leitwert: string; world: string; scene: string; mood: string };
+const worldsOf = (ws: { name: string }[]) => ws.map((w) => w.name).join(" × ");
 
-async function genAnalogy(briefing: string, n: number): Promise<Card[]> {
-  const dirs: Direction[] = await generateAnalogies({ briefing, n, tier: "strong" });
-  return dirs.map((d) => ({ leitwert: d.leitwert, world: d.world, core: d.core, scene: d.scene, mood: d.mood }));
+async function genEntangle(briefing: string, n: number): Promise<Card[]> {
+  const { bridges } = await generateBridges({ briefing, n, tier: "strong" });
+  return bridges.map((b) => ({ leitwert: b.leitwert, world: worldsOf(b.worlds), scene: b.creativeDerivation, mood: b.mood }));
+}
+async function genLatent(briefing: string, n: number): Promise<Card[]> {
+  const { bridges } = await generateLatent({ briefing, n });
+  return bridges.map((b) => ({ leitwert: b.leitwert, world: worldsOf(b.worlds), scene: b.creativeDerivation, mood: b.mood }));
+}
+async function genWorkbench(briefing: string, n: number): Promise<Card[]> {
+  const cs = await generateWorkbench({ briefing, n });
+  return cs.map((c) => ({ leitwert: c.leitwert, world: worldsOf(c.worlds), scene: c.creativeDerivation, mood: c.mood }));
 }
 async function genPersona(briefing: string, n: number): Promise<Card[]> {
-  const ps = await Promise.all(Array.from({ length: n }, () => generatePersona({ briefing, tier: "strong" })));
-  return ps.map((p) => ({ leitwert: p.leitwert, world: "Persona", core: "—", scene: p.persona, mood: p.mood }));
+  const ps = await generatePersonas({ briefing, n, tier: "strong" });
+  return ps.map((p) => ({ leitwert: p.leitwert, world: "Persona", scene: p.persona, mood: p.mood }));
 }
 
 async function main() {
@@ -68,14 +83,18 @@ async function main() {
   setApiBase(base);
 
   const engines: { id: string; gen: (b: string, n: number) => Promise<Card[]> }[] = [
-    { id: "analogy", gen: genAnalogy },
+    { id: "entanglement", gen: genEntangle },
+    { id: "latent", gen: genLatent },
+    { id: "workbench", gen: genWorkbench },
     { id: "persona", gen: genPersona },
   ];
 
-  console.log(`\n  VIBE EVAL · Analogie vs Persona   n=${n}  judge=${useJudge ? judgeTier : "off"}  (${base})`);
+  console.log(`\n  VIBE EVAL · ${engines.map((e) => e.id).join(" · ")}   n=${n}  judge=${useJudge ? judgeTier : "off"}  (${base})`);
 
   type Agg = { tgt: number; surp: number; craft: number; n: number };
-  const aggs: Record<string, Agg> = { analogy: { tgt: 0, surp: 0, craft: 0, n: 0 }, persona: { tgt: 0, surp: 0, craft: 0, n: 0 } };
+  const aggs: Record<string, Agg> = Object.fromEntries(
+    engines.map((e) => [e.id, { tgt: 0, surp: 0, craft: 0, n: 0 }]),
+  );
 
   for (const b of BRIEFINGS) {
     console.log(`\n${"─".repeat(78)}\n■ ${b.label}   "${b.text}"`);

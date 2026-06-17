@@ -17,6 +17,8 @@ export const personaSchema = z.object({
   mood: z.string(),
   vector: axisVectorSchema,
 });
+/** Batched personas — N distinct sources in one call. */
+export const personaListSchema = z.object({ personas: z.array(personaSchema) });
 
 /** Engine E phase 1 — Diverger: essence, burnt clichés, and a WIDE field of far donor worlds. */
 export const divergeSchema = z.object({

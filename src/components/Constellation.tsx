@@ -76,7 +76,14 @@ export function Constellation({ onExport }: { onExport: (c: VibeCard) => void })
 
   return (
     <div className="constellation">
-      <motion.div className="constellation-canvas" drag dragMomentum={false} style={{ x: 0, y: 0 }}>
+      <motion.div
+        className="constellation-canvas"
+        drag
+        dragMomentum={false}
+        dragElastic={0.12}
+        dragConstraints={{ left: -640, right: 640, top: -520, bottom: 520 }}
+        style={{ x: 0, y: 0 }}
+      >
         {/* connector spokes */}
         <svg className="spokes" width="2000" height="2000" viewBox="-1000 -1000 2000 2000">
           {placed.map((p) => (
@@ -106,8 +113,7 @@ export function Constellation({ onExport }: { onExport: (c: VibeCard) => void })
           return (
             <motion.button
               key={p.card.id}
-              layout
-              initial={{ opacity: 0, scale: 0.4 }}
+              initial={{ opacity: 0, scale: 0.4, x: 0, y: 0 }}
               animate={{ opacity: 1, scale: 1, x: p.x, y: p.y }}
               transition={{ type: "spring", stiffness: 200, damping: 24 }}
               className={`node node--block${isAnchor ? " is-anchor" : ""}${isFocus ? " is-focus" : ""}`}
@@ -126,6 +132,9 @@ export function Constellation({ onExport }: { onExport: (c: VibeCard) => void })
       </motion.div>
 
       {loading && <div className="constellation-loading">Bausteine entstehen…</div>}
+      {!loading && !cards.length && !anchors.length && (
+        <div className="constellation-hint">Block wählen → ☆ Anker setzen → „Aus Ankern ableiten"</div>
+      )}
 
       <FocusFlyout onExport={onExport} isAnchored={(id) => anchorIds.has(id)} onAnchor={toggleAnchor} anchorsFull={anchors.length >= MAX_ANCHORS} />
     </div>
@@ -170,6 +179,12 @@ function FocusFlyout({
       </div>
       <h2 className="flyout-name">{card.leitwert}</h2>
       <div className="flyout-mood">{card.mood}{d?.operators?.length ? ` · ${d.operators.join(" + ")}` : ""}</div>
+      {(d?.domainDistance || d?.comfortRating) && (
+        <div className="flyout-tags">
+          {d?.domainDistance && <span>Distanz: {d.domainDistance}</span>}
+          {d?.comfortRating && <span>Komfort: {d.comfortRating}</span>}
+        </div>
+      )}
 
       <div className="flyout-palette">
         {card.palette.map((c, i) => (

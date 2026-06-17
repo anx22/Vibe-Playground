@@ -3,14 +3,16 @@ import { persist } from "zustand/middleware";
 import { zero } from "../engine";
 import type { VibeCard } from "../engine";
 import { paletteFor, typoFor } from "../engine/derive";
-import { generateBridges, generateLatent, generatePersona, generateWorkbench } from "../llm/client";
+import { generateBridges, generateLatent, generatePersonas, generateWorkbench } from "../llm/client";
 import type { Bridge, Persona, WorkbenchCandidate } from "../llm/schema";
 import { judgeRank } from "../llm/select";
 
 /** Per method we generate a few extra and judge-select the strongest into the cluster (E-041). */
-const PER_METHOD = 6;
-const OVERSCAN = PER_METHOD + 2;
+const PER_METHOD = 5;
+const OVERSCAN = PER_METHOD + 1;
 const MAX_ANCHORS = 5;
+let idSeq = 0;
+const nextId = (source: string) => `${source}-${idSeq++}`;
 const rng = () => Math.random();
 
 const HEX = /^#?[0-9a-fA-F]{3,8}$/;
@@ -21,7 +23,7 @@ function palette3(p: string[] | undefined): [string, string, string] {
 
 function bridgeToCard(b: Bridge, source: string): VibeCard {
   return {
-    id: `${source}-${b.leitwert}-${Math.floor(rng() * 1e6)}`,
+    id: nextId(source),
     leitwert: b.leitwert,
     mood: b.mood,
     scene: b.creativeDerivation,
@@ -41,13 +43,14 @@ function bridgeToCard(b: Bridge, source: string): VibeCard {
       object: b.objectMetaphor,
       derivation: b.creativeDerivation,
       affordances: b.affordances,
+      domainDistance: b.domainDistance,
     },
   };
 }
 
 function personaToCard(p: Persona, source: string): VibeCard {
   return {
-    id: `${source}-${p.leitwert}-${Math.floor(rng() * 1e6)}`,
+    id: nextId(source),
     leitwert: p.leitwert,
     mood: p.mood,
     scene: p.persona,
@@ -63,7 +66,12 @@ function personaToCard(p: Persona, source: string): VibeCard {
 
 function candidateToCard(c: WorkbenchCandidate, source: string): VibeCard {
   const card = bridgeToCard(c, source);
-  card.detail = { ...card.detail, tasteDirection: c.tasteDirection, operators: c.operators };
+  card.detail = {
+    ...card.detail,
+    tasteDirection: c.tasteDirection,
+    operators: c.operators,
+    comfortRating: c.comfortRating,
+  };
   return card;
 }
 
@@ -104,11 +112,9 @@ export const SOURCES: Source[] = [
     label: "Persona",
     accent: "#5B8BD6",
     gen: async (briefing, steer, n) =>
-      (
-        await Promise.all(
-          Array.from({ length: n }, () => generatePersona({ briefing: briefing + steer, tier: "strong" })),
-        )
-      ).map((p) => personaToCard(p, "persona")),
+      (await generatePersonas({ briefing: briefing + steer, n, tier: "strong" })).map((p) =>
+        personaToCard(p, "persona"),
+      ),
   },
 ];
 
@@ -200,7 +206,14 @@ export const useVibeStore = create<VibeState>()(
     }),
     {
       name: "vibe-playground",
-      partialize: (s) => ({ anchors: s.anchors }),
+      // Persist the whole working set so a reload restores the constellation, not orphaned anchors.
+      partialize: (s) => ({
+        phase: s.phase,
+        seed: s.seed,
+        cards: s.cards,
+        anchors: s.anchors,
+        generation: s.generation,
+      }),
     },
   ),
 );

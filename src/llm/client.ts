@@ -2,7 +2,7 @@ import {
   axisVectorSchema,
   entangleSchema,
   judgeSchema,
-  personaSchema,
+  personaListSchema,
   workbenchSchema,
   type Entangle,
   type JudgeScore,
@@ -39,8 +39,9 @@ async function post<T>(path: string, body: unknown, schema: { parse(x: unknown):
 /** Model tier — `strong` (Sonnet) for the user-facing Studio, `cheap` (Haiku) for Lab evals, `premium` (Opus) for the strict judge run. */
 export type Tier = "cheap" | "strong" | "premium";
 
-export const generatePersona = (input: { briefing: string; tier?: Tier }): Promise<Persona> =>
-  post("/api/persona", input, personaSchema);
+/** Batched: N distinct personas in one call (avoids N round-trips per round). */
+export const generatePersonas = (input: { briefing: string; n?: number; tier?: Tier }): Promise<Persona[]> =>
+  post("/api/persona", input, personaListSchema).then((r) => r.personas);
 
 /**
  * Engine D — Structural Entanglement (ENGINE-D-SPEC). Distill essence → burn clichés → far-but-

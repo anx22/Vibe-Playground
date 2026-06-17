@@ -33,6 +33,9 @@ export interface VibeCard {
     /** Engine F: the orthogonal taste-direction this candidate belongs to, and the pots used. */
     tasteDirection?: string;
     operators?: string[];
+    comfortRating?: string;
+    /** Engine D/E self-rated donor distance (hoch / mittel). */
+    domainDistance?: string;
   };
   /** LLM-judge score (1..5 each + overall), attached by the judge-select step (E-041). */
   quality?: Quality;

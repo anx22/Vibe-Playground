@@ -31,15 +31,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Phase 2 — measure "far" honestly: rank donors by embedding distance to the essence,
     // keep the upper percentile (relative to the actual distribution; avoids absolute-threshold trap).
     let shortlist = diverge.donors;
-    try {
-      const vecs = await embed([diverge.essence, ...diverge.donors.map((d) => `${d.world} — ${d.gist}`)]);
-      const ess = vecs[0];
-      const scored = diverge.donors.map((d, i) => ({ d, dist: cosineDist(ess, vecs[i + 1]) }));
-      const sorted = [...scored].sort((a, b) => a.dist - b.dist);
-      const cut = sorted[Math.floor(sorted.length * 0.45)]?.dist ?? 0; // keep the far ~55%
-      shortlist = scored.filter((s) => s.dist >= cut).sort((a, b) => b.dist - a.dist).map((s) => s.d);
-    } catch {
-      /* embeddings unavailable → fall back to the full donor field */
+    if (diverge.donors.length > 3) {
+      try {
+        const vecs = await embed([diverge.essence, ...diverge.donors.map((d) => `${d.world} — ${d.gist}`)]);
+        const ess = vecs[0];
+        const scored = diverge.donors
+          .map((d, i) => ({ d, dist: cosineDist(ess, vecs[i + 1]) }))
+          .filter((s) => Number.isFinite(s.dist))
+          .sort((a, b) => b.dist - a.dist); // farthest first
+        // Keep the far ~55% by RANK (robust to tied distances), never fewer than 4.
+        const keep = Math.max(4, Math.round(scored.length * 0.55));
+        if (scored.length) shortlist = scored.slice(0, keep).map((s) => s.d);
+      } catch {
+        /* embeddings unavailable → fall back to the full donor field */
+      }
     }
 
     // Phase 3 — Resonator + Composer + Namer (strong): rhyme filter → bridges.
