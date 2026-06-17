@@ -1,16 +1,11 @@
 import {
   analogySchema,
   axisVectorSchema,
-  batchResultSchema,
   judgeSchema,
   personaSchema,
-  sceneRenderSchema,
-  seedListSchema,
   type Direction,
   type JudgeScore,
   type Persona,
-  type SceneRender,
-  type WorldTerm,
 } from "./schema";
 import type { AxisVector } from "../engine";
 
@@ -41,27 +36,6 @@ async function post<T>(path: string, body: unknown, schema: { parse(x: unknown):
 
 /** Model tier — `strong` (Sonnet) for the user-facing Studio, `cheap` (Haiku) for Lab evals, `premium` (Opus) for the strict judge run. */
 export type Tier = "cheap" | "strong" | "premium";
-
-export interface RenderJob {
-  leitwert: string;
-  worlds: string[];
-  mood: string;
-  note: string;
-  briefing?: string;
-}
-
-export const renderScene = (input: RenderJob, tier?: Tier): Promise<SceneRender> =>
-  post("/api/render", { ...input, tier }, sceneRenderSchema);
-
-/** Batch render — one round-trip, fanned out server-side (the Studio's generate path). */
-export const renderBatch = (jobs: RenderJob[], tier?: Tier): Promise<SceneRender[]> =>
-  post("/api/batch", { jobs, tier }, batchResultSchema).then((r) => r.results);
-
-export const expandSeeds = (input: {
-  briefing: string;
-  n: number;
-  tier?: Tier;
-}): Promise<WorldTerm[]> => post("/api/seeds", input, seedListSchema).then((r) => r.worlds);
 
 export const generatePersona = (input: { briefing: string; tier?: Tier }): Promise<Persona> =>
   post("/api/persona", input, personaSchema);

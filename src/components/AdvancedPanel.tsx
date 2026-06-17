@@ -1,38 +1,37 @@
-import type { Lens } from "../store/useVibeStore";
+import type { Mode } from "../store/useVibeStore";
 
-const LENSES: { id: Lens; label: string; hint: string }[] = [
-  { id: "auto", label: "Katalog", hint: "Feste Stil-Liste, per Regel kombiniert" },
-  { id: "B", label: "Generativ", hint: "Modell erfindet Begriffe, mischt per Bedeutungs-Nähe" },
-  { id: "C", label: "Persona", hint: "Modell erfindet einen Urheber, daraus folgt der Stil" },
+const MODES: { id: Mode; label: string; hint: string }[] = [
+  { id: "analogy", label: "Analogie", hint: "Funktionaler Kern → ferne Welt mit gleichem Kern → Leitwert" },
+  { id: "persona", label: "Persona", hint: "Modell erfindet einen Urheber, daraus folgt der Stil" },
 ];
 
-/** Adaptive Advanced controls: engine lens + the safe↔experimental tension knob. */
+/** Adaptive Advanced controls: the creative derivation (Analogie/Persona) + tension knob. */
 export function AdvancedPanel({
-  lens,
+  mode,
   tension,
-  onLens,
+  onMode,
   onTension,
 }: {
-  lens: Lens;
+  mode: Mode;
   tension: number;
-  onLens: (l: Lens) => void;
+  onMode: (m: Mode) => void;
   onTension: (t: number) => void;
 }) {
-  const current = LENSES.find((l) => l.id === lens);
+  const current = MODES.find((m) => m.id === mode);
   return (
     <div className="adv-panel">
       <div className="adv-head">Advanced</div>
 
-      <div className="adv-lens" role="tablist" aria-label="Engine">
-        {LENSES.map((l) => (
+      <div className="adv-lens" role="tablist" aria-label="Herleitung">
+        {MODES.map((m) => (
           <button
-            key={l.id}
+            key={m.id}
             type="button"
-            className={`adv-lens-btn${lens === l.id ? " is-active" : ""}`}
-            onClick={() => onLens(l.id)}
-            title={l.hint}
+            className={`adv-lens-btn${mode === m.id ? " is-active" : ""}`}
+            onClick={() => onMode(m.id)}
+            title={m.hint}
           >
-            {l.label}
+            {m.label}
           </button>
         ))}
       </div>

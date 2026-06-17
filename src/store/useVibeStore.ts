@@ -1,10 +1,10 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { AxisVector, Signal, VibeCard } from "../engine";
-import { AXES, add, autoEngine, clamp, zero, LEXICON } from "../engine";
+import { AXES, add, clamp, zero, LEXICON } from "../engine";
 import { paletteFor, typoFor } from "../engine/derive";
-import { generateAnalogies, interpretBriefing } from "../llm/client";
-import type { Direction } from "../llm/schema";
+import { generateAnalogies, generatePersona, interpretBriefing } from "../llm/client";
+import type { Direction, Persona } from "../llm/schema";
 import { judgeRank } from "../llm/select";
 
 const BATCH = 5;
@@ -12,8 +12,8 @@ const BATCH = 5;
 const OVERSCAN = BATCH + 2;
 const studioRng = () => Math.random();
 
-/** Kept for persistence back-compat; the single Analogy Engine ignores it (E-046). */
-export type Lens = "auto" | "B" | "C";
+/** The two creative derivations (E-046). Analogie = functional-core analogy; Persona = fictional source. */
+export type Mode = "analogy" | "persona";
 
 /** One analogy direction → a Studio card (palette/typo derive from its 6-axis projection). */
 function directionToCard(d: Direction): VibeCard {
@@ -30,6 +30,21 @@ function directionToCard(d: Direction): VibeCard {
   };
 }
 
+/** One persona → a Studio card (the fictional originator whose aesthetic falls out as the vibe). */
+function personaToCard(p: Persona): VibeCard {
+  return {
+    id: `${p.leitwert}-${Math.floor(studioRng() * 1e6)}`,
+    leitwert: p.leitwert,
+    mood: p.mood,
+    scene: p.persona,
+    typography: typoFor(p.vector, studioRng),
+    palette: paletteFor(p.vector),
+    vector: p.vector,
+    coherence: { sharedAxes: [], ok: true },
+    origin: { home: "Persona", intrusion: "—", object: "—", engineNote: p.persona },
+  };
+}
+
 /** Steering folded into the brief: pull toward kept directions, away from rejected ones. */
 function steerText(signals: Signal[]): string {
   const near = signals.filter((s) => s.kind === "attract").map((s) => s.label);
@@ -42,24 +57,33 @@ function steerText(signals: Signal[]): string {
 }
 
 /**
- * Studio generate — the Analogy Engine (E-046): brief → functional core → distant domains that
- * embody the same core → Leitwerte, judge-selected best-first. Falls back to the offline skeleton
- * only when the gateway is unreachable, so the loop never dead-ends.
+ * Studio generate (E-046). Two creative derivations, both judge-selected best-first:
+ *  - "analogy": brief → functional core → a DISTANT domain with the same core → Leitwert.
+ *  - "persona": a fictional source whose aesthetic falls out as a coherent vibe.
+ * Returns empty + a banner flag when the gateway is unreachable (no offline collision fallback).
  */
 async function generateBatch(
+  mode: Mode,
   briefing: string,
   steer: string,
-  fallbackCentroid: AxisVector,
-  spread: number,
 ): Promise<{ cards: VibeCard[]; sceneOk: boolean }> {
   try {
-    const dirs = await generateAnalogies({ briefing: briefing + steer, n: OVERSCAN, tier: "strong" });
-    const cards = dirs.map(directionToCard);
+    let cards: VibeCard[];
+    if (mode === "persona") {
+      const ps = await Promise.all(
+        Array.from({ length: OVERSCAN }, () =>
+          generatePersona({ briefing: briefing + steer, tier: "strong" }),
+        ),
+      );
+      cards = ps.map(personaToCard);
+    } else {
+      const dirs = await generateAnalogies({ briefing: briefing + steer, n: OVERSCAN, tier: "strong" });
+      cards = dirs.map(directionToCard);
+    }
     const ranked = await judgeRank(cards, briefing);
     return { cards: ranked.slice(0, BATCH), sceneOk: true };
   } catch {
-    const skeletons = autoEngine.generate(fallbackCentroid, { batchSize: BATCH, spread }, studioRng);
-    return { cards: skeletons, sceneOk: false }; // offline / rate-limited fallback
+    return { cards: [], sceneOk: false }; // gateway unreachable / rate-limited
   }
 }
 
@@ -98,7 +122,6 @@ const newSignal = (kind: Signal["kind"], card: VibeCard): Signal => ({
 
 interface VibeState {
   phase: "blank" | "studio";
-  view: "studio" | "lab";
   seed: string;
   seedVec: AxisVector;
   signals: Signal[];
@@ -113,12 +136,11 @@ interface VibeState {
   llmFallback: boolean;
   // Advanced (adaptive): unlocks on first steer; persisted.
   advanced: boolean;
-  lens: Lens;
+  mode: Mode;
   tension: number;
 
-  setView: (v: "studio" | "lab") => void;
   setSeed: (w: string) => void;
-  setLens: (l: Lens) => void;
+  setMode: (m: Mode) => void;
   setTension: (t: number) => void;
   explore: () => Promise<void>;
   iterate: () => Promise<void>;
@@ -133,7 +155,6 @@ export const useVibeStore = create<VibeState>()(
   persist(
     (set, get) => ({
       phase: "blank",
-      view: "studio",
       seed: "",
       seedVec: zero(),
       signals: [],
@@ -146,12 +167,11 @@ export const useVibeStore = create<VibeState>()(
       loading: false,
       llmFallback: false,
       advanced: false,
-      lens: "auto",
+      mode: "analogy",
       tension: 0.45,
 
-      setView: (v) => set({ view: v }),
       setSeed: (w) => set({ seed: w, seedVec: seedVector(w) }),
-      setLens: (l) => set({ lens: l }),
+      setMode: (m) => set({ mode: m }),
       setTension: (t) =>
         set({ tension: t, spread: spreadFromTension(t, get().signals) }),
 
@@ -166,18 +186,18 @@ export const useVibeStore = create<VibeState>()(
             /* keep lexicon fallback */
           }
         }
-        const { tension } = get();
+        const { tension, mode } = get();
         const spread = spreadFromTension(tension, []);
         const centroid = centroidOf(seedVec, []);
         set({ seedVec, centroid, spread });
-        const { cards, sceneOk } = await generateBatch(briefing, "", centroid, spread);
+        const { cards, sceneOk } = await generateBatch(mode, briefing, "");
         set({ cards, loading: false, llmFallback: !sceneOk });
       },
 
       iterate: async () => {
-        const { centroid, spread, seed, signals } = get();
+        const { seed, signals, mode } = get();
         set({ loading: true });
-        const { cards, sceneOk } = await generateBatch(seed, steerText(signals), centroid, spread);
+        const { cards, sceneOk } = await generateBatch(mode, seed, steerText(signals));
         set({ cards, focusId: null, loading: false, llmFallback: !sceneOk });
       },
 
@@ -230,7 +250,7 @@ export const useVibeStore = create<VibeState>()(
         library: s.library,
         commits: s.commits,
         advanced: s.advanced,
-        lens: s.lens,
+        mode: s.mode,
         tension: s.tension,
       }),
     },

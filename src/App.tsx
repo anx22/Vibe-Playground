@@ -4,7 +4,6 @@ import { useVibeStore } from "./store/useVibeStore";
 import { Pentagon } from "./components/Pentagon";
 import { VibeCard } from "./components/VibeCard";
 import { Tacho } from "./components/Tacho";
-import { Lab } from "./components/Lab";
 import { ExportModal } from "./components/ExportModal";
 import { AdvancedPanel } from "./components/AdvancedPanel";
 
@@ -44,30 +43,14 @@ export default function App() {
           Vibe Playground
         </button>
         <div className="topbar-right">
-          <div className="view-toggle">
-            <button
-              type="button"
-              className={s.view === "studio" ? "is-active" : ""}
-              onClick={() => s.setView("studio")}
-            >
-              Studio
-            </button>
-            <button
-              type="button"
-              className={s.view === "lab" ? "is-active" : ""}
-              onClick={() => s.setView("lab")}
-            >
-              Lab
-            </button>
-          </div>
           <Tacho value={tacho} />
         </div>
       </header>
 
-      {s.view === "studio" && s.phase === "studio" && s.llmFallback && !bannerDismissed && (
+      {s.phase === "studio" && s.llmFallback && !bannerDismissed && (
         <div className="ratelimit-banner">
           <span>
-            Rate-Limit oder kein Gateway — Vibes laufen gerade als <b>Skelette</b> (ohne LLM-Szene).
+            Rate-Limit oder kein Gateway — gerade <b>kein Ergebnis</b>. Später erneut iterieren.
           </span>
           <a
             className="rl-link"
@@ -83,9 +66,7 @@ export default function App() {
         </div>
       )}
 
-      {s.view === "lab" ? (
-        <Lab />
-      ) : s.phase === "blank" ? (
+      {s.phase === "blank" ? (
         <main className="stage">
           <Pentagon vector={s.centroid} spread={s.spread} idle />
           <div className="seedbar">
@@ -134,9 +115,9 @@ export default function App() {
             </div>
             {s.advanced && (
               <AdvancedPanel
-                lens={s.lens}
+                mode={s.mode}
                 tension={s.tension}
-                onLens={s.setLens}
+                onMode={s.setMode}
                 onTension={s.setTension}
               />
             )}

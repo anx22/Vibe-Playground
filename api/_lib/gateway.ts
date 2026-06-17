@@ -1,4 +1,4 @@
-import { embedMany, gateway, generateObject } from "ai";
+import { generateObject } from "ai";
 import type { z } from "zod";
 
 /**
@@ -69,22 +69,6 @@ export async function genObject<T>(opts: {
 
   if (!opts.noCache) cache.set(ck, { at: Date.now(), value: object });
   return object as T;
-}
-
-/** Real semantic embeddings (Engine B). Cheap, high-dimensional — auth via the gateway/OIDC. */
-const EMBED_MODEL = "openai/text-embedding-3-small";
-export async function embed(texts: string[]): Promise<number[][]> {
-  if (!texts.length) return [];
-  const { embeddings, usage } = await embedMany({
-    model: gateway.textEmbeddingModel(EMBED_MODEL),
-    values: texts,
-  });
-  try {
-    console.log(`[gw] embed ${EMBED_MODEL} n=${texts.length} usage=${JSON.stringify(usage)}`);
-  } catch {
-    /* ignore */
-  }
-  return embeddings;
 }
 
 /** Concurrency-limited fan-out — the synchronous "batch" path through the gateway. */
