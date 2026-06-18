@@ -54,7 +54,7 @@ src/
   llm/         schema (zod, shared) · client (fetchers) · select (judge-rank)
   store/       useVibeStore (zustand) — SOURCES registry, anchors, explore/iterate
   components/  Board (bento field + detail drawer) · ExportModal
-  export.ts    block → ready design-brief prompt
+  export.ts    block → one-line trigger + target prompt (MJ/ChatGPT/Brandboard)
 api/           entangle · latent · workbench · persona · judge · interpret · health
   _lib/        gateway (tiers · caching · embed · cosineDist) · prompts · schema
 scripts/eval.ts   headless engine comparison on the judge

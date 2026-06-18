@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { VibeCard } from "./engine";
-import { buildExportPrompt } from "./export";
+import { buildExportPrompt, buildTrigger } from "./export";
 
 const base = {
   mood: "kühl, wachsam",
@@ -50,5 +50,31 @@ describe("buildExportPrompt (compact style trigger)", () => {
     expect(out).toContain("Stil-Trigger: «Stille Würde»");
     expect(out).toContain("Quelle:");
     expect(out).not.toContain("Welt:");
+  });
+});
+
+describe("buildTrigger + target tabs (C9)", () => {
+  it("packs the whole vibe into a single line", () => {
+    const out = buildTrigger(bridgeCard, "brandboard");
+    expect(out.split("\n")).toHaveLength(1);
+    expect(out).toContain("«Black-Box-Vigilanz»");
+    expect(out).toContain("#101010");
+  });
+
+  it("flavours Midjourney as an English image prompt with params", () => {
+    const out = buildExportPrompt(bridgeCard, "midjourney");
+    expect(out).toContain("--ar");
+    expect(out).toMatch(/aesthetic|surfaces/);
+    expect(out).not.toContain("Stil-Trigger");
+  });
+
+  it("frames ChatGPT as an art-director instruction", () => {
+    const out = buildExportPrompt(bridgeCard, "chatgpt");
+    expect(out).toContain("Art Director");
+    expect(out).toContain("Black-Box-Vigilanz");
+  });
+
+  it("keeps brandboard as the default layered spec", () => {
+    expect(buildExportPrompt(bridgeCard)).toBe(buildExportPrompt(bridgeCard, "brandboard"));
   });
 });

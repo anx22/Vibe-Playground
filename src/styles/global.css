@@ -954,7 +954,7 @@ body {
 }
 .export-text {
   width: 100%;
-  height: 320px;
+  height: 200px;
   resize: vertical;
   border: 2px solid var(--ink);
   border-radius: 14px;
@@ -971,6 +971,17 @@ body {
   justify-content: flex-end;
   gap: 10px;
 }
+
+/* C9 — target tabs + the one-line trigger */
+.export-tabs { display: flex; gap: 6px; }
+.export-tab { flex: 1; padding: 8px 10px; border: 2px solid #eef1f9; background: #fff; border-radius: 12px; font-weight: 800; font-size: 13px; color: var(--ink-soft); cursor: pointer; box-shadow: 0 3px 0 #eef1f9; transition: transform .06s ease, filter .15s ease; }
+.export-tab:hover { filter: brightness(1.02); }
+.export-tab:active { transform: translateY(2px); box-shadow: 0 1px 0 #eef1f9; }
+.export-tab.is-on { color: #fff; background: var(--accent); border-color: var(--accent); box-shadow: 0 3px 0 color-mix(in srgb, var(--accent) 60%, #000); }
+.export-line { display: flex; flex-direction: column; gap: 7px; background: color-mix(in srgb, var(--accent) 7%, #fff); border: 2px solid color-mix(in srgb, var(--accent) 22%, #fff); border-radius: 14px; padding: 11px 13px; }
+.export-line-label { font-weight: 800; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+.export-line-text { margin: 0; font-size: 13.5px; line-height: 1.45; color: var(--ink); font-weight: 600; overflow-wrap: anywhere; }
+.export-line-copy { align-self: flex-start; flex: 0 0 auto !important; }
 
 /* Library item with export action */
 .lib-item {
