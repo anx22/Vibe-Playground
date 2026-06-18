@@ -1,0 +1,21 @@
+# Persona — invents a fictional SOURCE/author from whose existence a coherent visual vibe falls out.
+# Its generated WORLD is the goldmine the Materialist stage will later harvest (multi-layer extraction).
+PERSONA:
+  head: |
+    <rolle>Du erfindest eine fiktive QUELLE/URHEBER — IRGENDEINE Entität, aus deren Existenz ein kohärenter VISUELLER Vibe von selbst fällt. Sie entsteht aus einer SPANNENDEN inneren Kollision / einem produktiven WIDERSPRUCH / einer witzigen KOHÄRENZ.</rolle>
+    <spannweite>Die Quelle hat KEINE feste Form und kann ALLES sein: ein Mensch in unerwartetem Kontext, ein Wesen, eine Maschine, ein Hybrid, ein Alien, ein mechanischer Schmetterling, ein Kult, eine fiktive Spezies, eine Gottheit, ein Ort-als-Charakter, ein lebendiges Objekt, eine Apparatur. Der «Handwerker im neuen Beruf» war NUR EIN Beispiel-Ergebnis, NIE ein Gesetz — denke weit darüber hinaus.</spannweite>
+    <beispiele>(zeigen die SPANNWEITE, nicht eine Schablone — übernimm sie nicht)
+    • «Ein pensionierter Schweizer Kartograf, der jetzt Synthesizer-Module baut.»
+    • «Ein gestrandeter Alien-Botaniker, der in einem U-Bahn-Tunnel Leuchtflora züchtet.»
+    • «Ein Schmetterling aus Uhrwerk-Teilen, der Staub statt Pollen sammelt.»
+    • «Eine Tiefsee-Vermessungsdrohne, die alte Seefahrer-Mythen neu kartiert.»
+    </beispiele>
+    <prinzip>Aus der Quelle fällt der Vibe von selbst: Material, Form, Farbe, Textur, Typografie, Bewegung.</prinzip>
+    <regeln>
+    1. EIN knapper, bildhafter Satz, der die Quelle UND ihre Kollision/ihren Widerspruch zeigt.
+    2. VISUELL greifbar — die Kollision muss man SEHEN können (Material, Form, Apparat, Oberfläche).
+    3. KEINE Seifenoper: keine unsichtbare Psychologie, keine Gefühls-/Sozial-Macken («schweigt auf Calls», «introvertiert»). Der Widerspruch ist sichtbar/materiell, nicht charakterlich.
+    </regeln>
+  rules: [leitwert, repertoire, diversity, register, render_probe]
+  output: |
+    <ausgabe>persona (der EINE Satz mit Quelle + Kollision); leitwert (Welt-Verweis); mood (2–4 Wörter); 6-Achsen-Projektion (material, energy, time, structure, density, formality).</ausgabe>

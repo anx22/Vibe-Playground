@@ -1,0 +1,35 @@
+# Shared rule blocks — injected into the engine setups by `rules: [...]` (see scripts/build-setup.ts).
+# THIS is the one place to tune the cross-cutting word-rules. Edit, then `npm run setup`.
+
+leitwert: |
+  <leitwert_format>
+  Ein Leitwert ist ein VERDICHTETER WELT-VERWEIS: ein Kompositum aus 2–4 KONKRETEN, sichtbaren Welt-/Handwerks-/Material-/Ort-Begriffen, mit Bindestrichen, das sofort eine VISUELLE Designwelt auslöst.
+  GUT: «Black-Box-Vigilanz» · «Leuchtfeuer-Logbuch» · «Kartograf-Synthese» · «Reinraum-Almanach».
+  VERBOTEN: ganze Sätze; Verb-/Imperativ-Phrasen («… sichtbar machen»); «X ist Y»/«X trägt Y»; abstrakte Aphorismen; Wert-/Tugend-/Gefühlswörter als Leitwert («Stille», «Mut», «Würde», «Vertrauen», «Risiko», «Messung ist Mut», «Stille trägt Gewicht»).
+  Der Leitwert benennt WELTEN, keine Botschaft — man muss ihn SEHEN können.
+  </leitwert_format>
+
+diversity: |
+  <diversität>
+  Beispiele in diesem Prompt zeigen NUR Form und Methode, NIE den Inhalt — übernimm KEINE ihrer Welten, Berufe, Domänen oder Wörter.
+  MEIDE deine Gewohnheits-Spender, die durch Übergebrauch selbst zum Klischee wurden: Tiefsee/Hydrothermalquellen, Vulkanologie/Geologie, Buchbinderei/Bleisatz, Uhrmacherei, Kartografie, Damaststahl, Nō-Theater, Quipu, Leuchtturm/Leuchtfeuer, Imkerei, Alchemie. Nutze sie NUR, wenn der Reim wirklich einzigartig ist — sonst FRISCHE, ungenutzte Domänen.
+  Scanne das GESAMTE menschliche Wissen aus ALLEN Epochen — historisch BIS gegenwärtig, digital, futuristisch, spekulativ; NICHT nur historisch/vintage — und ALLEN Kulturen, Wissenschaften, Berufen, Alltag, Subkulturen, Sport, Recht, Logistik, Landwirtschaft, Medizin, Spiel, Musik. Jede der N Richtungen aus einer KOMPLETT anderen Wissensregion — keine zwei aus derselben Familie.
+  Variiere Wortform UND Objekt-Metapher stark: NICHT immer dieselben Endungen (-Logbuch, -Almanach, -Protokoll, -Raster, -Kodex) und NICHT immer Buch-/Archiv-Objekte. Das verdichtende Objekt kann ALLES sein — Werkzeug, Maschine, Kleidung, Speise, Instrument, Fahrzeug, Software, Körper, Gebäude.
+  In jeder Antwort echte Überraschung statt der naheliegenden 'kreativen' Standardwelten.
+  </diversität>
+
+repertoire: |
+  <repertoire>
+  Das eigentliche Ziel ist NICHT eine feste Bauform, sondern eine SPANNENDE METAPHER / ein produktiver WIDERSPRUCH / eine witzige KOHÄRENZ / ein goldener Schnitt über Metaphern hinweg. Strukturen und Beispiele in diesem Prompt sind WERKZEUG, KEIN Käfig — denke ohne Scheuklappen.
+  Dein Material ist ALLES: Domänen, Phänomene, Materialien, Systeme, Wesen, Epochen — UND das gesamte etablierte Design-/Kunst-/Illustrations-/Zeichentechnik-Vokabular (Stile, Bewegungen, Medien, Druck-/Mal-/Zeichen-/Render-Techniken, Künstler-Handschriften). Nutze es als FRISCHE, SPEZIFISCHE Zutat einer Kollision — niemals als faule generische Einzelstil-Antwort.
+  </repertoire>
+
+register: |
+  <render_register>
+  Variiere nicht nur die DOMÄNE, sondern das RENDER-/MATERIAL-REGISTER: das Material-, Oberflächen-, Licht- und Gewichts-Gefühl, das der Leitwert in einem Bildmodell auslöst (z. B. Metall/Industrie · organisch/weich · digital/leuchtend · Papier/Archiv · Stein/Keramik · Textil/Faser · Glas/Flüssig · roh/elementar). Die N Ergebnisse müssen VERSCHIEDENE Register treffen — KEINE zwei im selben Material-/Render-Register, auch wenn ihre Domänen verschieden sind (zwei ferne Welten, die beide als «verwittertes Vintage-Messing-Papier» rendern, sind ein Register-Klon).
+  </render_register>
+
+render_probe: |
+  <render_probe>
+  Selbst-Render-Probe je Leitwert: stell dir vor, NUR der Leitwert (ohne Szene/Begründung) geht an ein Bildmodell. Entsteht eine VIVIDE, SPEZIFISCHE Welt — oder etwas Generisches/Vages? Wenn vage: schärfe ihn mit einem KONKRETEREN Welt-/Material-Begriff, bis er von selbst eine spezifische Designwelt zieht. Schärfe NUR die vagen — bereits konkrete Leitwerte NICHT überschärfen/verflachen. Er bleibt ein 2–4-teiliges Konkret-Kompositum, NIE eine Szene oder Anweisung.
+  </render_probe>
