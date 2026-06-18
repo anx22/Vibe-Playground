@@ -30,10 +30,14 @@ export const DIVERSITY_RULE =
   "Hydrothermalquellen, Vulkanologie/Geologie, Buchbinderei/Bleisatz, Uhrmacherei, Kartografie, " +
   "Damaststahl, Nō-Theater, Quipu, Leuchtturm/Leuchtfeuer, Imkerei, Alchemie. Nutze sie NUR, wenn der " +
   "Reim wirklich einzigartig ist — sonst FRISCHE, ungenutzte Domänen.\n" +
-  "Scanne das GESAMTE menschliche Wissen (alle Epochen, Kulturen, Wissenschaften, Berufe, Alltag, " +
-  "Subkulturen, Sport, Recht, Logistik, Landwirtschaft, Medizin, Spiel, Musik, Bürokratie …). Jede der " +
-  "N Richtungen aus einer KOMPLETT anderen Wissensregion — keine zwei aus derselben Familie. Maximale " +
-  "Streuung; in jeder Antwort echte Überraschung statt der naheliegenden 'kreativen' Standardwelten.\n" +
+  "Scanne das GESAMTE menschliche Wissen aus ALLEN Epochen — historisch BIS gegenwärtig, digital, " +
+  "futuristisch, spekulativ; NICHT nur historisch/vintage — und ALLEN Kulturen, Wissenschaften, " +
+  "Berufen, Alltag, Subkulturen, Sport, Recht, Logistik, Landwirtschaft, Medizin, Spiel, Musik. Jede " +
+  "der N Richtungen aus einer KOMPLETT anderen Wissensregion — keine zwei aus derselben Familie.\n" +
+  "Variiere Wortform UND Objekt-Metapher stark: NICHT immer dieselben Endungen (-Logbuch, -Almanach, " +
+  "-Protokoll, -Raster, -Kodex) und NICHT immer Buch-/Archiv-Objekte. Das verdichtende Objekt kann " +
+  "ALLES sein — Werkzeug, Maschine, Kleidung, Speise, Instrument, Fahrzeug, Software, Körper, Gebäude.\n" +
+  "In jeder Antwort echte Überraschung statt der naheliegenden 'kreativen' Standardwelten.\n" +
   "</diversität>";
 
 export const JUDGE_SYSTEM =
@@ -60,8 +64,9 @@ export const ENTANGLE_SYSTEM =
   "Domänenwörter (kein «Sicherheit», «Graph»). Ein Satz. Trage sie wortwörtlich durch alle Schritte.\n" +
   "2. KLISCHEES VERBRENNEN: die 3–5 naheliegenden Design-Reflexe listen und hart verbieten.\n" +
   "3. VERSCHRÄNKUNGS-SUCHE: Quellwelten, domänenfern, deren innere Logik mit der Essenz REIMT. Scanne " +
-  "vor-digital, vernakulär, nicht-westlich, nicht-Design, quer durch ALLE Wissensgebiete. " +
-  "Verwirf topische Nachbarn und den Design-Kanon (Bauhaus/Swiss/Brutalismus).\n" +
+  "aus ALLEN Epochen (historisch, gegenwärtig, futuristisch, digital, spekulativ — NICHT nur " +
+  "historisch) und ALLEN Kulturen (bewusst auch nicht-westlich, vernakulär), quer durch ALLE " +
+  "Wissensgebiete. Verwirf topische Nachbarn und den Design-Kanon (Bauhaus/Swiss/Brutalismus).\n" +
   "4. AFFORDANZ-FILTER: nur Welten mit ≥5 konkreten, gestalterisch nutzbaren Affordanzen behalten; " +
   "tote/erschöpfte Welten (z. B. Tresor → schwer/metall/retro) raus.\n" +
   "5. KOMPONIEREN: pro Brücke 2 Welten, die BEIDE unabhängig mit DERSELBEN Essenz reimen. Reibung " +
@@ -83,8 +88,9 @@ export const LATENT_DIVERGE_SYSTEM =
   "<aufgabe>\n" +
   "1. ESSENZ (Wirkstruktur) destillieren — abstrakt, ohne Oberflächen-/Domänenwörter, ein Satz.\n" +
   "2. Die 3–5 naheliegenden Design-Klischees verbrennen.\n" +
-  "3. Ein WEITES Feld von 12–16 Spender-Welten vorschlagen, maximal FERN vom Thema — vor-digital, " +
-  "vernakulär, nicht-westlich, nicht-Design, quer durch ALLE Wissensgebiete. " +
+  "3. Ein WEITES Feld von 12–16 Spender-Welten vorschlagen, maximal FERN vom Thema, aus ALLEN Epochen " +
+  "(historisch, gegenwärtig, futuristisch, digital, spekulativ — NICHT nur historisch) und ALLEN " +
+  "Kulturen (auch nicht-westlich, vernakulär), quer durch ALLE Wissensgebiete. " +
   "KEINE topischen Nachbarn, KEIN Design-Kanon. Bewusst über sehr verschiedene Domänen streuen.\n" +
   "</aufgabe>\n" +
   "<hinweis>Die Distanz misst danach ein Embedding-Index — liefere echte Streuung, nicht Varianten.</hinweis>" +
@@ -117,8 +123,9 @@ export const WORKBENCH_SYSTEM =
   "No-Gos — aus dem Briefing selbst, nicht nachfragen.\n" +
   "2. SEMANTISCHES FELD (Volumen) über 5 Ebenen: A direkt · B Metapher · C Emotion/Versprechen · " +
   "D fremdsprachig · E ENTKOPPELTE Umdeutung («wäre das kein Produkt, sondern ein Schiff/Ritual/" +
-  "geologischer Prozess/Küchengerät»). Ebene E ist Pflicht und muss FERN, nicht-kanonisch, " +
-  "nicht-westlich, nicht-Design greifen — Hauptquelle der Überraschung.\n" +
+  "geologischer Prozess/Küchengerät»). Ebene E ist Pflicht und muss FERN und unerwartet greifen — aus " +
+  "jeder Epoche und Kultur (historisch BIS zeitgenössisch/digital/futuristisch), jenseits des " +
+  "Design-Kanons — Hauptquelle der Überraschung.\n" +
   "3. OPERATOREN (Töpfe), briefing-adaptiv gewichtet (B2B-Premium → Klassische Wurzel + Ort/Ära, Bruch " +
   "unterdrücken; verspielt → Umdeutung + Geste + Bruch): Entkoppelte Umdeutung, Konkrete Metapher, " +
   "Fremdkultur-Lehnwort, Klassische Wurzel, Ort/Ära/Macher, Geste/Bewegung, Klang→Textur (Plosive " +
@@ -145,9 +152,12 @@ export const PERSONA_SYSTEM =
   "Atelier als Subjekt. Form: «Ein:e [Mensch mit Handwerk/Herkunft], der/die jetzt [fremder Kontext].»</harte_regel>\n" +
   "<beispiele>\n" +
   "• «Ein pensionierter Schweizer Kartograf, der jetzt Synthesizer-Module baut.»\n" +
-  "• «Eine Buchbinderin aus Kyoto, die nur noch für Software-Firmen arbeitet.»\n" +
   "• «Ein Geigenbauer, der auf chirurgische Prothesen umgestiegen ist.»\n" +
+  "• «Eine forensische Datenanalystin, die jetzt Parfums nach Tatort-Logik komponiert.»\n" +
+  "• «Ein Speedrun-Weltrekordhalter, der Notfall-Evakuierungspläne entwirft.»\n" +
   "</beispiele>\n" +
+  "<epochen>Die Person aus JEDER Epoche und Disziplin — bewusst auch ZEITGENÖSSISCH und DIGITAL " +
+  "(Coderin, Game-Designer, Datenforensikerin, Drohnenpilot), nicht nur traditionelles Handwerk.</epochen>\n" +
   "<prinzip>Aus dieser PERSON fällt der gesamte Vibe von selbst: Material, Typografie, Farbe, Textur, Tiefe.</prinzip>\n" +
   "<regeln>\n" +
   "1. GENAU EIN knapper Satz; beginnt mit «Ein»/«Eine» + einer PERSON (Beruf), nie mit Ort/Betrieb.\n" +
