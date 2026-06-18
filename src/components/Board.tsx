@@ -23,7 +23,7 @@ export function Board({ onExport }: { onExport: (c: VibeCard) => void }) {
   const cards = useVibeStore((s) => s.cards);
   const anchors = useVibeStore((s) => s.anchors);
   const seed = useVibeStore((s) => s.seed);
-  const loading = useVibeStore((s) => s.loading);
+  const pending = useVibeStore((s) => s.pendingSources);
   const failed = useVibeStore((s) => s.failedSources);
   const anchorsFull = anchors.length >= MAX_ANCHORS;
   const anchorIds = new Set(anchors.map((a) => a.id));
@@ -48,23 +48,24 @@ export function Board({ onExport }: { onExport: (c: VibeCard) => void }) {
         )}
       </div>
 
-      {failed.length > 0 && !loading && (
+      {failed.length > 0 && (
         <div className="board-note">{failed.join(", ")} {failed.length > 1 ? "lieferten" : "lieferte"} diese Runde nichts.</div>
       )}
 
       <div className="lanes">
         {SOURCES.map((src) => {
           const group = cards.filter((c) => c.source === src.id && !anchorIds.has(c.id));
+          const laneLoading = pending.includes(src.id);
           return (
             <section className="lane" key={src.id} style={{ ["--accent" as string]: src.accent } as CSSProperties}>
               <header className="lane-head">
                 <span className="lane-dot" />
                 <span className="lane-title">{src.label}</span>
-                <span className="lane-count">{group.length}</span>
+                <span className="lane-count">{laneLoading ? <span className="lane-spin" /> : group.length}</span>
               </header>
               <div className="lane-body">
-                {loading && group.length === 0 && <div className="lane-skeleton">entsteht…</div>}
-                {!loading && group.length === 0 && <div className="lane-empty">—</div>}
+                {laneLoading && group.length === 0 && <div className="lane-skeleton">läuft… <span className="lane-spin" /></div>}
+                {!laneLoading && group.length === 0 && <div className="lane-empty">—</div>}
                 {group.map((c) => (
                   <Row key={c.id} card={c} anchored={anchorIds.has(c.id)} anchorsFull={anchorsFull} onExport={onExport} />
                 ))}

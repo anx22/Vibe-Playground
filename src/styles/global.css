@@ -1586,7 +1586,7 @@ body {
 .row-main { width: 100%; display: flex; align-items: center; gap: 11px; padding: 11px 12px; background: none; border: none; cursor: pointer; text-align: left; }
 .row-bar { width: 6px; align-self: stretch; min-height: 36px; border-radius: 99px; background: var(--accent); flex: none; }
 .row-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-.row-name { font-weight: 800; font-size: 14.5px; color: var(--ink); line-height: 1.15; }
+.row-name { font-weight: 800; font-size: 14.5px; color: var(--ink); line-height: 1.16; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .row-sub { font-weight: 600; font-size: 12px; color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .row-pal { display: flex; width: 34px; height: 14px; border-radius: 99px; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(0,0,0,.06); flex: none; }
 .row-pal span { flex: 1; }
@@ -1594,12 +1594,15 @@ body {
 .row-chev.up { transform: rotate(180deg); }
 
 .row-detail { overflow: hidden; }
-.rd-inner { padding: 2px 14px 14px 29px; display: flex; flex-direction: column; gap: 7px; }
+.rd-inner { padding: 2px 14px 14px 29px; display: flex; flex-direction: column; gap: 7px; overflow-wrap: anywhere; }
 .rd-tag { align-self: flex-start; font-weight: 800; font-size: 11px; color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, #fff); border: 1.5px solid color-mix(in srgb, var(--accent) 30%, #fff); border-radius: 99px; padding: 2px 9px; }
 .rd-mood { font-weight: 700; font-size: 12px; color: var(--ink-soft); }
 .rd-block p, .rd-line { font-weight: 600; font-size: 13px; line-height: 1.45; color: var(--ink); margin: 0; }
 .rd-role { color: var(--ink-soft); font-size: 11px; }
 .rd-rhyme { font-style: italic; color: var(--ink-soft); }
 .rd-k { font-weight: 800; color: var(--accent); margin-right: 5px; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; }
-.rd-actions { display: flex; gap: 8px; margin-top: 6px; }
-.btn-sm { padding: 8px 12px !important; font-size: 13px !important; border-radius: 12px !important; }
+.rd-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.btn-sm { padding: 8px 12px !important; font-size: 13px !important; border-radius: 12px !important; flex: 1 1 auto; white-space: nowrap; }
+
+.lane-spin { display: inline-block; width: 13px; height: 13px; border: 2.5px solid color-mix(in srgb, var(--accent) 28%, #fff); border-top-color: var(--accent); border-radius: 50%; animation: lane-spin .7s linear infinite; vertical-align: middle; }
+@keyframes lane-spin { to { transform: rotate(360deg); } }

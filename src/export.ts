@@ -1,40 +1,27 @@
 import type { VibeCard } from "./engine";
 
 /**
- * Turn a block into a ready-to-paste design brief / LLM prompt — the output surface (E-024:
- * the vibe is the deliverable). Pure & deterministic, no tokens. Uses the block's own content
- * (Leitwert, the colliding worlds, why-it-rhymes, object, palette) — no axes.
+ * A compact STYLE TRIGGER to paste into a design AI (landing page / brandboard / pitch slide) —
+ * not a derivation essay (E-057). The Leitwert is the trigger; this adds only the few visual cues
+ * a model needs to render it: the colliding worlds (or the person), mood, palette, key textures.
  */
 export function buildExportPrompt(c: VibeCard): string {
   const d = c.detail;
-  const hasWorlds = !!d?.worlds?.length;
-  const lines: string[] = [`Design-Direction: «${c.leitwert}»`, ``];
+  const worlds = d?.worlds?.length
+    ? d.worlds.map((w) => w.name).join(" × ")
+    : c.origin.home && c.origin.home !== "Persona"
+      ? c.origin.home
+      : "";
+  const cues = (d?.affordances ?? []).slice(0, 4).join(", ");
 
-  if (hasWorlds) {
-    lines.push(`Welten-Verschränkung:`);
-    for (const w of d!.worlds!) lines.push(`- ${w.name} (${w.role}) — reimt: ${w.rhyme}`);
-    lines.push(``);
-  } else if (c.origin.home && c.origin.home !== "Persona") {
-    lines.push(`Welt: ${c.origin.home}`, ``);
-  } else {
-    lines.push(`Quelle: fiktive Persona/Urheber (siehe Herleitung)`, ``);
-  }
-
-  if (d?.object && d.object !== "—") lines.push(`Objekt-Metapher: ${d.object}`);
-  if (d?.derivation ?? c.scene) lines.push(`Herleitung (warum es trägt): ${d?.derivation ?? c.scene}`);
-  lines.push(`Stimmung: ${c.mood}`, ``);
-
-  if (d?.affordances?.length) {
-    lines.push(`Gestalterische Affordanzen:`, ...d.affordances.map((a) => `- ${a}`), ``);
-  }
-
-  lines.push(
-    `Palette (Richtung): ${c.palette.join(" · ")}`,
-    ``,
-    `Aufgabe: Erzeuge [Artefakt einsetzen — Landing-Page, Poster, App-Screen] strikt in dieser`,
-    `Design-Direction. ${hasWorlds ? "Setze die Welten-Verschränkung" : "Setze diese Welt"} visuell um`,
-    `(nicht wörtlich abbilden), halte Stimmung und Palette-Richtung konsequent; keine generische`,
-    `AI-Ästhetik, keine Klischees.`,
-  );
+  const lines = [
+    `Stil-Trigger: «${c.leitwert}»`,
+    worlds ? `Welten: ${worlds}` : d?.derivation ? `Quelle: ${d.derivation}` : "",
+    `Stimmung: ${c.mood}`,
+    `Palette: ${c.palette.join(" · ")}`,
+    cues ? `Visuell: ${cues}` : "",
+    "",
+    `Wende diesen Stil auf [Landingpage / Brandboard / Slide / Pitch] an — die Welten visuell umsetzen, nicht wörtlich abbilden; keine generische AI-Ästhetik.`,
+  ].filter(Boolean);
   return lines.join("\n");
 }

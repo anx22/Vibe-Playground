@@ -121,36 +121,21 @@ export const SOURCES: Source[] = [
   },
 ];
 
-/** Steering folded into the brief: the anchored gold blocks pull the next wave toward them. */
+/** Steering folded into the brief — a NUDGE, not a collapse. Anti-convergence so we don't get clones. */
 function gravityText(anchors: VibeCard[]): string {
   if (!anchors.length) return "";
-  return `\nGravitation — leite die nächsten Richtungen aus diesen Ankern ab, ohne den Kern zu verlassen: ${anchors
-    .map((a) => a.leitwert)
-    .join(", ")}.`;
+  return (
+    `\nInspiration (NICHT wiederholen, NICHT kopieren): ${anchors.map((a) => a.leitwert).join(", ")}. ` +
+    `Bewege dich in ihre Richtung, aber liefere klar EIGENSTÄNDIGE, untereinander stark VERSCHIEDENE ` +
+    `Ergebnisse — keine Varianten desselben, keine Near-Duplicates.`
+  );
 }
 
-/** Run every active source in parallel; each cluster keeps its judge-selected best. */
-async function generateField(
-  briefing: string,
-  steer: string,
-): Promise<{ cards: VibeCard[]; ok: boolean; failed: string[] }> {
-  const failed: string[] = [];
-  const clusters = await Promise.all(
-    SOURCES.map(async (src) => {
-      try {
-        const cards = await src.gen(briefing, steer, OVERSCAN);
-        const ranked = await judgeRank(cards, briefing);
-        return ranked.slice(0, PER_METHOD);
-      } catch (e) {
-        failed.push(src.label);
-        console.warn(`[${src.id}] generation failed`, e);
-        return [] as VibeCard[];
-      }
-    }),
-  );
-  const flat = clusters.flat();
-  return { cards: flat, ok: flat.length > 0, failed };
-}
+/** Normalised leitwert for dedup (a round of clones is the main "many identical entries" bug). */
+const normLw = (s: string) => s.toLowerCase().replace(/[^a-z0-9äöü]/g, "");
+
+/** Monotonic round id so late results from a superseded round are dropped. */
+let roundSeq = 0;
 
 interface VibeState {
   phase: "blank" | "studio";
@@ -163,6 +148,8 @@ interface VibeState {
   llmFallback: boolean;
   /** Engine cluster labels that failed in the last round (empty when all succeeded). */
   failedSources: string[];
+  /** Source ids still generating this round — each lane shows a spinner until its id clears. */
+  pendingSources: string[];
 
   setSeed: (w: string) => void;
   explore: () => Promise<void>;
@@ -174,7 +161,60 @@ interface VibeState {
 
 export const useVibeStore = create<VibeState>()(
   persist(
-    (set, get) => ({
+    (set, get) => {
+      /**
+       * Streaming round (E-056): each engine runs INDEPENDENTLY and streams its judge-selected
+       * cards into its lane the moment it finishes — no engine waits for the slowest. A round id
+       * drops late results from a superseded round; loading/pending clear as each settles.
+       */
+      const runRound = (briefing: string, steer: string) => {
+        const round = ++roundSeq;
+        set({
+          loading: true,
+          cards: [],
+          focusId: null,
+          failedSources: [],
+          pendingSources: SOURCES.map((s) => s.id),
+        });
+        const settle = (srcId: string) =>
+          set((s) => {
+            const pendingSources = s.pendingSources.filter((id) => id !== srcId);
+            const done = pendingSources.length === 0;
+            return {
+              pendingSources,
+              loading: !done,
+              llmFallback: done ? s.cards.length === 0 : s.llmFallback,
+            };
+          });
+        for (const src of SOURCES) {
+          src
+            .gen(briefing, steer, OVERSCAN)
+            .then((cards) => judgeRank(cards, briefing))
+            .then((ranked) => {
+              if (round !== roundSeq) return;
+              set((s) => {
+                const seen = new Set(s.cards.map((c) => normLw(c.leitwert)));
+                const fresh = ranked.slice(0, PER_METHOD).filter((c) => {
+                  const k = normLw(c.leitwert);
+                  if (seen.has(k)) return false;
+                  seen.add(k);
+                  return true;
+                });
+                return { cards: [...s.cards, ...fresh] };
+              });
+            })
+            .catch((e) => {
+              if (round !== roundSeq) return;
+              console.warn(`[${src.id}] generation failed`, e);
+              set((s) => ({ failedSources: [...s.failedSources, src.label] }));
+            })
+            .finally(() => {
+              if (round === roundSeq) settle(src.id);
+            });
+        }
+      };
+
+      return {
       phase: "blank",
       seed: "",
       cards: [],
@@ -184,21 +224,20 @@ export const useVibeStore = create<VibeState>()(
       loading: false,
       llmFallback: false,
       failedSources: [],
+      pendingSources: [],
 
       setSeed: (w) => set({ seed: w }),
 
       explore: async () => {
         const briefing = get().seed;
-        set({ phase: "studio", cards: [], anchors: [], focusId: null, generation: 1, loading: true, failedSources: [] });
-        const { cards, ok, failed } = await generateField(briefing, "");
-        set({ cards, loading: false, llmFallback: !ok, failedSources: failed });
+        set({ phase: "studio", cards: [], anchors: [], focusId: null, generation: 1 });
+        runRound(briefing, "");
       },
 
       iterate: async () => {
         const { seed, anchors, generation } = get();
-        set({ loading: true });
-        const { cards, ok, failed } = await generateField(seed, gravityText(anchors));
-        set({ cards, focusId: null, generation: generation + 1, loading: false, llmFallback: !ok, failedSources: failed });
+        set({ generation: generation + 1 });
+        runRound(seed, gravityText(anchors));
       },
 
       toggleAnchor: (c) => {
@@ -210,9 +249,12 @@ export const useVibeStore = create<VibeState>()(
 
       focus: (id) => set({ focusId: id }),
 
-      reset: () =>
-        set({ phase: "blank", seed: "", cards: [], anchors: [], focusId: null, generation: 0, loading: false, failedSources: [] }),
-    }),
+      reset: () => {
+        roundSeq++; // cancel any in-flight round
+        set({ phase: "blank", seed: "", cards: [], anchors: [], focusId: null, generation: 0, loading: false, failedSources: [], pendingSources: [] });
+      },
+      };
+    },
     {
       name: "vibe-playground",
       // Persist the whole working set so a reload restores the constellation, not orphaned anchors.

@@ -72,4 +72,4 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 }
 
-export const config = { maxDuration: 90 };
+export const config = { maxDuration: 180 };

@@ -35,20 +35,19 @@ const personaCard: VibeCard = {
   detail: { derivation: "Ein obsessiver Uhrmacher …" },
 };
 
-describe("buildExportPrompt", () => {
-  it("emits the worlds-entanglement block for a bridge card", () => {
+describe("buildExportPrompt (compact style trigger)", () => {
+  it("is a tight style trigger for a bridge card (worlds + palette, no essay)", () => {
     const out = buildExportPrompt(bridgeCard);
-    expect(out).toContain("«Black-Box-Vigilanz»");
-    expect(out).toContain("Welten-Verschränkung:");
-    expect(out).toContain("Flugschreiber");
-    expect(out).toContain("Setze die Welten-Verschränkung");
+    expect(out).toContain("Stil-Trigger: «Black-Box-Vigilanz»");
+    expect(out).toContain("Welten: Flugschreiber");
     expect(out).toContain("#101010");
+    expect(out.split("\n").length).toBeLessThan(8); // compact, not a Riesenbuch
   });
 
-  it("does NOT reference a Welten-Verschränkung for a persona card (no worlds)", () => {
+  it("uses the person as the source for a persona card (no worlds)", () => {
     const out = buildExportPrompt(personaCard);
-    expect(out).not.toContain("Welten-Verschränkung");
-    expect(out).toContain("fiktive Persona");
-    expect(out).toContain("Setze diese Welt");
+    expect(out).toContain("Stil-Trigger: «Stille Würde»");
+    expect(out).toContain("Quelle:");
+    expect(out).not.toContain("Welten:");
   });
 });
