@@ -1,5 +1,5 @@
 /**
- * Headless eval harness for the engines (Verschränkung · Latent-Agent · Werkbank · Persona).
+ * Headless eval harness for the engines (Verschränkung · Werkbank · Persona).
  * Robust by construction: every network call is timeout-bounded + retried, a failed call is RECORDED
  * (engine · briefing · error · ms) and never aborts the run, and the end prints a FAILURES block plus a
  * scorecard for whatever succeeded. `--in` makes a run fully deterministic & offline (score a frozen
@@ -20,7 +20,6 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import {
   generateBridges,
-  generateLatent,
   generatePersonas,
   generateWorkbench,
   judge,
@@ -45,7 +44,6 @@ const BRIEFINGS = [
 const worldsOf = (ws: { name: string }[]) => ws.map((w) => w.name).join(" × ");
 const ENGINES: { id: string; gen: (b: string, n: number) => Promise<Card[]> }[] = [
   { id: "entanglement", gen: async (b, n) => (await generateBridges({ briefing: b, n, tier: "strong" })).bridges.map((x) => ({ leitwert: x.leitwert, world: worldsOf(x.worlds), scene: x.creativeDerivation, mood: x.mood })) },
-  { id: "latent", gen: async (b, n) => (await generateLatent({ briefing: b, n })).bridges.map((x) => ({ leitwert: x.leitwert, world: worldsOf(x.worlds), scene: x.creativeDerivation, mood: x.mood })) },
   { id: "workbench", gen: async (b, n) => (await generateWorkbench({ briefing: b, n })).map((x) => ({ leitwert: x.leitwert, world: worldsOf(x.worlds), scene: x.creativeDerivation, mood: x.mood })) },
   { id: "persona", gen: async (b, n) => (await generatePersonas({ briefing: b, n, tier: "strong" })).map((p) => ({ leitwert: p.leitwert, world: "Persona", scene: p.persona, mood: p.mood })) },
 ];

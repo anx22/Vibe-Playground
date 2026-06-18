@@ -4,9 +4,9 @@
 
 ## Where it stands
 
-Live on Vercel. The Studio is a **bento field**: briefing → four engine **panels** (each a hero
+Live on Vercel. The Studio is a **bento field**: briefing → three engine **panels** (each a hero
 direction over satellite tiles) → anchor up to 5 gold → "aus Ankern ableiten" → detail drawer →
-copy/export. All four generators run live (Verschränkung · Latent-Agent · Werkbank · Persona),
+copy/export. All three generators run live (Verschränkung · Werkbank · Persona),
 judge-selected per panel; Werkbank's satellites sub-cluster by taste-direction. Glossy-plastic theme.
 North star: speed to a credible, surprising direction.
 
@@ -16,8 +16,8 @@ North star: speed to a credible, surprising direction.
   engine panels, each a **hero** tile (judge-#1) over satellite tiles, a **register** chip per tile
   (E-065), Werkbank satellites grouped by **taste-direction** (D12); a tile opens a **detail drawer**
   with progressive depth (E-066). Leitidee header + anchor strip on top. Framer-Motion.
-- **Four engines** as a pluggable `Source` registry (`store/useVibeStore.ts`), each an `api/`
-  endpoint sharing one bridge contract + `bridgeToCard`: `entangle` (D) · `latent` (E) ·
+- **Three engines** as a pluggable `Source` registry (`store/useVibeStore.ts`), each an `api/`
+  endpoint sharing one bridge contract + `bridgeToCard`: `entangle` (D) ·
   `workbench` (F) · `persona`. Plus `judge`, `interpret`, `health`.
 - **Judge-select + quality floor** (`llm/select.ts`, E-063) — over-generate (guard-max), score
   on-target×surprise×craft×**designValue** (a derivable design-value, not a story/bullshit — the

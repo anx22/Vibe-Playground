@@ -20,18 +20,6 @@ export const personaSchema = z.object({
 /** Batched personas — N distinct sources in one call. */
 export const personaListSchema = z.object({ personas: z.array(personaSchema) });
 
-/** Engine E phase 1 — Diverger: essence, burnt clichés, and a WIDE field of far donor worlds. */
-export const divergeSchema = z.object({
-  essence: z.string().describe("Wirkstruktur — abstract relational core, no surface-domain words"),
-  forbidden: z.array(z.string()).describe("burnt cliché list"),
-  donors: z.array(
-    z.object({
-      world: z.string(),
-      gist: z.string().describe("one line: the world's inner logic (used to embed + measure distance)"),
-    }),
-  ).describe("12–16 deliberately diverse, far, non-canonical donor worlds"),
-});
-
 /** A single bridge — the shared output unit of Engine D and Engine E. */
 export const bridgeShape = z.object({
   leitwert: z.string().describe("2–4 token compound — the design directive"),
@@ -49,9 +37,6 @@ export const bridgeShape = z.object({
   domainDistance: z.string().describe("hoch / mittel"),
   affordances: z.array(z.string()).describe("≥5 concrete, design-actionable affordances"),
 });
-
-/** Just the bridges — what Engine E's compose call emits (essence/forbidden already in hand). */
-export const bridgesSchema = z.object({ bridges: z.array(bridgeShape) });
 
 /** Engine F — Technique Workbench. Curated survivors, each tagged with its taste-direction + pots. */
 export const workbenchSchema = z.object({

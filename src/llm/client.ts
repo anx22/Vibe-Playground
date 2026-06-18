@@ -69,16 +69,6 @@ export const generateBridges = (input: {
 }): Promise<Entangle> => post("/api/entangle", input, entangleSchema);
 
 /**
- * Engine E — Latent Agent (ENGINE-E-SPEC, Tier-0). Same bridge contract as Engine D, but "far" is
- * measured with real embeddings (diverge → embed/rank → resonate/compose) rather than asserted.
- */
-export const generateLatent = (input: {
-  briefing: string;
-  n?: number;
-  steer?: string;
-}): Promise<Entangle> => post("/api/latent", input, entangleSchema);
-
-/**
  * Engine F — Technique Workbench (ENGINE-F-SPEC). Fast, pure-prompt Volume → Filter → Curation;
  * returns curated candidates clustered into orthogonal taste-directions. The speed path.
  */

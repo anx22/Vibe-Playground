@@ -57,12 +57,6 @@ export const MOCK_CARDS: VibeCard[] = [
   c("workbench", "Leuchtfeuer-Kodex", "ruhig, wachsam", ["#9E5CFF", "#2f1559", "#d8c0ff"], "Leuchtturm", "Kühle Autorität"),
   c("workbench", "Werkbank-Ethik", "ehrlich, präzise", ["#B074FF", "#3a1c6b", "#e1ccff"], "Schmiede", "Geerdetes Handwerk"),
 
-  c("latent", "Sediment-Protokoll", "fließend, organisch", ["#34D17E", "#0f5e36", "#bff2d6"], "Mangroven-Rhizom"),
-  c("latent", "Schwellenschmied", "rituell, erzwungen", ["#2FC66D", "#0c5430", "#b6efce"], "Yoruba-Schmiede"),
-  c("latent", "Mykel-Wächter", "verzweigt, still", ["#46D98C", "#10663c", "#c8f5dd"], "Myzel-Netz"),
-  c("latent", "Wabi-Schutz", "ruhig, unperfekt", ["#3ACB7F", "#0e5d37", "#bdf0d2"], "Wabi-Sabi"),
-  c("latent", "Riff-Logik", "lebendig, dicht", ["#28C16A", "#0a4f2d", "#aeecca"], "Korallenriff"),
-
   c("persona", "Kartograf-Synth", "präzise, elektronisch", ["#46A6FF", "#10477a", "#c4e3ff"], "Schweizer Kartograf"),
   c("persona", "Kyoto-Software", "ruhig, reduziert", ["#3F97FF", "#0e3f73", "#bcdcff"], "Buchbinderei Kyoto"),
   c("persona", "Uhrmacher-Glitch", "minutiös, gebrochen", ["#5BB0FF", "#194e85", "#cfe8ff"], "Uhrmacher-Atelier"),

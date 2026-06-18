@@ -6,10 +6,8 @@
  */
 import { writeFileSync } from "node:fs";
 import { z } from "zod";
-import { cosineDist, embed, genObject, modelFor } from "../api/_lib/gateway.js";
+import { genObject, modelFor } from "../api/_lib/gateway.js";
 import {
-  bridgesSchema,
-  divergeSchema,
   entangleSchema,
   judgeBatchSchema,
   personaListSchema,
@@ -18,8 +16,6 @@ import {
 import {
   ENTANGLE_SYSTEM,
   JUDGE_SYSTEM,
-  LATENT_COMPOSE_SYSTEM,
-  LATENT_DIVERGE_SYSTEM,
   MATERIALIST_EXTRACT_SYSTEM,
   MATERIALIST_WORLD_SYSTEM,
   PERSONA_SYSTEM,
@@ -50,23 +46,6 @@ async function runPersona(ctx: string, n: number): Promise<Card[]> {
     prompt: `Briefing: ${ctx}\nErzeuge ${n} VERSCHIEDENE Personas, aus denen je ein klarer Vibe fällt.` });
   return out.personas.map((p) => ({ engine: "persona", leitwert: p.leitwert, world: "Persona", scene: p.persona, mood: p.mood }));
 }
-async function runLatent(ctx: string, n: number): Promise<Card[]> {
-  const dv = await genObject({ model: modelFor("strong"), schema: divergeSchema, system: LATENT_DIVERGE_SYSTEM, noCache: true,
-    prompt: `Thema/Briefing: ${ctx}.\nLiefere essence, forbidden[] und 14 weit gestreute Spender-Welten.` });
-  let shortlist = dv.donors;
-  if (dv.donors.length > 3) {
-    try {
-      const vecs = await embed([dv.essence, ...dv.donors.map((d) => `${d.world} — ${d.gist}`)]);
-      const scored = dv.donors.map((d, i) => ({ d, dist: cosineDist(vecs[0], vecs[i + 1]) })).filter((s) => Number.isFinite(s.dist)).sort((a, b) => b.dist - a.dist);
-      const keep = Math.max(4, Math.round(scored.length * 0.55));
-      if (scored.length) shortlist = scored.slice(0, keep).map((s) => s.d);
-    } catch { /* no embeddings → full field */ }
-  }
-  const cp = await genObject({ model: modelFor("strong"), schema: bridgesSchema, system: LATENT_COMPOSE_SYSTEM, noCache: true,
-    prompt: `ESSENZ: ${dv.essence}\nVERBOTEN: ${dv.forbidden.join(", ")}\nGemessen-FERNE Spender-Welten:\n${shortlist.map((d) => `- ${d.world}: ${d.gist}`).join("\n")}\nKomponiere ${n} Brücken über VERSCHIEDENE Verhaltens-Zellen.` });
-  return cp.bridges.map((b) => ({ engine: "latent", leitwert: b.leitwert, world: worlds(b.worlds), scene: b.creativeDerivation, mood: b.mood }));
-}
-
 // Materialist (prototype run of the YAML design): N worlds → harvest the strongest anchors from each.
 const mWorld = z.object({ worlds: z.array(z.object({ world: z.string(), domain: z.string(), innerLogic: z.string() })) });
 const mExtract = z.object({ results: z.array(z.object({ leitwert: z.string(), anchors: z.array(z.object({ layer: z.string(), anchor: z.string(), why: z.string() })), mood: z.string() })) });
@@ -91,7 +70,6 @@ async function batchJudge(briefing: string, cards: Card[]): Promise<number[]> {
 
 const ENGINES = [
   { id: "entanglement", run: runEntangle },
-  { id: "latent", run: runLatent },
   { id: "workbench", run: runWorkbench },
   { id: "persona", run: runPersona },
   { id: "materialist", run: runMaterialist },

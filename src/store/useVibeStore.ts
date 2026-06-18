@@ -3,7 +3,7 @@ import { persist } from "zustand/middleware";
 import { zero } from "../engine";
 import type { VibeCard } from "../engine";
 import { paletteFor, typoFor } from "../engine/derive";
-import { generateBridges, generateLatent, generatePersonas, generateWorkbench } from "../llm/client";
+import { generateBridges, generatePersonas, generateWorkbench } from "../llm/client";
 import type { Bridge, Persona, WorkbenchCandidate } from "../llm/schema";
 import { judgeRank, passesFloor, spreadByRegister } from "../llm/select";
 
@@ -106,13 +106,6 @@ export const SOURCES: Source[] = [
     accent: "#CE82FF",
     gen: async (briefing, steer, n) =>
       (await generateWorkbench({ briefing, steer, n })).map((c) => candidateToCard(c, "workbench")),
-  },
-  {
-    id: "latent",
-    label: "Latent-Agent",
-    accent: "#58CC02",
-    gen: async (briefing, steer, n) =>
-      (await generateLatent({ briefing, steer, n })).bridges.map((b) => bridgeToCard(b, "latent")),
   },
   {
     id: "persona",

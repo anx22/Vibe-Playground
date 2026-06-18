@@ -25,7 +25,6 @@ from **structural resonance** — decoupled, so both maximize at once. Two non-n
 | Engine | Principle | Cost |
 |---|---|---|
 | **D · Verschränkung** | essence → burn clichés → far-but-rhyming worlds → affordance≥5 → bridge → name. One call. | fast |
-| **E · Latent-Agent** | LLM leaps; **real embeddings measure "far"** (percentile rank). Diverge → embed/rank → resonate. | slow (2 calls + embed) |
 | **F · Werkbank** | Volume→Filter→Curation: wide field × operators, over-generate 3× / cut ⅔, cluster into orthogonal taste-directions. | fastest, pure prompt |
 | **Persona** | a fictional originator whose aesthetic falls out as the vibe. | fast |
 
