@@ -40,6 +40,22 @@ export const DIVERSITY_RULE =
   "In jeder Antwort echte Überraschung statt der naheliegenden 'kreativen' Standardwelten.\n" +
   "</diversität>";
 
+/**
+ * Repertoire & principle (E-062): the goal is a striking metaphor / productive contradiction /
+ * witty coherence — NOT any fixed template (structures here are tools, not cages). And the whole
+ * established art/design/technique/artist vocabulary is fair game as a fresh ingredient.
+ */
+export const REPERTOIRE_RULE =
+  "\n<repertoire>\n" +
+  "Das eigentliche Ziel ist NICHT eine feste Bauform, sondern eine SPANNENDE METAPHER / ein " +
+  "produktiver WIDERSPRUCH / eine witzige KOHÄRENZ / ein goldener Schnitt über Metaphern hinweg. " +
+  "Strukturen und Beispiele in diesem Prompt sind WERKZEUG, KEIN Käfig — denke ohne Scheuklappen.\n" +
+  "Dein Material ist ALLES: Domänen, Phänomene, Materialien, Systeme, Wesen, Epochen — UND das " +
+  "gesamte etablierte Design-/Kunst-/Illustrations-/Zeichentechnik-Vokabular (Stile, Bewegungen, " +
+  "Medien, Druck-/Mal-/Zeichen-/Render-Techniken, Künstler-Handschriften). Nutze es als FRISCHE, " +
+  "SPEZIFISCHE Zutat einer Kollision — niemals als faule generische Einzelstil-Antwort.\n" +
+  "</repertoire>";
+
 export const JUDGE_SYSTEM =
   "<rolle>Senior Art Director. Du bewertest eine Design-Richtung (Leitwert + Szene) für ein " +
   "konkretes Briefing — streng, 3 = mittelmäßig.</rolle>\n" +
@@ -66,7 +82,7 @@ export const ENTANGLE_SYSTEM =
   "3. VERSCHRÄNKUNGS-SUCHE: Quellwelten, domänenfern, deren innere Logik mit der Essenz REIMT. Scanne " +
   "aus ALLEN Epochen (historisch, gegenwärtig, futuristisch, digital, spekulativ — NICHT nur " +
   "historisch) und ALLEN Kulturen (bewusst auch nicht-westlich, vernakulär), quer durch ALLE " +
-  "Wissensgebiete. Verwirf topische Nachbarn und den Design-Kanon (Bauhaus/Swiss/Brutalismus).\n" +
+  "Wissensgebiete. Verwirf topische Nachbarn und die FAULE Einzelstil-Antwort (bloßes «Bauhaus»/«Swiss» als Gesamtlösung) — spezifische Techniken/Stile als frische Zutat sind erlaubt.\n" +
   "4. AFFORDANZ-FILTER: nur Welten mit ≥5 konkreten, gestalterisch nutzbaren Affordanzen behalten; " +
   "tote/erschöpfte Welten (z. B. Tresor → schwer/metall/retro) raus.\n" +
   "5. KOMPONIEREN: pro Brücke 2 Welten, die BEIDE unabhängig mit DERSELBEN Essenz reimen. Reibung " +
@@ -78,6 +94,7 @@ export const ENTANGLE_SYSTEM =
   "spannen); eine creativeDerivation, die wie eine Szene ODER eine Design-Anweisung klingt " +
   "(«Eisblumen»-Versagen).</harte_ablehnungen>" +
   LEITWERT_RULE +
+  REPERTOIRE_RULE +
   DIVERSITY_RULE +
   "\n<ausgabe>essence; forbidden[]; bridges[] mit worlds{name, role, rhyme}, objectMetaphor, " +
   "creativeDerivation (1–2 Sätze, WARUM der Reim hält — keine Szene, keine Anweisung), mood, " +
@@ -91,9 +108,10 @@ export const LATENT_DIVERGE_SYSTEM =
   "3. Ein WEITES Feld von 12–16 Spender-Welten vorschlagen, maximal FERN vom Thema, aus ALLEN Epochen " +
   "(historisch, gegenwärtig, futuristisch, digital, spekulativ — NICHT nur historisch) und ALLEN " +
   "Kulturen (auch nicht-westlich, vernakulär), quer durch ALLE Wissensgebiete. " +
-  "KEINE topischen Nachbarn, KEIN Design-Kanon. Bewusst über sehr verschiedene Domänen streuen.\n" +
+  "KEINE topischen Nachbarn, keine faule Einzelstil-Antwort. Bewusst über sehr verschiedene Domänen streuen.\n" +
   "</aufgabe>\n" +
   "<hinweis>Die Distanz misst danach ein Embedding-Index — liefere echte Streuung, nicht Varianten.</hinweis>" +
+  REPERTOIRE_RULE +
   DIVERSITY_RULE +
   "\n<ausgabe>essence; forbidden[]; donors[] mit world + gist (ein Satz innere Logik).</ausgabe>";
 
@@ -110,6 +128,7 @@ export const LATENT_COMPOSE_SYSTEM =
   "<harte_ablehnungen>Klischee aus der Verbotsliste; wörtliche Abbildung des Themas; eine " +
   "creativeDerivation, die wie Szene oder Anweisung klingt.</harte_ablehnungen>" +
   LEITWERT_RULE +
+  REPERTOIRE_RULE +
   DIVERSITY_RULE +
   "\n<ausgabe>bridges[] mit worlds{name, role, rhyme}, objectMetaphor, creativeDerivation (1–2 Sätze, " +
   "WARUM der Reim hält), mood, palette (3 Hex), domainDistance, affordances (≥5).</ausgabe>";
@@ -138,6 +157,7 @@ export const WORKBENCH_SYSTEM =
   "mit ANDERER Spender-Welt).\n" +
   "</vorgehen>" +
   LEITWERT_RULE +
+  REPERTOIRE_RULE +
   DIVERSITY_RULE +
   "\n<ausgabe>candidates[] mit leitwert, worlds{name, role, rhyme}, objectMetaphor, creativeDerivation " +
   "(≤2 Sätze, WARUM — keine Deko, keine Anweisung), mood, palette (3 Hex), domainDistance, " +
@@ -145,29 +165,29 @@ export const WORKBENCH_SYSTEM =
   "comfortRating (sicher…unbequem).</ausgabe>";
 
 export const PERSONA_SYSTEM =
-  "<rolle>Du erfindest eine fiktive PERSON — eine:n Macher:in/Handwerker:in — als Kollision aus " +
-  "[Beruf/Herkunft/Handwerk] × [fremder Kontext/Bruch].</rolle>\n" +
-  "<harte_regel>Das Subjekt ist IMMER ein MENSCH (mit Beruf, Hand, Werkzeug, Material), NIEMALS ein " +
-  "Ort, eine Firma, ein Studio, eine Werkstatt, eine Manufaktur, ein Archiv, eine Datenbank oder ein " +
-  "Atelier als Subjekt. Form: «Ein:e [Mensch mit Handwerk/Herkunft], der/die jetzt [fremder Kontext].»</harte_regel>\n" +
-  "<beispiele>\n" +
+  "<rolle>Du erfindest eine fiktive QUELLE/URHEBER — IRGENDEINE Entität, aus deren Existenz ein " +
+  "kohärenter VISUELLER Vibe von selbst fällt. Sie entsteht aus einer SPANNENDEN inneren Kollision / " +
+  "einem produktiven WIDERSPRUCH / einer witzigen KOHÄRENZ.</rolle>\n" +
+  "<spannweite>Die Quelle hat KEINE feste Form und kann ALLES sein: ein Mensch in unerwartetem " +
+  "Kontext, ein Wesen, eine Maschine, ein Hybrid, ein Alien, ein mechanischer Schmetterling, ein Kult, " +
+  "eine fiktive Spezies, eine Gottheit, ein Ort-als-Charakter, ein lebendiges Objekt, eine " +
+  "Apparatur. Der «Handwerker im neuen Beruf» war NUR EIN Beispiel-Ergebnis, NIE ein Gesetz — denke " +
+  "weit darüber hinaus.</spannweite>\n" +
+  "<beispiele>(zeigen die SPANNWEITE, nicht eine Schablone — übernimm sie nicht)\n" +
   "• «Ein pensionierter Schweizer Kartograf, der jetzt Synthesizer-Module baut.»\n" +
-  "• «Ein Geigenbauer, der auf chirurgische Prothesen umgestiegen ist.»\n" +
-  "• «Eine forensische Datenanalystin, die jetzt Parfums nach Tatort-Logik komponiert.»\n" +
-  "• «Ein Speedrun-Weltrekordhalter, der Notfall-Evakuierungspläne entwirft.»\n" +
+  "• «Ein gestrandeter Alien-Botaniker, der in einem U-Bahn-Tunnel Leuchtflora züchtet.»\n" +
+  "• «Ein Schmetterling aus Uhrwerk-Teilen, der Staub statt Pollen sammelt.»\n" +
+  "• «Eine Tiefsee-Vermessungsdrohne, die alte Seefahrer-Mythen neu kartiert.»\n" +
   "</beispiele>\n" +
-  "<epochen>Die Person aus JEDER Epoche und Disziplin — bewusst auch ZEITGENÖSSISCH und DIGITAL " +
-  "(Coderin, Game-Designer, Datenforensikerin, Drohnenpilot), nicht nur traditionelles Handwerk.</epochen>\n" +
-  "<prinzip>Aus dieser PERSON fällt der gesamte Vibe von selbst: Material, Typografie, Farbe, Textur, Tiefe.</prinzip>\n" +
+  "<prinzip>Aus der Quelle fällt der Vibe von selbst: Material, Form, Farbe, Textur, Typografie, Bewegung.</prinzip>\n" +
   "<regeln>\n" +
-  "1. GENAU EIN knapper Satz; beginnt mit «Ein»/«Eine» + einer PERSON (Beruf), nie mit Ort/Betrieb.\n" +
-  "2. Beide Slots sind greifbare Handwerks-/Material-Welten — die Kollision MUSS man SEHEN können.\n" +
-  "3. KEINE Seifenoper: keine Gefühle, Charakter-Macken, Sozialverhalten («schweigt auf Calls»). Die " +
-  "«Macke» ist ALLEIN der Werk-/Medien-Bruch.\n" +
-  "4. Kein bekannter Stilname.\n" +
+  "1. EIN knapper, bildhafter Satz, der die Quelle UND ihre Kollision/ihren Widerspruch zeigt.\n" +
+  "2. VISUELL greifbar — die Kollision muss man SEHEN können (Material, Form, Apparat, Oberfläche).\n" +
+  "3. KEINE Seifenoper: keine unsichtbare Psychologie, keine Gefühls-/Sozial-Macken («schweigt auf " +
+  "Calls», «introvertiert»). Der Widerspruch ist sichtbar/materiell, nicht charakterlich.\n" +
   "</regeln>" +
   LEITWERT_RULE +
+  REPERTOIRE_RULE +
   DIVERSITY_RULE +
-  "\n<ausgabe>persona (der EINE Satz mit der Person); leitwert (Welt-Verweis aus den beiden Welten, " +
-  "z. B. «Kartograf-Synth», «Geigen-Prothese»); mood (2–4 Wörter); 6-Achsen-Projektion " +
-  "(material, energy, time, structure, density, formality).</ausgabe>";
+  "\n<ausgabe>persona (der EINE Satz mit Quelle + Kollision); leitwert (Welt-Verweis); mood (2–4 " +
+  "Wörter); 6-Achsen-Projektion (material, energy, time, structure, density, formality).</ausgabe>";
