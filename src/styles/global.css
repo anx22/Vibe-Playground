@@ -1127,36 +1127,7 @@ body {
 .anchor-badge { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 50%, var(--line)); }
 .topbar-right { display: flex; align-items: center; gap: 10px; }
 
-.constellation { position: relative; height: calc(100dvh - 64px); overflow: hidden;
-  background: radial-gradient(120% 120% at 50% 45%, #211d19 0%, #15120f 70%, #0e0c0a 100%); }
-.constellation-canvas { position: absolute; left: 50%; top: 50%; width: 0; height: 0; cursor: grab; }
-.constellation-canvas:active { cursor: grabbing; }
-.spokes { position: absolute; left: -1000px; top: -1000px; pointer-events: none; }
 
-.node { position: absolute; }
-.node--center { left: 0; top: 0; transform: translate(-50%, -50%); display: grid; place-items: center;
-  background: var(--paper); color: var(--ink); box-shadow: 0 0 0 3px var(--ink), 0 0 60px rgba(232,106,75,.25); }
-.center-inner { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0 22px; text-align: center; }
-.center-kicker { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-soft); }
-.center-text { font-size: 15px; font-weight: 800; line-height: 1.15; max-height: 84px; overflow: hidden; }
-
-.node--block { left: 0; top: 0; border: none; padding: 0; display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 7px; cursor: pointer; color: #f3efe7;
-  background: #2b2620; box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--accent) 65%, transparent);
-  transition: filter .18s ease, box-shadow .18s ease; }
-.node--block:hover { filter: brightness(1.18); }
-.node--block.is-anchor { background: #322a22;
-  box-shadow: inset 0 0 0 3px var(--accent), 0 0 28px color-mix(in srgb, var(--accent) 55%, transparent); }
-.node--block.is-focus { box-shadow: inset 0 0 0 3px #fff, 0 0 24px rgba(255,255,255,.25); }
-.node-name { font-size: 12.5px; font-weight: 700; line-height: 1.12; text-align: center; padding: 0 16px; }
-.node-palette { display: flex; width: 56%; height: 8px; border-radius: 999px; overflow: hidden; }
-.node-palette span { flex: 1; }
-
-.cluster-label { position: absolute; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
-  font-weight: 800; opacity: 0.85; pointer-events: none; white-space: nowrap; }
-.constellation-loading { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%);
-  color: #f3efe7; font-size: 13px; letter-spacing: 0.04em; opacity: 0.85;
-  background: rgba(0,0,0,.35); padding: 7px 16px; border-radius: 999px; backdrop-filter: blur(4px); }
 
 .flyout { position: absolute; right: 0; top: 0; height: 100%; width: min(380px, 88vw); overflow-y: auto;
   background: var(--paper); border-left: 2.5px solid var(--ink); padding: 24px 22px 32px;
@@ -1245,48 +1216,7 @@ body {
   backdrop-filter: blur(8px);
 }
 
-/* cooler, deeper constellation canvas */
-.constellation {
-  background:
-    radial-gradient(130% 120% at 50% 38%, #20242e 0%, #15171e 60%, #0c0d12 100%);
-}
 
-/* center hexagon = white glossy plastic chip */
-.node--center {
-  background: linear-gradient(160deg, #ffffff 0%, #f0f2f7 60%, #e2e6ef 100%);
-  box-shadow:
-    inset 0 2px 1px rgba(255, 255, 255, 0.95),
-    inset 0 -10px 24px rgba(20, 26, 40, 0.12),
-    0 18px 50px -14px rgba(0, 0, 0, 0.6),
-    0 0 0 1px rgba(255, 255, 255, 0.6);
-}
-
-/* glossy plastic tiles with a top sheen */
-.node--block {
-  background: linear-gradient(157deg, #3a3f4d 0%, #2a2e39 48%, #20242d 100%);
-  box-shadow:
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.18),
-    inset 0 -14px 26px rgba(0, 0, 0, 0.3),
-    0 14px 30px -12px rgba(0, 0, 0, 0.7),
-    0 0 0 1.5px color-mix(in srgb, var(--accent) 55%, transparent);
-  position: relative;
-}
-.node--block::before {
-  content: "";
-  position: absolute; inset: 0;
-  clip-path: inherit;
-  background: linear-gradient(155deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.04) 38%, transparent 60%);
-  pointer-events: none;
-}
-.node--block.is-anchor {
-  box-shadow:
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.28),
-    0 0 0 2.5px var(--accent),
-    0 0 30px color-mix(in srgb, var(--accent) 60%, transparent),
-    0 16px 34px -12px rgba(0, 0, 0, 0.7);
-}
-.node-name { text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45); }
-.node-palette { box-shadow: inset 0 0 0 1px rgba(255,255,255,.25); }
 
 /* frosted-glass flyout */
 .flyout {
@@ -1299,13 +1229,10 @@ body {
 .flyout-name { background: linear-gradient(180deg, #1b1f29, #3d4658); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .flyout-palette { box-shadow: inset 0 1px 0 rgba(255,255,255,.6), 0 6px 16px -8px rgba(20,26,40,.5); border: 1px solid rgba(255,255,255,.8); }
 
-/* loading chip */
-.constellation-loading { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.18); backdrop-filter: blur(10px); }
 
 /* review polish */
 .flyout-tags { display: flex; gap: 8px; margin: 2px 0 14px; }
 .flyout-tags span { font-size: 11px; padding: 3px 9px; border-radius: 999px; background: rgba(20,26,40,.07); color: var(--ink-soft); border: 1px solid rgba(255,255,255,.7); }
-.constellation-hint { position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%); color: #f3efe7; font-size: 13px; opacity: .8; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.16); padding: 8px 16px; border-radius: 999px; backdrop-filter: blur(10px); pointer-events: none; }
 
 /* ════════════════ Frontend-design pass — "Observatory" (grounds the UI in the subject) ════════════════ */
 /* Away from the AI defaults (cream-paper / near-black+one-accent): a cool star-chart instrument. */
@@ -1328,57 +1255,17 @@ body {
 }
 
 /* type roles — deliberate pairing, not a neutral delivery vehicle */
-.stage-title, .center-text, .node-name, .flyout-name { font-family: var(--font-display); letter-spacing: -0.015em; }
-.center-kicker, .cluster-label, .flyout-src, .flyout-block h3, .flyout-tags span,
-.gen-badge, .anchor-badge, .node-anchor { font-family: var(--font-mono); }
+.stage-title, .flyout-name { font-family: var(--font-display); letter-spacing: -0.015em; }
+.flyout-src, .flyout-block h3, .flyout-tags span,
+.gen-badge, .anchor-badge { font-family: var(--font-mono); }
 .flyout-mood, .flyout-block p, .flyout-block li { font-family: var(--font-body); }
 .flyout-block p { font-size: 15px; line-height: 1.5; }
 
-/* the instrument: deep observatory field + concentric measurement rings + anchor orbit */
-.constellation {
-  background:
-    radial-gradient(1.5px 1.5px at 20% 30%, rgba(var(--instrument), 0.16) 50%, transparent 51%) 0 0/140px 140px,
-    radial-gradient(1.5px 1.5px at 70% 60%, rgba(var(--instrument), 0.12) 50%, transparent 51%) 0 0/190px 190px,
-    radial-gradient(135% 120% at 50% 42%, #16203a 0%, #0e1426 58%, #090d18 100%);
-}
-.instrument {
-  position: absolute; left: 0; top: 0; width: 900px; height: 900px;
-  transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none;
-  background: repeating-radial-gradient(circle at center, transparent 0 88px, rgba(var(--instrument), 0.05) 88px 89px);
-}
-.instrument::after {
-  content: ""; position: absolute; left: 50%; top: 50%; width: 300px; height: 300px;
-  transform: translate(-50%, -50%); border-radius: 50%;
-  border: 1px dashed rgba(var(--instrument), 0.22);
-}
 
-/* center chip — instrument readout, cool not warm */
-.node--center { background: linear-gradient(165deg, #ffffff, #eef1f8 70%, #e3e8f4); }
-.center-kicker { letter-spacing: 0.26em; }
-.cluster-label { font-weight: 700; letter-spacing: 0.22em; }
-
-/* blocks: quiet plates, the name carries it */
-.node-name { font-weight: 700; }
-
-/* on-block anchor affordance — pick the five gold ideas without opening the flyout */
-.node-anchor {
-  position: absolute; top: 9%; left: 50%; transform: translateX(-50%);
-  width: 24px; height: 24px; border-radius: 50%; border: none; cursor: pointer;
-  display: grid; place-items: center; font-size: 13px; line-height: 1;
-  background: rgba(8, 12, 22, 0.5); color: #fff; opacity: 0;
-  transition: opacity 0.15s ease, transform 0.15s ease; backdrop-filter: blur(4px);
-}
-.node--block:hover .node-anchor,
-.node--block:focus-visible .node-anchor,
-.node-anchor.on { opacity: 1; }
-.node-anchor.on { background: var(--accent); box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 60%, transparent); }
-.node-anchor:disabled { cursor: not-allowed; }
-.node--block:hover .node-anchor:disabled { opacity: 0.3; }
 
 /* quality floor: visible keyboard focus */
-.node--block:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 .btn:focus-visible, .btn-primary:focus-visible, .btn-iterate:focus-visible,
-.btn-anchor:focus-visible, .node-anchor:focus-visible, .flyout-x:focus-visible {
+.btn-anchor:focus-visible, .flyout-x:focus-visible {
   outline: 2px solid var(--accent); outline-offset: 2px;
 }
 
@@ -1412,8 +1299,8 @@ body {
   background:
     radial-gradient(1100px 700px at 50% -12%, #ffffff 0%, #f3f6ff 55%, #eaeefb 100%) fixed;
 }
-.stage-title, .center-text, .node-name, .flyout-name, .brand { font-family: var(--font-display); font-weight: 800; letter-spacing: -0.01em; }
-.center-kicker, .cluster-label, .flyout-src, .flyout-block h3, .flyout-tags span, .gen-badge, .anchor-badge { font-family: "Nunito", sans-serif; font-weight: 800; }
+.stage-title, .flyout-name, .brand { font-family: var(--font-display); font-weight: 800; letter-spacing: -0.01em; }
+.flyout-src, .flyout-block h3, .flyout-tags span, .gen-badge, .anchor-badge { font-family: "Nunito", sans-serif; font-weight: 800; }
 .flyout-mood, .flyout-block p, .flyout-block li { font-family: "Nunito", sans-serif; }
 
 /* chrome */
@@ -1437,58 +1324,7 @@ body {
 .stage-title { background: none; -webkit-text-fill-color: currentColor; color: var(--ink); font-size: clamp(30px, 4.4vw, 52px); }
 .seed-input { background: #fff !important; border: 2px solid #e7ebf7 !important; border-radius: 16px !important; box-shadow: 0 4px 0 #eef1f9 !important; color: var(--ink) !important; backdrop-filter: none; }
 
-/* LIGHT, friendly canvas (override the dark observatory) */
-.constellation {
-  background:
-    radial-gradient(2px 2px at 22% 28%, rgba(43,45,66,.05) 50%, transparent 51%) 0 0/150px 150px,
-    radial-gradient(1100px 760px at 50% 40%, #ffffff 0%, #eef2fd 60%, #e6ebfa 100%);
-}
-.instrument { background: repeating-radial-gradient(circle at center, transparent 0 92px, rgba(43,45,66,.05) 92px 93px); }
-.instrument::after { border: 2px dashed rgba(43,45,66,.10); }
 
-/* CENTER: white glossy candy chip with a soft multicolor glow */
-.node--center {
-  background: linear-gradient(165deg, #ffffff, #f4f6ff 70%, #e9edfb);
-  color: var(--ink);
-  box-shadow:
-    inset 0 4px 0 rgba(255,255,255,.9),
-    inset 0 -14px 22px rgba(43,45,66,.08),
-    0 18px 36px -12px rgba(43,45,66,.35),
-    0 0 0 6px rgba(255,255,255,.6),
-    0 0 46px rgba(120,140,255,.22);
-}
-.center-kicker { color: var(--ink-soft); letter-spacing: 0.2em; }
-.center-text { color: var(--ink); }
-
-/* BLOCKS: glossy candy jelly (claymorphism). --accent is set per tile inline. */
-.node--block {
-  color: #fff;
-  background: linear-gradient(157deg,
-    color-mix(in srgb, var(--accent) 78%, white) 0%,
-    var(--accent) 52%,
-    color-mix(in srgb, var(--accent) 80%, black) 100%);
-  box-shadow:
-    inset 0 6px 0 rgba(255,255,255,.5),
-    inset 0 -16px 22px rgba(0,0,0,.20),
-    0 16px 28px -8px color-mix(in srgb, var(--accent) 55%, transparent),
-    0 4px 0 color-mix(in srgb, var(--accent) 70%, black);
-}
-.node--block::before {
-  content: ""; position: absolute; inset: 0; clip-path: inherit; pointer-events: none;
-  background: radial-gradient(120% 70% at 50% 6%, rgba(255,255,255,.55), rgba(255,255,255,.12) 34%, transparent 56%);
-}
-.node--block.is-anchor { box-shadow: inset 0 6px 0 rgba(255,255,255,.55), 0 0 0 4px #ffb020, 0 0 26px rgba(255,176,32,.6), 0 6px 0 color-mix(in srgb, var(--accent) 70%, black); }
-.node--block.is-focus { box-shadow: inset 0 6px 0 rgba(255,255,255,.6), 0 0 0 4px #fff, 0 18px 30px -8px rgba(0,0,0,.3); }
-.node-name { font-weight: 800; text-shadow: 0 1px 2px rgba(0,0,0,.28); }
-.node-palette { box-shadow: inset 0 0 0 1px rgba(255,255,255,.5); }
-.node-anchor { background: rgba(255,255,255,.9); color: var(--accent); box-shadow: 0 3px 8px rgba(0,0,0,.2); }
-.node-anchor.on { background: #ffb020; color: #fff; }
-
-/* cluster labels readable on light */
-.cluster-label { color: color-mix(in srgb, var(--accent) 78%, #2b2d42); font-weight: 800; letter-spacing: .14em; }
-
-/* hint / loading chips on light */
-.constellation-loading, .constellation-hint { background: #fff; color: var(--ink-soft); border: 2px solid #eef1f9; box-shadow: 0 6px 16px -8px rgba(43,45,66,.4); backdrop-filter: none; }
 
 /* FLYOUT: clean white card */
 .flyout { background: #fff; border-left: 2px solid #eef1f9; box-shadow: -24px 0 50px -22px rgba(43,45,66,.3); }
@@ -1497,66 +1333,7 @@ body {
 .flyout-tags span { background: #f3f5fc; border: 2px solid #eef1f9; color: var(--ink-soft); }
 .flyout-palette { border: 2px solid #eef1f9; box-shadow: 0 6px 14px -8px rgba(43,45,66,.3); }
 
-/* ════════════════ GEM (light, glossy 3D) — E-053 constellation look ════════════════ */
-.constellation {
-  position: relative; height: calc(100dvh - 64px); overflow: hidden;
-  background:
-    radial-gradient(2px 2px at 24% 30%, rgba(60,70,120,.05) 50%, transparent 51%) 0 0/160px 160px,
-    radial-gradient(1300px 860px at 50% 32%, #ffffff 0%, #eef1fb 58%, #e6eaf6 100%);
-}
-.cst-canvas { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
-.cst-links { position: absolute; left: -720px; top: -460px; width: 1440px; height: 920px; overflow: visible; pointer-events: none; }
 
-/* Duolingo-style tiles: FLAT vivid colour + a hard 3D bottom edge (the signature). Not glossy. */
-.gem {
-  position: absolute; left: 0; top: 0; border: none; cursor: pointer;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
-  color: #fff; border-radius: 22px; padding: 0 10px; text-align: center;
-  font-family: "Nunito", system-ui, sans-serif; background: var(--accent);
-  box-shadow:
-    0 7px 0 0 color-mix(in srgb, var(--accent) 58%, #000),  /* hard bottom edge = the 3D thickness */
-    0 12px 16px -8px rgba(20,20,50,.30);                     /* soft ground shadow */
-}
-/* subtle top sheen — flat-friendly, not a glossy blob */
-.gem::before {
-  content: ""; position: absolute; inset: 2px 2px auto 2px; height: 42%; border-radius: 20px 20px 40% 40%;
-  pointer-events: none; background: linear-gradient(180deg, rgba(255,255,255,.26), rgba(255,255,255,0));
-}
-.gem:hover { filter: brightness(1.05); }
-
-.gem--center {
-  transform: translate(-50%, -50%);
-  background: #4b4b6a;  /* the brief: a grounding ink tile, distinct from the colour clusters */
-  box-shadow: 0 8px 0 0 #34344d, 0 16px 26px -10px rgba(20,18,55,.45);
-  gap: 4px;
-}
-.gem--center::before { background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,0)); }
-.gem--center .gem-title { font-size: 14px; font-weight: 800; line-height: 1.18; padding: 0 18px; overflow-wrap: anywhere; hyphens: auto; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
-
-.gem-eyebrow { font-family: "Nunito"; font-weight: 800; font-size: 9.5px; letter-spacing: .16em; text-transform: uppercase; opacity: .92; text-shadow: 0 1px 2px rgba(0,0,0,.25); }
-.gem-name { font-weight: 800; line-height: 1.1; text-shadow: 0 1px 2px rgba(0,0,0,.3); overflow: hidden; }
-.gem--hub .gem-name { font-size: 14.5px; max-height: 52px; }
-.gem--sat .gem-name { font-size: 12px; max-height: 44px; }
-.gem--anchor .gem-name { font-size: 11px; max-height: 30px; }
-.gem-palette { display: flex; width: 52%; height: 7px; border-radius: 99px; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(255,255,255,.55), 0 1px 2px rgba(0,0,0,.25); }
-.gem-palette span { flex: 1; }
-
-.gem-anchor {
-  position: absolute; top: 7px; right: 7px; width: 22px; height: 22px; border-radius: 50%; border: none;
-  display: grid; place-items: center; font-size: 12px; cursor: pointer; opacity: 0;
-  background: rgba(255,255,255,.92); color: var(--accent); box-shadow: 0 2px 6px rgba(0,0,0,.25);
-  transition: opacity .14s ease; font-family: "Nunito";
-}
-.gem:hover .gem-anchor, .gem:focus-visible .gem-anchor, .gem-anchor.on { opacity: 1; }
-.gem-anchor.on { background: #ffb020; color: #fff; }
-.gem-anchor:disabled { opacity: 0; cursor: not-allowed; }
-.gem:hover .gem-anchor:disabled { opacity: .35; }
-
-.gem.is-anchor { box-shadow: 0 0 0 4px #FFC800, 0 7px 0 0 color-mix(in srgb, var(--accent) 58%, #000), 0 12px 18px -8px rgba(25,25,55,.3); }
-.gem.is-focus { box-shadow: 0 0 0 4px #fff, 0 7px 0 0 color-mix(in srgb, var(--accent) 58%, #000), 0 16px 22px -8px rgba(20,20,55,.4); }
-.gem:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
-
-.cst-loading, .cst-hint { position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%); background: #fff; color: var(--ink-soft); border: 2px solid #eef1f9; box-shadow: 0 8px 18px -8px rgba(43,45,66,.4); padding: 9px 18px; border-radius: 99px; font-weight: 700; font-family: "Nunito"; }
 
 /* ════════════════ STUDIO — bento field (E-067) ════════════════ */
 .board { position: relative; height: calc(100dvh - 64px); display: flex; flex-direction: column; gap: 13px; padding: 16px 18px 18px; overflow: hidden; font-family: "Nunito", system-ui, sans-serif; }
