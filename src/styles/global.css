@@ -1602,6 +1602,9 @@ body {
 .rd-rhyme { font-style: italic; color: var(--ink-soft); }
 .rd-k { font-weight: 800; color: var(--accent); margin-right: 5px; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; }
 .rd-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.rd-more { align-self: flex-start; font-weight: 800; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); background: none; border: none; padding: 2px 0; cursor: pointer; }
+.rd-more:hover { text-decoration: underline; }
+.rd-depth { overflow: hidden; display: flex; flex-direction: column; gap: 7px; }
 .btn-sm { padding: 8px 12px !important; font-size: 13px !important; border-radius: 12px !important; flex: 1 1 auto; white-space: nowrap; }
 
 .lane-spin { display: inline-block; width: 13px; height: 13px; border: 2.5px solid color-mix(in srgb, var(--accent) 28%, #fff); border-top-color: var(--accent); border-radius: 50%; animation: lane-spin .7s linear infinite; vertical-align: middle; }

@@ -1,4 +1,4 @@
-import { type CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { VibeCard } from "../engine";
 import { SOURCES, MAX_ANCHORS, useVibeStore } from "../store/useVibeStore";
@@ -85,6 +85,11 @@ function Row({ card, anchored, anchorsFull, onExport }: { card: VibeCard; anchor
   const open = focusId === card.id;
   const d = card.detail;
   const canAnchor = anchored || !anchorsFull;
+  // Progressive depth (E-066): the expander opens to the GIST (why + actions); the rich dossier
+  // (worlds · object · affordances) stays one more click away. Collapsing the row resets depth.
+  const [deep, setDeep] = useState(false);
+  useEffect(() => { if (!open) setDeep(false); }, [open]);
+  const hasDepth = !!(d?.worlds?.length || (d?.object && d.object !== "—") || d?.affordances?.length);
 
   return (
     <div className={`row${open ? " is-open" : ""}${anchored ? " is-anchored" : ""}`}>
@@ -102,19 +107,32 @@ function Row({ card, anchored, anchorsFull, onExport }: { card: VibeCard; anchor
         {open && (
           <motion.div className="row-detail" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.18 }}>
             <div className="rd-inner">
-              {card.detail?.tasteDirection && <div className="rd-tag">{card.detail.tasteDirection}</div>}
+              {d?.tasteDirection && <div className="rd-tag">{d.tasteDirection}</div>}
               <div className="rd-mood">{card.mood}{d?.operators?.length ? ` · ${d.operators.join(" + ")}` : ""}</div>
-
-              {d?.worlds?.length ? (
-                <div className="rd-block">
-                  {d.worlds.map((w, i) => (
-                    <p key={i}><b>{w.name}</b> <span className="rd-role">{w.role}</span> — <span className="rd-rhyme">{w.rhyme}</span></p>
-                  ))}
-                </div>
-              ) : null}
-              {d?.object && d.object !== "—" && <p className="rd-line"><span className="rd-k">Objekt</span> {d.object}</p>}
               <p className="rd-line"><span className="rd-k">Herleitung</span> {d?.derivation ?? card.scene}</p>
-              {d?.affordances?.length ? <p className="rd-line"><span className="rd-k">Affordanzen</span> {d.affordances.join(" · ")}</p> : null}
+
+              {hasDepth && (
+                <>
+                  <button className="rd-more" onClick={() => setDeep((v) => !v)} aria-expanded={deep}>
+                    {deep ? "Tiefe ausblenden ▴" : "Tiefe zeigen ▾"}
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {deep && (
+                      <motion.div className="rd-depth" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.16 }}>
+                        {d?.worlds?.length ? (
+                          <div className="rd-block">
+                            {d.worlds.map((w, i) => (
+                              <p key={i}><b>{w.name}</b> <span className="rd-role">{w.role}</span> — <span className="rd-rhyme">{w.rhyme}</span></p>
+                            ))}
+                          </div>
+                        ) : null}
+                        {d?.object && d.object !== "—" && <p className="rd-line"><span className="rd-k">Objekt</span> {d.object}</p>}
+                        {d?.affordances?.length ? <p className="rd-line"><span className="rd-k">Affordanzen</span> {d.affordances.join(" · ")}</p> : null}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </>
+              )}
 
               <div className="rd-actions">
                 <button className={`btn btn-anchor btn-sm${anchored ? " is-on" : ""}`} disabled={!canAnchor} onClick={() => toggleAnchor(card)}>
