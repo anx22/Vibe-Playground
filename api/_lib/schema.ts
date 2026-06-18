@@ -76,6 +76,6 @@ export const judgeSchema = z.object({
   onTarget: z.number().min(1).max(5).describe("Würde ein Senior-AD das DIESEM Kunden hinlegen? Trifft es den Kern?"),
   surprise: z.number().min(1).max(5).describe("Nicht-naheliegend — überrascht statt Branchen-Klischee?"),
   craft: z.number().min(1).max(5).describe("Ist die Szene konkret/evokativ statt generisch?"),
-  renderability: z.number().min(1).max(5).describe("Erzeugt der Leitwert WÖRTLICH an ein Bildmodell gegeben eine kohärente, schöne Designwelt? Sichtbare Material-/Form-Begriffe hoch, abstrakte Konzeptwörter niedrig."),
+  designValue: z.number().min(1).max(5).describe("Ableitbarer DESIGN-Wert (Welt/Material/Stil/Stimmung), aus dem ein Bildmodell eine interessante Designwelt baut — KEINE Geschichte/Narrativ, keine nicht-ableitbare Abstraktion."),
   note: z.string().describe("ein kurzer Satz Begründung"),
 });

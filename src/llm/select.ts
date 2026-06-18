@@ -26,7 +26,7 @@ export async function judgeRank(
           { briefing, leitwert: c.leitwert, scene: c.scene, mood: c.mood },
           tier,
         );
-        const overall = (s.onTarget + s.surprise + s.craft + s.renderability) / 4;
+        const overall = (s.onTarget + s.surprise + s.craft + s.designValue) / 4;
         return { ...c, quality: { ...s, overall } };
       } catch {
         return c; // unscored — sinks to the bottom, never blocks the loop
@@ -37,9 +37,10 @@ export async function judgeRank(
 }
 
 /**
- * The quality floor (E-063): a card must clear this mean score to reach the board — otherwise the
- * cluster regenerates once rather than surfacing "best of bad". The judge rubric calls 3 = mittelmäßig,
- * so a floor above 3 means "better than mediocre". Tunable.
+ * The quality floor (E-063): a card must clear this mean score to reach the board — this is where the
+ * north-star fail-conditions get enforced (no bullshit · no story-instead-of-design-value · nothing
+ * you can't derive a design-world from). Below it the cluster regenerates once rather than surfacing
+ * "best of bad". 3 = mittelmäßig in the rubric, so a floor above 3 means "better than mediocre". Tunable.
  *
  * An UNSCORED card (judge unreachable) is NOT floored out, so a judge outage degrades to
  * "show everything" — never to an empty board.

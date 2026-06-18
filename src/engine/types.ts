@@ -41,13 +41,13 @@ export interface VibeCard {
   quality?: Quality;
 }
 
-/** The judge's verdict on one card — the production fitness signal (E-063: on-target × surprise × craft × renderability). */
+/** The judge's verdict on one card — the production fitness signal (E-063: on-target × surprise × craft × designValue). */
 export interface Quality {
   onTarget: number;
   surprise: number;
   craft: number;
-  /** Does the Leitwert, fed verbatim to an image model, render to a coherent/beautiful world? (E-063) */
-  renderability: number;
+  /** A derivable design-value (world/material/style/mood), NOT a story — the north-star win/fail axis (E-063). */
+  designValue: number;
   overall: number;
   note: string;
 }

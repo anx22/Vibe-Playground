@@ -17,7 +17,7 @@ const base: VibeCard = {
 };
 const withScore = (overall: number): VibeCard => ({
   ...base,
-  quality: { onTarget: overall, surprise: overall, craft: overall, renderability: overall, overall, note: "" },
+  quality: { onTarget: overall, surprise: overall, craft: overall, designValue: overall, overall, note: "" },
 });
 
 describe("quality floor (E-063)", () => {

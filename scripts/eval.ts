@@ -91,9 +91,9 @@ async function main() {
 
   console.log(`\n  VIBE EVAL · ${engines.map((e) => e.id).join(" · ")}   n=${n}  judge=${useJudge ? judgeTier : "off"}  (${base})`);
 
-  type Agg = { tgt: number; surp: number; craft: number; rend: number; n: number };
+  type Agg = { tgt: number; surp: number; craft: number; dv: number; n: number };
   const aggs: Record<string, Agg> = Object.fromEntries(
-    engines.map((e) => [e.id, { tgt: 0, surp: 0, craft: 0, rend: 0, n: 0 }]),
+    engines.map((e) => [e.id, { tgt: 0, surp: 0, craft: 0, dv: 0, n: 0 }]),
   );
 
   for (const b of BRIEFINGS) {
@@ -114,8 +114,8 @@ async function main() {
           try {
             const s = await judgeRetry({ briefing: b.text, leitwert: c.leitwert, scene: c.scene, mood: c.mood }, judgeTier);
             const a = aggs[e.id];
-            a.tgt += s.onTarget; a.surp += s.surprise; a.craft += s.craft; a.rend += s.renderability; a.n++;
-            console.log(`        \x1b[2monTgt ${s.onTarget} · surp ${s.surprise} · craft ${s.craft} · rend ${s.renderability} — ${s.note}\x1b[0m`);
+            a.tgt += s.onTarget; a.surp += s.surprise; a.craft += s.craft; a.dv += s.designValue; a.n++;
+            console.log(`        \x1b[2monTgt ${s.onTarget} · surp ${s.surprise} · craft ${s.craft} · dVal ${s.designValue} — ${s.note}\x1b[0m`);
           } catch (err) {
             console.log(`        ✗ judge: ${String(err)}`);
           }
@@ -126,14 +126,14 @@ async function main() {
 
   if (useJudge) {
     console.log(`\n${"─".repeat(78)}\n  SCORECARD (judge=${judgeTier})`);
-    console.log(`    ${"engine".padEnd(10)} onTgt surp craft rend   overall`);
+    console.log(`    ${"engine".padEnd(10)} onTgt surp craft dVal   overall`);
     for (const id of Object.keys(aggs)) {
       const a = aggs[id];
       if (!a.n) continue;
-      const tgt = a.tgt / a.n, surp = a.surp / a.n, craft = a.craft / a.n, rend = a.rend / a.n;
-      const overall = (tgt + surp + craft + rend) / 4;
+      const tgt = a.tgt / a.n, surp = a.surp / a.n, craft = a.craft / a.n, dv = a.dv / a.n;
+      const overall = (tgt + surp + craft + dv) / 4;
       const f = (x: number) => x.toFixed(2).padStart(5);
-      console.log(`    ${id.padEnd(10)}${f(tgt)}${f(surp)}${f(craft)}${f(rend)}   ${bar(overall)} ${overall.toFixed(2)}`);
+      console.log(`    ${id.padEnd(10)}${f(tgt)}${f(surp)}${f(craft)}${f(dv)}   ${bar(overall)} ${overall.toFixed(2)}`);
     }
   }
   console.log("");
