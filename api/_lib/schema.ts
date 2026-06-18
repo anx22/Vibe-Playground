@@ -77,5 +77,6 @@ export const judgeSchema = z.object({
   surprise: z.number().min(1).max(5).describe("Nicht-naheliegend — überrascht statt Branchen-Klischee?"),
   craft: z.number().min(1).max(5).describe("Ist die Szene konkret/evokativ statt generisch?"),
   designValue: z.number().min(1).max(5).describe("Ableitbarer DESIGN-Wert (Welt/Material/Stil/Stimmung), aus dem ein Bildmodell eine interessante Designwelt baut — KEINE Geschichte/Narrativ, keine nicht-ableitbare Abstraktion."),
+  register: z.string().describe("Render-/Material-Register — nächstliegendes aus Metall-Industrie, Organisch-Weich, Digital-Leuchtend, Papier-Archiv, Stein-Keramik, Textil-Faser, Glas-Flüssig, Roh-Elementar (für Register-Vielfalt im Cluster)"),
   note: z.string().describe("ein kurzer Satz Begründung"),
 });

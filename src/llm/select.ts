@@ -48,3 +48,38 @@ export async function judgeRank(
 export const QUALITY_FLOOR = 3.3;
 export const passesFloor = (c: VibeCard): boolean =>
   c.quality === undefined || c.quality.overall >= QUALITY_FLOOR;
+
+/**
+ * Register-aware ordering (E-065 · C8). Given judge-ranked cards (best-first), re-thread them so the
+ * FRONT of the list cycles through DISTINCT render/material registers — best-of-each-register first,
+ * then the next tier — so the top-N the board shows spans material feels instead of collapsing into
+ * one. The single best card keeps position #1; only the tail is diversified. Pure, order-only;
+ * unscored/unlabeled cards keep a stable trailing position (they never pose as one shared register).
+ */
+export function spreadByRegister(cards: VibeCard[]): VibeCard[] {
+  const key = (c: VibeCard) => (c.quality?.register ?? "").trim().toLowerCase();
+  const groups = new Map<string, VibeCard[]>();
+  const order: string[] = [];
+  for (const c of cards) {
+    const k = key(c);
+    if (!groups.has(k)) {
+      groups.set(k, []);
+      order.push(k);
+    }
+    groups.get(k)!.push(c);
+  }
+  const labeled = order.filter((k) => k !== "");
+  const out: VibeCard[] = [];
+  for (let more = true; more; ) {
+    more = false;
+    for (const k of labeled) {
+      const g = groups.get(k)!;
+      if (g.length) {
+        out.push(g.shift()!);
+        more = true;
+      }
+    }
+  }
+  for (const c of groups.get("") ?? []) out.push(c);
+  return out;
+}

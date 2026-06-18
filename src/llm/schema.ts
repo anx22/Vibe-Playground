@@ -55,6 +55,7 @@ export const judgeSchema = z.object({
   surprise: z.number().min(1).max(5),
   craft: z.number().min(1).max(5),
   designValue: z.number().min(1).max(5),
+  register: z.string(),
   note: z.string(),
 });
 export type JudgeScore = z.infer<typeof judgeSchema>;

@@ -20,7 +20,9 @@ theme. North star: speed to a credible, surprising direction.
   on-target×surprise×craft×**designValue** (a derivable design-value, not a story/bullshit — the
   north-star fail-conditions), drop everything under the floor; a cluster that comes back thin
   **stays thin** — no refill pass (E-064), an honest sparse lane over "best of bad". A persisted **novelty memory** (`useVibeStore`) repels
-  already-produced Leitwerte each round so quality stays consistent at scale.
+  already-produced Leitwerte each round so quality stays consistent at scale. The cheap judge also tags
+  each card's **render-register**; `spreadByRegister` re-threads a cluster's survivors to span material
+  feels (E-065), and two generation rules force register-variety + a self-render-probe (ground only the vague).
 - **Eval** (`scripts/eval.ts`) — `npm run eval -- --judge` compares engines on shared briefings.
 - **Gateway proxy** (`api/_lib/`) — tiers, `caching:'auto'`, fallbacks; `embed`/`cosineDist` for E.
 

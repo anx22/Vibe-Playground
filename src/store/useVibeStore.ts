@@ -5,7 +5,7 @@ import type { VibeCard } from "../engine";
 import { paletteFor, typoFor } from "../engine/derive";
 import { generateBridges, generateLatent, generatePersonas, generateWorkbench } from "../llm/client";
 import type { Bridge, Persona, WorkbenchCandidate } from "../llm/schema";
-import { judgeRank, passesFloor } from "../llm/select";
+import { judgeRank, passesFloor, spreadByRegister } from "../llm/select";
 
 /** Per method we generate a few extra and judge-select the strongest into the cluster (E-041). */
 const PER_METHOD = 5;
@@ -168,7 +168,9 @@ export function pushProduced(produced: string[], add: string[]): string[] {
  * One source's pipeline: generate → judge-rank → quality FLOOR (+ in-source dedup). Thin stays thin —
  * if few cards clear the floor the cluster simply comes back small; there is no second pass (E-064,
  * reversing E-063's regenerate-once). An honest, sometimes-sparse board beats a best-effort "best of
- * bad" refill — and it halves the worst-case latency/cost of a weak round.
+ * bad" refill — and it halves the worst-case latency/cost of a weak round. Survivors are then
+ * re-threaded to span render/material registers (E-065) so the visible top-N doesn't collapse into
+ * one material feel.
  */
 async function produceForSource(src: Source, briefing: string, steer: string): Promise<VibeCard[]> {
   const seen = new Set<string>();
@@ -184,7 +186,7 @@ async function produceForSource(src: Source, briefing: string, steer: string): P
     return out;
   };
   const ranked = await judgeRank(await src.gen(briefing, steer, OVERSCAN), briefing);
-  return keep(ranked);
+  return spreadByRegister(keep(ranked));
 }
 
 /** Monotonic round id so late results from a superseded round are dropped. */

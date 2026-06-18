@@ -56,6 +56,34 @@ export const REPERTOIRE_RULE =
   "SPEZIFISCHE Zutat einer Kollision — niemals als faule generische Einzelstil-Antwort.\n" +
   "</repertoire>";
 
+/**
+ * Render-register variety (E-065). DIVERSITY_RULE spreads DOMAINS; this spreads the RENDER/MATERIAL
+ * register — the material/surface/light/weight feel a Leitwert triggers in an image model. Two far
+ * domains that both render as «weathered vintage brass-and-paper» are a register-clone.
+ */
+export const REGISTER_RULE =
+  "\n<render_register>\n" +
+  "Variiere nicht nur die DOMÄNE, sondern das RENDER-/MATERIAL-REGISTER: das Material-, Oberflächen-, " +
+  "Licht- und Gewichts-Gefühl, das der Leitwert in einem Bildmodell auslöst (z. B. Metall/Industrie · " +
+  "organisch/weich · digital/leuchtend · Papier/Archiv · Stein/Keramik · Textil/Faser · Glas/Flüssig · " +
+  "roh/elementar). Die N Ergebnisse müssen VERSCHIEDENE Register treffen — KEINE zwei im selben Material-/" +
+  "Render-Register, auch wenn ihre Domänen verschieden sind (zwei ferne Welten, die beide als " +
+  "«verwittertes Vintage-Messing-Papier» rendern, sind ein Register-Klon).\n" +
+  "</render_register>";
+
+/**
+ * Self-render-probe (E-065). Operationalises the designValue north-star at GENERATION time: ground
+ * only the VAGUE Leitwerte, never flatten an already-concrete one (Leitwert ≠ render, E-024).
+ */
+export const RENDER_PROBE_RULE =
+  "\n<render_probe>\n" +
+  "Selbst-Render-Probe je Leitwert: stell dir vor, NUR der Leitwert (ohne Szene/Begründung) geht an ein " +
+  "Bildmodell. Entsteht eine VIVIDE, SPEZIFISCHE Welt — oder etwas Generisches/Vages? Wenn vage: schärfe " +
+  "ihn mit einem KONKRETEREN Welt-/Material-Begriff, bis er von selbst eine spezifische Designwelt zieht. " +
+  "Schärfe NUR die vagen — bereits konkrete Leitwerte NICHT überschärfen/verflachen. Er bleibt ein " +
+  "2–4-teiliges Konkret-Kompositum, NIE eine Szene oder Anweisung.\n" +
+  "</render_probe>";
+
 export const JUDGE_SYSTEM =
   "<rolle>Senior Art Director. Du bewertest eine Design-Richtung (Leitwert + Szene) für ein " +
   "konkretes Briefing — streng, 3 = mittelmäßig.</rolle>\n" +
@@ -72,7 +100,11 @@ export const JUDGE_SYSTEM =
   "Botschaft. Erzähl-/Story-Ausgaben und nicht-ableitbare Abstrakta → niedrig.\n" +
   "Bestnote nur, wenn brauchbar UND überraschend UND ein ableitbarer Design-Wert (keine Geschichte).\n" +
   "</kriterien>\n" +
-  "<ausgabe>onTarget, surprise, craft, designValue (je 1–5) + note (ein Satz Begründung).</ausgabe>";
+  "<register>Ordne zusätzlich das RENDER-/MATERIAL-REGISTER zu — das Material-/Oberflächen-/Licht-/" +
+  "Gewichts-Gefühl, das der Leitwert in einem Bildmodell auslöst — als GENAU EINES aus: Metall-Industrie, " +
+  "Organisch-Weich, Digital-Leuchtend, Papier-Archiv, Stein-Keramik, Textil-Faser, Glas-Flüssig, " +
+  "Roh-Elementar. Nimm das nächstliegende; es dient der Register-Vielfalt im Cluster.</register>\n" +
+  "<ausgabe>onTarget, surprise, craft, designValue (je 1–5), register (eines der acht) + note (ein Satz Begründung).</ausgabe>";
 
 export const ENTANGLE_SYSTEM =
   "<rolle>Structural-Entanglement-Engine. Du erzeugst Leitwerte über DAS GEGENTEIL, DAS UNERWARTET " +
@@ -102,6 +134,8 @@ export const ENTANGLE_SYSTEM =
   LEITWERT_RULE +
   REPERTOIRE_RULE +
   DIVERSITY_RULE +
+  REGISTER_RULE +
+  RENDER_PROBE_RULE +
   "\n<ausgabe>essence; forbidden[]; bridges[] mit worlds{name, role, rhyme}, objectMetaphor, " +
   "creativeDerivation (1–2 Sätze, WARUM der Reim hält — keine Szene, keine Anweisung), mood, " +
   "palette (3 Hex-Farben als Richtung), domainDistance (hoch/mittel), affordances (≥5).</ausgabe>";
@@ -136,6 +170,8 @@ export const LATENT_COMPOSE_SYSTEM =
   LEITWERT_RULE +
   REPERTOIRE_RULE +
   DIVERSITY_RULE +
+  REGISTER_RULE +
+  RENDER_PROBE_RULE +
   "\n<ausgabe>bridges[] mit worlds{name, role, rhyme}, objectMetaphor, creativeDerivation (1–2 Sätze, " +
   "WARUM der Reim hält), mood, palette (3 Hex), domainDistance, affordances (≥5).</ausgabe>";
 
@@ -165,6 +201,8 @@ export const WORKBENCH_SYSTEM =
   LEITWERT_RULE +
   REPERTOIRE_RULE +
   DIVERSITY_RULE +
+  REGISTER_RULE +
+  RENDER_PROBE_RULE +
   "\n<ausgabe>candidates[] mit leitwert, worlds{name, role, rhyme}, objectMetaphor, creativeDerivation " +
   "(≤2 Sätze, WARUM — keine Deko, keine Anweisung), mood, palette (3 Hex), domainDistance, " +
   "affordances (≥5), tasteDirection (Geschmacksrichtung), operators (genutzte Töpfe/Ketten), " +
@@ -195,5 +233,7 @@ export const PERSONA_SYSTEM =
   LEITWERT_RULE +
   REPERTOIRE_RULE +
   DIVERSITY_RULE +
+  REGISTER_RULE +
+  RENDER_PROBE_RULE +
   "\n<ausgabe>persona (der EINE Satz mit Quelle + Kollision); leitwert (Welt-Verweis); mood (2–4 " +
   "Wörter); 6-Achsen-Projektion (material, energy, time, structure, density, formality).</ausgabe>";
