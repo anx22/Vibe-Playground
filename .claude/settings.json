@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run typecheck:api)",
+      "mcp__a7723694-8216-4961-8d90-64f660d07c2a__list_deployments",
+      "mcp__a7723694-8216-4961-8d90-64f660d07c2a__get_deployment"
+    ]
+  }
+}
