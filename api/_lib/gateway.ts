@@ -18,6 +18,10 @@ export const MODELS = {
 export const modelFor = (tier?: "cheap" | "strong" | "premium") =>
   tier === "premium" ? MODELS.premium : tier === "cheap" ? MODELS.cheap : MODELS.strong;
 
+/** Fill {placeholders} in a YAML-sourced prompt template — keeps ALL prompt wording in the YAML. */
+export const fill = (tpl: string, vars: Record<string, string | number>): string =>
+  tpl.replace(/\{(\w+)\}/g, (_m, k) => (vars[k] === undefined ? "" : String(vars[k])));
+
 /** Failover order per model (tried by the gateway if the primary fails/unavailable). */
 const FALLBACKS: Record<string, string[]> = {
   [MODELS.premium]: [MODELS.strong, MODELS.cheap],

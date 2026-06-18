@@ -45,17 +45,17 @@ const c = (
 export const MOCK_SEED = "Sicherheitskomponenten für Industrieanlagen, ingenieursgetrieben";
 
 export const MOCK_CARDS: VibeCard[] = [
-  c("entanglement", "Black-Box-Vigilanz", "kühl, wachsam", ["#FF7A5E", "#7a2618", "#ffd0b0"], "Flugschreiber"),
-  c("entanglement", "Seilschaft-Protokoll", "geerdet, verlässlich", ["#FF6B5E", "#7a1f14", "#ffc4b0"], "Alpine Sicherung"),
-  c("entanglement", "Sterilfeld-Präzision", "rein, kompromisslos", ["#FF8A6E", "#82301c", "#ffd8c4"], "OP-Sterilfeld"),
-  c("entanglement", "Tresor-Logik", "verschlossen, integer", ["#F4604E", "#6e1d12", "#ffbaa6"], "Schließmechanik"),
-  c("entanglement", "Schleusen-Disziplin", "kontrolliert, schwer", ["#FF7257", "#73230f", "#ffccb8"], "Schleusenwärter"),
+  c("synthese", "Black-Box-Vigilanz", "kühl, wachsam", ["#FF7A5E", "#7a2618", "#ffd0b0"], "Flugschreiber"),
+  c("synthese", "Seilschaft-Protokoll", "geerdet, verlässlich", ["#FF6B5E", "#7a1f14", "#ffc4b0"], "Alpine Sicherung"),
+  c("synthese", "Sterilfeld-Präzision", "rein, kompromisslos", ["#FF8A6E", "#82301c", "#ffd8c4"], "OP-Sterilfeld"),
+  c("synthese", "Tresor-Logik", "verschlossen, integer", ["#F4604E", "#6e1d12", "#ffbaa6"], "Schließmechanik"),
+  c("synthese", "Schleusen-Disziplin", "kontrolliert, schwer", ["#FF7257", "#73230f", "#ffccb8"], "Schleusenwärter"),
 
-  c("workbench", "Vigil-Schaltwerk", "exakt, gravitätisch", ["#B57BFF", "#3e1f6e", "#e6d4ff"], "Leuchtfeuer", "Kühle Autorität"),
-  c("workbench", "Reinraum-Notiz", "klar, mit Bruch", ["#A86CFF", "#371a63", "#ddc8ff"], "Reinraum", "Klarheit mit Bruch"),
-  c("workbench", "Gezeiten-Almanach", "geerdet, handwerklich", ["#C18CFF", "#48267d", "#ead9ff"], "Gezeitentabelle", "Geerdetes Handwerk"),
-  c("workbench", "Leuchtfeuer-Kodex", "ruhig, wachsam", ["#9E5CFF", "#2f1559", "#d8c0ff"], "Leuchtturm", "Kühle Autorität"),
-  c("workbench", "Werkbank-Ethik", "ehrlich, präzise", ["#B074FF", "#3a1c6b", "#e1ccff"], "Schmiede", "Geerdetes Handwerk"),
+  c("synthese", "Vigil-Schaltwerk", "exakt, gravitätisch", ["#B57BFF", "#3e1f6e", "#e6d4ff"], "Leuchtfeuer", "Kühle Autorität"),
+  c("synthese", "Reinraum-Notiz", "klar, mit Bruch", ["#A86CFF", "#371a63", "#ddc8ff"], "Reinraum", "Klarheit mit Bruch"),
+  c("synthese", "Gezeiten-Almanach", "geerdet, handwerklich", ["#C18CFF", "#48267d", "#ead9ff"], "Gezeitentabelle", "Geerdetes Handwerk"),
+  c("synthese", "Leuchtfeuer-Kodex", "ruhig, wachsam", ["#9E5CFF", "#2f1559", "#d8c0ff"], "Leuchtturm", "Kühle Autorität"),
+  c("synthese", "Werkbank-Ethik", "ehrlich, präzise", ["#B074FF", "#3a1c6b", "#e1ccff"], "Schmiede", "Geerdetes Handwerk"),
 
   c("persona", "Kartograf-Synth", "präzise, elektronisch", ["#46A6FF", "#10477a", "#c4e3ff"], "Schweizer Kartograf"),
   c("persona", "Kyoto-Software", "ruhig, reduziert", ["#3F97FF", "#0e3f73", "#bcdcff"], "Buchbinderei Kyoto"),

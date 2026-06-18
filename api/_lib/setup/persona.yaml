@@ -19,3 +19,7 @@ PERSONA:
   rules: [leitwert, repertoire, diversity, register, render_probe]
   output: |
     <ausgabe>persona (der EINE Satz mit Quelle + Kollision); leitwert (Welt-Verweis); mood (2–4 Wörter); 6-Achsen-Projektion (material, energy, time, structure, density, formality).</ausgabe>
+  prompt: |
+    Briefing: {ctx}
+    Erzeuge {n} VERSCHIEDENE Personas, aus denen je ein klarer Vibe fällt.
+  blank: "(blank slate)"

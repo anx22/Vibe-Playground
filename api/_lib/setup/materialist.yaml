@@ -17,6 +17,10 @@ MATERIALIST_WORLD:
   rules: [repertoire, diversity]
   output: |
     <ausgabe>world (2–3 Sätze Kopfkino); domain (woher die Welt stammt); innerLogic (ein Satz: die Wirkstruktur, die zum Thema reimt).</ausgabe>
+  prompt: |
+    Thema/Briefing: {ctx}.
+    Beschwöre {n} VERSCHIEDENE, weit gestreute Welten (je 2–3 Sätze Kopfkino), fern vom Klischee.
+  blank: "(blank slate)"
 
 MATERIALIST_EXTRACT:
   head: |
@@ -35,3 +39,7 @@ MATERIALIST_EXTRACT:
     Der Leitwert ist ein TRIGGER-WORT: ein 2–3-teiliges Kompositum, verankert im STÄRKSTEN geernteten Material / der stärksten Form, das sofort ein FÜHLBARES Bild zieht (Klasse: «Bleisatz-Setzkasten», «Sporenkapsel-Raster», «Glut-Patina»). VERBOTEN: abstrakte System-Endungen (-Protokoll, -Schaltplan, -Kanon, -Schwelle, -Ordnung, -Frequenz, -Vigilanz, -Index); ganze Sätze; Wert-/Gefühlswörter.
     </leitwert_material>
     <ausgabe>leitwert (Trigger-Wort); anchors[] (je: layer ∈ {Material, Form, Anordnung, Farbe-Licht, Geste}, anchor (der konkrete Design-Anker), why (ein kurzer Satz, warum design-stark)); mood (2–4 Wörter); palette (3 Hex).</ausgabe>
+  prompt: |
+    Briefing: {ctx}.
+    Ernte aus JEDER der {count} Welten die 2–3 stärksten Design-Anker (Material/Form/Anordnung/Farbe-Licht/Geste). Gib {count} results[] in DERSELBEN Reihenfolge:
+    {list}

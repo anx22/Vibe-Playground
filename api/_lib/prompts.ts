@@ -5,9 +5,4 @@
  * (entangle/workbench/persona/judge) and their imports stay unchanged. To tune ANY wording —
  * a role, a rule, a negative example, an output spec — edit the YAML and regenerate.
  */
-export {
-  ENTANGLE_SYSTEM,
-  JUDGE_SYSTEM,
-  PERSONA_SYSTEM,
-  WORKBENCH_SYSTEM,
-} from "./setup.generated.js";
+export * from "./setup.generated.js";

@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { judgeBatchSchema } from "./_lib/schema.js";
-import { genObject, modelFor } from "./_lib/gateway.js";
-import { JUDGE_SYSTEM } from "./_lib/prompts.js";
+import { fill, genObject, modelFor } from "./_lib/gateway.js";
+import { JUDGE_BLANK, JUDGE_PROMPT, JUDGE_SYSTEM } from "./_lib/prompts.js";
 import { clampStr, clampTier } from "./_lib/guard.js";
 
 /**
@@ -28,10 +28,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       model: modelFor(tier),
       schema: judgeBatchSchema,
       system: JUDGE_SYSTEM,
-      prompt:
-        `Briefing: ${briefing || "(blank slate)"}\n` +
-        `Bewerte JEDE der ${items.length} Richtungen einzeln und streng. Gib genau ${items.length} ` +
-        `Score-Objekte in scores[] zurück, in DERSELBEN Reihenfolge:\n${list}`,
+      prompt: fill(JUDGE_PROMPT, { briefing: briefing || JUDGE_BLANK, count: items.length, list }),
       // Strict measurement: never serve a cached score for the premium judge run.
       noCache: tier === "premium",
       // Scores are tiny; cap tight to bound the batch.

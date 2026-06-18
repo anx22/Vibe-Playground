@@ -21,6 +21,10 @@ interface Entry {
   head?: string;
   rules?: string[];
   output?: string;
+  /** The user-message template (with {ctx}/{steer}/{n}/… placeholders) — filled by gateway.fill. */
+  prompt?: string;
+  /** Fallback text used in place of an empty briefing. */
+  blank?: string;
 }
 
 const assemble = (e: Entry): string => {
@@ -38,17 +42,22 @@ const out: Record<string, string> = {};
 for (const file of readdirSync(setupDir).sort()) {
   if (!file.endsWith(".yaml") || file.startsWith("_")) continue;
   const doc = yaml.load(readFileSync(join(setupDir, file), "utf8")) as Record<string, Entry>;
-  for (const [key, entry] of Object.entries(doc)) out[key] = assemble(entry);
+  for (const [key, entry] of Object.entries(doc)) {
+    out[`${key}_SYSTEM`] = assemble(entry);
+    if (entry.prompt) out[`${key}_PROMPT`] = String(entry.prompt).replace(/\n+$/, "");
+    if (entry.blank) out[`${key}_BLANK`] = String(entry.blank).trim();
+  }
 }
 
 const banner =
   "// AUTO-GENERATED from api/_lib/setup/*.yaml by `npm run setup` — DO NOT EDIT.\n" +
   "// Tune the prompts in the YAML, then regenerate.\n\n";
-const body = Object.entries(out)
-  .map(([k, v]) => `export const ${k}_SYSTEM = ${JSON.stringify(v)};`)
+const body = Object.keys(out)
+  .sort()
+  .map((name) => `export const ${name} = ${JSON.stringify(out[name])};`)
   .join("\n");
 writeFileSync(join(setupDir, "../setup.generated.ts"), banner + body + "\n");
-console.log(`setup.generated.ts ← ${Object.keys(out).map((k) => `${k}_SYSTEM`).join(", ")}`);
+console.log(`setup.generated.ts ← ${Object.keys(out).filter((k) => k.endsWith("_SYSTEM")).join(", ")}`);
 
 if (process.argv.includes("--verify")) {
   const snapPath = "/tmp/prompts-snapshot.json";

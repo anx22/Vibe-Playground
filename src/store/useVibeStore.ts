@@ -3,7 +3,7 @@ import { persist } from "zustand/middleware";
 import { zero } from "../engine";
 import type { VibeCard } from "../engine";
 import { paletteFor, typoFor } from "../engine/derive";
-import { generateBridges, generatePersonas, generateWorkbench } from "../llm/client";
+import { generatePersonas, generateSynthese } from "../llm/client";
 import type { Bridge, Persona, WorkbenchCandidate } from "../llm/schema";
 import { judgeRank, passesFloor, spreadByRegister } from "../llm/select";
 
@@ -92,20 +92,11 @@ export interface Source {
 
 export const SOURCES: Source[] = [
   {
-    id: "entanglement",
-    label: "Verschränkung",
-    accent: "#FF4B4B",
-    gen: async (briefing, steer, n) =>
-      (await generateBridges({ briefing, steer, n, tier: "strong" })).bridges.map((b) =>
-        bridgeToCard(b, "entanglement"),
-      ),
-  },
-  {
-    id: "workbench",
-    label: "Werkbank",
+    id: "synthese",
+    label: "Synthese",
     accent: "#CE82FF",
     gen: async (briefing, steer, n) =>
-      (await generateWorkbench({ briefing, steer, n })).map((c) => candidateToCard(c, "workbench")),
+      (await generateSynthese({ briefing, steer, n })).map((c) => candidateToCard(c, "synthese")),
   },
   {
     id: "persona",

@@ -1,0 +1,20 @@
+# Synthese — D + F married. F's fast WIDE search (volume + operators) feeding D's STRICT gate
+# (the two worlds must truly share one inner logic · ≥5 design hooks · a tangible material anchor),
+# then F's spread into taste-directions. One call. Replaces the separate Verschränkung + Werkbank.
+SYNTHESE:
+  head: |
+    <rolle>Synthese-Engine (D+F verheiratet): die SCHNELLE, BREITE Suche der Werkbank mit dem STRENGEN Qualitäts-Gate der Verschränkung. Erst Menge, dann harte Auslese, dann Geschmacks-Spreizung — alles in EINEM Durchlauf.</rolle>
+    <vorgehen>
+    1. KERN destillieren: die Wirkstruktur des Themas in einem Satz (relationaler Kern, OHNE Oberflächen-/Domänenwörter).
+    2. KLISCHEES VERBRENNEN: die 3–5 naheliegenden Design-Reflexe listen und hart verbieten.
+    3. WEIT STREUEN (Volumen): erzeuge intern 3× mehr Kandidaten als du zeigst, über 5 Ebenen — A direkt · B Metapher · C Emotion/Versprechen · D fremdsprachig · E ENTKOPPELTE Umdeutung («wäre das kein Produkt, sondern ein Schiff/Ritual/geologischer Prozess/Küchengerät»). Operatoren: Entkoppelte Umdeutung, Fremdkultur-Lehnwort, Ort/Ära/Macher, Geste/Bewegung, Klang→Textur, genau EIN kontrollierter Bruch. Ebene E + der Bruch sind die Hauptquelle der Überraschung.
+    4. HARTES GATE (Verschränkungs-Standard) — wirf ALLES raus, das nicht durchhält: pro Kandidat ZWEI ferne Welten, deren innere Logik WIRKLICH dieselbe ist (echter struktureller Reim, nicht nur nebeneinandergestellt); ≥5 konkrete, gestalterisch nutzbare Affordanzen; ein anfassbarer Material-Anker; KEIN Klischee aus der Verbotsliste; Komfort-Test («sicher & vergesslich» raus); Distinktheit («würden 5 andere AI-Tools dasselbe liefern?» → raus); keine wörtliche Abbildung. ELIMINIERE mindestens ⅔ — die Auslese IST das System.
+    5. KURATION: die Überlebenden in 3–4 ORTHOGONALE Geschmacksrichtungen sortieren (distinkte Pole, jede mit ANDERER Spender-Welt), inkl. genau EINEM überraschenden Ausreißer.
+    </vorgehen>
+  rules: [leitwert, repertoire, diversity, register, render_probe]
+  output: |
+    <ausgabe>candidates[] mit leitwert, worlds{name, role, rhyme}, objectMetaphor, creativeDerivation (≤2 Sätze, WARUM die zwei Welten dieselbe innere Logik teilen — keine Szene, keine Anweisung), mood, palette (3 Hex), domainDistance, affordances (≥5), tasteDirection (Geschmacksrichtung), operators (genutzte Töpfe/Ketten), comfortRating (sicher…unbequem).</ausgabe>
+  prompt: |
+    Briefing: {ctx}.{steer}
+    Erst viele Kandidaten intern (≥3×), dann hart aussortieren (≥⅔ weg) nach dem Verschränkungs-Gate, und gib {n} starke, gut vorstellbare Richtungen über 3–4 Geschmacksrichtungen zurück.
+  blank: "(blank slate — wähle ein starkes Strategie-Profil und ein weit gestreutes Feld selbst)"

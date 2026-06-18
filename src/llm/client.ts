@@ -1,9 +1,7 @@
 import {
-  entangleSchema,
   judgeBatchSchema,
   personaListSchema,
   workbenchSchema,
-  type Entangle,
   type JudgeScore,
   type Persona,
   type WorkbenchCandidate,
@@ -58,26 +56,15 @@ export const generatePersonas = (input: { briefing: string; n?: number; tier?: T
   post("/api/persona", input, personaListSchema).then((r) => r.personas);
 
 /**
- * Engine D — Structural Entanglement (ENGINE-D-SPEC). Distill essence → burn clichés → far-but-
- * rhyming worlds → affordance filter → bridge → name. Returns essence + forbidden + bridges.
+ * Synthese (D + F married) — wide volume search gated by the strict structural-rhyme / affordance /
+ * materiality filter, in one call. Returns curated candidates clustered into taste-directions.
  */
-export const generateBridges = (input: {
-  briefing: string;
-  n?: number;
-  steer?: string;
-  tier?: Tier;
-}): Promise<Entangle> => post("/api/entangle", input, entangleSchema);
-
-/**
- * Engine F — Technique Workbench (ENGINE-F-SPEC). Fast, pure-prompt Volume → Filter → Curation;
- * returns curated candidates clustered into orthogonal taste-directions. The speed path.
- */
-export const generateWorkbench = (input: {
+export const generateSynthese = (input: {
   briefing: string;
   n?: number;
   steer?: string;
 }): Promise<WorkbenchCandidate[]> =>
-  post("/api/workbench", input, workbenchSchema).then((r) => r.candidates);
+  post("/api/synthese", input, workbenchSchema).then((r) => r.candidates);
 
 /** Batched LLM judge — scores MANY directions in ONE call (a structure in, scores[] out). */
 export const judgeBatch = (

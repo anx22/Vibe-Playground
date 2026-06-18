@@ -13,3 +13,8 @@ JUDGE:
     <register>Ordne zusätzlich das RENDER-/MATERIAL-REGISTER zu — das Material-/Oberflächen-/Licht-/Gewichts-Gefühl, das der Leitwert in einem Bildmodell auslöst — als GENAU EINES aus: Metall-Industrie, Organisch-Weich, Digital-Leuchtend, Papier-Archiv, Stein-Keramik, Textil-Faser, Glas-Flüssig, Roh-Elementar. Nimm das nächstliegende; es dient der Register-Vielfalt im Cluster.</register>
     <ausgabe>onTarget, surprise, craft, designValue (je 1–5), register (eines der acht) + note (ein Satz Begründung).</ausgabe>
   rules: []
+  prompt: |
+    Briefing: {briefing}
+    Bewerte JEDE der {count} Richtungen einzeln und streng. Gib genau {count} Score-Objekte in scores[] zurück, in DERSELBEN Reihenfolge:
+    {list}
+  blank: "(blank slate)"

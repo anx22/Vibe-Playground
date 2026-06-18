@@ -1,25 +1,28 @@
 /**
- * LOCAL eval — runs the REAL engine logic (mirrored from api/*.ts) directly via genObject with the
- * gateway key in env, so the CURRENT code is evaluable without a deploy. Mirrors the handlers' prompt
- * construction (keep in sync if they change). Includes a prototype run of the Materialist YAML method.
+ * LOCAL eval — runs the REAL engine logic directly via genObject with the gateway key in env, so the
+ * CURRENT code is evaluable without a deploy. Prompts come from the YAML (via setup.generated + fill),
+ * so this stays in sync with the endpoints automatically.
  *   AI_GATEWAY_API_KEY=… npx tsx scripts/eval-local.ts
  */
 import { writeFileSync } from "node:fs";
 import { z } from "zod";
-import { genObject, modelFor } from "../api/_lib/gateway.js";
+import { fill, genObject, modelFor } from "../api/_lib/gateway.js";
+import { judgeBatchSchema, personaListSchema, workbenchSchema } from "../api/_lib/schema.js";
 import {
-  entangleSchema,
-  judgeBatchSchema,
-  personaListSchema,
-  workbenchSchema,
-} from "../api/_lib/schema.js";
-import {
-  ENTANGLE_SYSTEM,
+  JUDGE_BLANK,
+  JUDGE_PROMPT,
   JUDGE_SYSTEM,
+  MATERIALIST_EXTRACT_PROMPT,
   MATERIALIST_EXTRACT_SYSTEM,
+  MATERIALIST_WORLD_BLANK,
+  MATERIALIST_WORLD_PROMPT,
   MATERIALIST_WORLD_SYSTEM,
+  PERSONA_BLANK,
+  PERSONA_PROMPT,
   PERSONA_SYSTEM,
-  WORKBENCH_SYSTEM,
+  SYNTHESE_BLANK,
+  SYNTHESE_PROMPT,
+  SYNTHESE_SYSTEM,
 } from "../api/_lib/setup.generated.js";
 
 const BRIEFINGS = [
@@ -31,30 +34,25 @@ const BRIEFINGS = [
 type Card = { engine: string; leitwert: string; world: string; scene: string; mood: string };
 const worlds = (ws: { name: string }[]) => ws.map((w) => w.name).join(" × ");
 
-async function runEntangle(ctx: string, n: number): Promise<Card[]> {
-  const out = await genObject({ model: modelFor("strong"), schema: entangleSchema, system: ENTANGLE_SYSTEM, noCache: true,
-    prompt: `Thema/Briefing: ${ctx}.\nErzeuge ${n} Brücken, jede über VERSCHIEDENE ferne Domänen.` });
-  return out.bridges.map((b) => ({ engine: "entanglement", leitwert: b.leitwert, world: worlds(b.worlds), scene: b.creativeDerivation, mood: b.mood }));
-}
-async function runWorkbench(ctx: string, n: number): Promise<Card[]> {
-  const out = await genObject({ model: modelFor("strong"), schema: workbenchSchema, system: WORKBENCH_SYSTEM, noCache: true,
-    prompt: `Briefing: ${ctx}.\nÜber-generiere intern (≥3×), eliminiere ≥⅔, und gib ${n} kuratierte Kandidaten über 3–4 orthogonale Geschmacksrichtungen zurück.` });
-  return out.candidates.map((b) => ({ engine: "workbench", leitwert: b.leitwert, world: worlds(b.worlds), scene: b.creativeDerivation, mood: b.mood }));
+async function runSynthese(ctx: string, n: number): Promise<Card[]> {
+  const out = await genObject({ model: modelFor("strong"), schema: workbenchSchema, system: SYNTHESE_SYSTEM, noCache: true,
+    prompt: fill(SYNTHESE_PROMPT, { ctx: ctx || SYNTHESE_BLANK, steer: "", n }) });
+  return out.candidates.map((b) => ({ engine: "synthese", leitwert: b.leitwert, world: worlds(b.worlds), scene: b.creativeDerivation, mood: b.mood }));
 }
 async function runPersona(ctx: string, n: number): Promise<Card[]> {
   const out = await genObject({ model: modelFor("strong"), schema: personaListSchema, system: PERSONA_SYSTEM, noCache: true,
-    prompt: `Briefing: ${ctx}\nErzeuge ${n} VERSCHIEDENE Personas, aus denen je ein klarer Vibe fällt.` });
+    prompt: fill(PERSONA_PROMPT, { ctx: ctx || PERSONA_BLANK, n }) });
   return out.personas.map((p) => ({ engine: "persona", leitwert: p.leitwert, world: "Persona", scene: p.persona, mood: p.mood }));
 }
-// Materialist (prototype run of the YAML design): N worlds → harvest the strongest anchors from each.
+
 const mWorld = z.object({ worlds: z.array(z.object({ world: z.string(), domain: z.string(), innerLogic: z.string() })) });
 const mExtract = z.object({ results: z.array(z.object({ leitwert: z.string(), anchors: z.array(z.object({ layer: z.string(), anchor: z.string(), why: z.string() })), mood: z.string() })) });
 async function runMaterialist(ctx: string, n: number): Promise<Card[]> {
   const w = await genObject({ model: modelFor("strong"), schema: mWorld, system: MATERIALIST_WORLD_SYSTEM, noCache: true,
-    prompt: `Thema/Briefing: ${ctx}.\nBeschwöre ${n} VERSCHIEDENE, weit gestreute Welten (je 2–3 Sätze Kopfkino), fern vom Klischee.` });
+    prompt: fill(MATERIALIST_WORLD_PROMPT, { ctx: ctx || MATERIALIST_WORLD_BLANK, n }) });
   const list = w.worlds.map((x, i) => `${i + 1}. ${x.world} [${x.domain}] — innere Logik: ${x.innerLogic}`).join("\n");
   const e = await genObject({ model: modelFor("strong"), schema: mExtract, system: MATERIALIST_EXTRACT_SYSTEM, noCache: true,
-    prompt: `Briefing: ${ctx}.\nErnte aus JEDER der ${w.worlds.length} Welten die 2–3 stärksten Design-Anker (Material/Form/Anordnung/Farbe-Licht/Geste). Gib ${w.worlds.length} results[] in DERSELBEN Reihenfolge:\n${list}` });
+    prompt: fill(MATERIALIST_EXTRACT_PROMPT, { ctx, count: w.worlds.length, list }) });
   return e.results.map((r, i) => ({ engine: "materialist", leitwert: r.leitwert, world: (w.worlds[i]?.world ?? "—").slice(0, 90), scene: r.anchors.map((a) => `${a.layer}: ${a.anchor}`).join(" · "), mood: r.mood }));
 }
 
@@ -63,14 +61,13 @@ async function batchJudge(briefing: string, cards: Card[]): Promise<number[]> {
   const list = cards.map((c, i) => `${i + 1}. Leitwert «${c.leitwert}» — Szene: ${c.scene || "—"} — Mood: ${c.mood || "—"}`).join("\n");
   try {
     const out = await genObject({ model: modelFor("cheap"), schema: judgeBatchSchema, system: JUDGE_SYSTEM, maxOutputTokens: 256 + cards.length * 140,
-      prompt: `Briefing: ${briefing}\nBewerte JEDE der ${cards.length} Richtungen streng. Gib ${cards.length} scores[] in Reihenfolge:\n${list}` });
+      prompt: fill(JUDGE_PROMPT, { briefing: briefing || JUDGE_BLANK, count: cards.length, list }) });
     return out.scores.map((s) => { const ax = [s.onTarget, s.surprise, s.craft, s.designValue].filter((x): x is number => typeof x === "number"); return ax.reduce((a, b) => a + b, 0) / ax.length; });
   } catch { return cards.map(() => NaN); }
 }
 
 const ENGINES = [
-  { id: "entanglement", run: runEntangle },
-  { id: "workbench", run: runWorkbench },
+  { id: "synthese", run: runSynthese },
   { id: "persona", run: runPersona },
   { id: "materialist", run: runMaterialist },
 ];
