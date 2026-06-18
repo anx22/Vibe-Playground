@@ -19,7 +19,7 @@ theme. North star: speed to a credible, surprising direction.
 - **Judge-select + quality floor** (`llm/select.ts`, E-063) — over-generate (guard-max), score
   on-target×surprise×craft×**designValue** (a derivable design-value, not a story/bullshit — the
   north-star fail-conditions), drop everything under the floor; a cluster that comes back thin
-  regenerates once (never "best of bad"). A persisted **novelty memory** (`useVibeStore`) repels
+  **stays thin** — no refill pass (E-064), an honest sparse lane over "best of bad". A persisted **novelty memory** (`useVibeStore`) repels
   already-produced Leitwerte each round so quality stays consistent at scale.
 - **Eval** (`scripts/eval.ts`) — `npm run eval -- --judge` compares engines on shared briefings.
 - **Gateway proxy** (`api/_lib/`) — tiers, `caching:'auto'`, fallbacks; `embed`/`cosineDist` for E.

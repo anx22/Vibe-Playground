@@ -11,8 +11,6 @@ import { judgeRank, passesFloor } from "../llm/select";
 const PER_METHOD = 5;
 /** Over-generate at the guard's max so the quality floor (E-063) can cut weak cards and still fill the cluster. */
 const OVERSCAN = 8;
-/** Below this many floor-passing cards, a cluster regenerates once instead of surfacing "best of bad" (E-063). */
-const MIN_PER_METHOD = 3;
 /** Cross-round novelty memory (E-063): how many produced Leitwerte to remember, and how many to repel per prompt. */
 const NOVELTY_CAP = 200;
 const NOVELTY_INJECT = 50;
@@ -167,9 +165,10 @@ export function pushProduced(produced: string[], add: string[]): string[] {
 }
 
 /**
- * One source's pipeline (E-063): generate → judge-rank → quality FLOOR (+ in-source dedup). If too
- * few clear the floor, regenerate the cluster ONCE (bounded cost), repelling what we just saw, rather
- * than padding the board with "best of bad". Refill is best-effort — a refill failure keeps batch one.
+ * One source's pipeline: generate → judge-rank → quality FLOOR (+ in-source dedup). Thin stays thin —
+ * if few cards clear the floor the cluster simply comes back small; there is no second pass (E-064,
+ * reversing E-063's regenerate-once). An honest, sometimes-sparse board beats a best-effort "best of
+ * bad" refill — and it halves the worst-case latency/cost of a weak round.
  */
 async function produceForSource(src: Source, briefing: string, steer: string): Promise<VibeCard[]> {
   const seen = new Set<string>();
@@ -185,17 +184,7 @@ async function produceForSource(src: Source, briefing: string, steer: string): P
     return out;
   };
   const ranked = await judgeRank(await src.gen(briefing, steer, OVERSCAN), briefing);
-  let survivors = keep(ranked);
-  if (survivors.length < MIN_PER_METHOD) {
-    try {
-      const avoid = noveltyText(ranked.map((c) => c.leitwert));
-      const refill = await judgeRank(await src.gen(briefing, steer + avoid, OVERSCAN), briefing);
-      survivors = [...survivors, ...keep(refill)];
-    } catch {
-      /* refill is best-effort — keep batch one */
-    }
-  }
-  return survivors;
+  return keep(ranked);
 }
 
 /** Monotonic round id so late results from a superseded round are dropped. */
