@@ -36,6 +36,9 @@ export interface VibeCard {
     comfortRating?: string;
     /** Engine D/E self-rated donor distance (hoch / mittel). */
     domainDistance?: string;
+    /** Design-Kompass: domänen-magnetisierte Typo-Richtung + Layout & Motion, fließt in den Export (E-080). */
+    typoDirection?: string;
+    layoutMotion?: string;
   };
   /** LLM-judge score (1..5 each + overall), attached by the judge-select step (E-041). */
   quality?: Quality;

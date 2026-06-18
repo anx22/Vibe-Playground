@@ -16,6 +16,8 @@ export const personaSchema = z.object({
   leitwert: z.string(),
   mood: z.string(),
   vector: axisVectorSchema,
+  typoDirection: z.string().describe("Typo-Richtung: Schrift-Charakter + ein konkreter Vorschlag, eine Zeile"),
+  layoutMotion: z.string().describe("Layout & Motion: Raster-/Kompositions-Idee + EIN Bewegungsprinzip, eine Zeile"),
 });
 /** Batched personas — N distinct sources in one call. */
 export const personaListSchema = z.object({ personas: z.array(personaSchema) });
@@ -36,6 +38,8 @@ export const bridgeShape = z.object({
   palette: z.array(z.string()).describe("3 hex colors, directional"),
   domainDistance: z.string().describe("hoch / mittel"),
   affordances: z.array(z.string()).describe("≥5 concrete, design-actionable affordances"),
+  typoDirection: z.string().describe("Typo-Richtung: Schrift-Charakter + ein konkreter Vorschlag, eine Zeile"),
+  layoutMotion: z.string().describe("Layout & Motion: Raster-/Kompositions-Idee + EIN Bewegungsprinzip, eine Zeile"),
 });
 
 /** Engine F — Technique Workbench. Curated survivors, each tagged with its taste-direction + pots. */

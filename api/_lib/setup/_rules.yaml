@@ -30,6 +30,15 @@ register: |
   Variiere nicht nur die DOMÄNE, sondern das RENDER-/MATERIAL-REGISTER: das Material-, Oberflächen-, Licht- und Gewichts-Gefühl, das der Leitwert in einem Bildmodell auslöst (z. B. Metall/Industrie · organisch/weich · digital/leuchtend · Papier/Archiv · Stein/Keramik · Textil/Faser · Glas/Flüssig · roh/elementar). Die N Ergebnisse müssen VERSCHIEDENE Register treffen — KEINE zwei im selben Material-/Render-Register, auch wenn ihre Domänen verschieden sind (zwei ferne Welten, die beide als «verwittertes Vintage-Messing-Papier» rendern, sind ein Register-Klon).
   </render_register>
 
+compass: |
+  <design_kompass>
+  Spüre die DESIGN-DOMÄNE des Briefings (z. B. Fintech, Luxus, KI, Developer, Health, SaaS, Editorial, Architektur, Food, Fashion, Automotive, Legal …) und ihr gestalterisches Schwerefeld — das Register, in dem die Domäne natürlich lebt (Palette · Typo · Layout/Motion).
+  Diese Domäne wirkt MAGNETISCH und LEICHT: ein sanfter Sog, der deine KONKRETEN Design-Parameter in die Resonanz der Domäne zieht. KEINE Schablone zum Abschreiben (kein harter Ref), KEIN Klischee, das gebrochen werden muss — nur eine Orientierung, damit das Ergebnis im richtigen Feld landet.
+  Die ÜBERRASCHUNG kommt aus der fernen Kollision (dem Leitwert), NICHT aus der Domäne. Der Kompass macht die Übersetzung nur DESIGN-ANWENDBAR und domänen-stimmig — er ersetzt nie die kreative Idee und glättet sie nie zur Branchen-Norm.
+  Übersetze die Kollision so in konkrete, domänen-magnetisierte Parameter: eine TYPO-RICHTUNG (Schrift-Charakter + ein konkreter Vorschlag) und LAYOUT & MOTION (Raster-/Kompositions-Idee + EIN Bewegungsprinzip) — je eine knappe Zeile, passend zu DIESEM Briefing. Lass die Palette ebenfalls leicht in die Domäne ziehen.
+  Bei blank slate oder unklarer Domäne: wähle die naheliegendste, ziehe nur ganz leicht.
+  </design_kompass>
+
 render_probe: |
   <render_probe>
   Selbst-Render-Probe je Leitwert: stell dir vor, NUR der Leitwert (ohne Szene/Begründung) geht an ein Bildmodell. Entsteht eine VIVIDE, SPEZIFISCHE Welt — oder etwas Generisches/Vages? Wenn vage: schärfe ihn mit einem KONKRETEREN Welt-/Material-Begriff, bis er von selbst eine spezifische Designwelt zieht. Schärfe NUR die vagen — bereits konkrete Leitwerte NICHT überschärfen/verflachen. Er bleibt ein 2–4-teiliges Konkret-Kompositum, NIE eine Szene oder Anweisung.

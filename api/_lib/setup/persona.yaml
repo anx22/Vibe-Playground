@@ -16,9 +16,9 @@ PERSONA:
     2. VISUELL greifbar — die Kollision muss man SEHEN können (Material, Form, Apparat, Oberfläche).
     3. KEINE Seifenoper: keine unsichtbare Psychologie, keine Gefühls-/Sozial-Macken («schweigt auf Calls», «introvertiert»). Der Widerspruch ist sichtbar/materiell, nicht charakterlich.
     </regeln>
-  rules: [leitwert, repertoire, diversity, register, render_probe]
+  rules: [leitwert, repertoire, diversity, register, compass, render_probe]
   output: |
-    <ausgabe>persona (der EINE Satz mit Quelle + Kollision); leitwert (Welt-Verweis); mood (2–4 Wörter); 6-Achsen-Projektion (material, energy, time, structure, density, formality).</ausgabe>
+    <ausgabe>persona (der EINE Satz mit Quelle + Kollision); leitwert (Welt-Verweis); mood (2–4 Wörter); 6-Achsen-Projektion (material, energy, time, structure, density, formality); typoDirection (Schrift-Charakter + 1 konkreter Vorschlag, eine Zeile); layoutMotion (Raster-/Kompositions-Idee + 1 Bewegungsprinzip, eine Zeile).</ausgabe>
   prompt: |
     Briefing: {ctx}
     Erzeuge {n} VERSCHIEDENE Personas, aus denen je ein klarer Vibe fällt.

@@ -17,6 +17,8 @@ export const personaSchema = z.object({
   leitwert: z.string(),
   mood: z.string(),
   vector: axisVectorSchema,
+  typoDirection: z.string(),
+  layoutMotion: z.string(),
 });
 export type Persona = z.infer<typeof personaSchema>;
 export const personaListSchema = z.object({ personas: z.array(personaSchema) });
@@ -31,6 +33,8 @@ export const bridgeSchema = z.object({
   palette: z.array(z.string()),
   domainDistance: z.string(),
   affordances: z.array(z.string()),
+  typoDirection: z.string(),
+  layoutMotion: z.string(),
 });
 export const entangleSchema = z.object({
   essence: z.string(),

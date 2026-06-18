@@ -31,18 +31,18 @@ const BRIEFINGS = [
   { id: "kosmetik", text: "Naturkosmetik-Marke, ehrlich und warm, ohne Greenwashing-Blätter-Optik" },
 ];
 
-type Card = { engine: string; leitwert: string; world: string; scene: string; mood: string };
+type Card = { engine: string; leitwert: string; world: string; scene: string; mood: string; typo?: string; layout?: string };
 const worlds = (ws: { name: string }[]) => ws.map((w) => w.name).join(" × ");
 
 async function runSynthese(ctx: string, n: number): Promise<Card[]> {
   const out = await genObject({ model: modelFor("strong"), schema: workbenchSchema, system: SYNTHESE_SYSTEM, noCache: true,
     prompt: fill(SYNTHESE_PROMPT, { ctx: ctx || SYNTHESE_BLANK, steer: "", n }) });
-  return out.candidates.map((b) => ({ engine: "synthese", leitwert: b.leitwert, world: worlds(b.worlds), scene: b.creativeDerivation, mood: b.mood }));
+  return out.candidates.map((b) => ({ engine: "synthese", leitwert: b.leitwert, world: worlds(b.worlds), scene: b.creativeDerivation, mood: b.mood, typo: b.typoDirection, layout: b.layoutMotion }));
 }
 async function runPersona(ctx: string, n: number): Promise<Card[]> {
   const out = await genObject({ model: modelFor("strong"), schema: personaListSchema, system: PERSONA_SYSTEM, noCache: true,
     prompt: fill(PERSONA_PROMPT, { ctx: ctx || PERSONA_BLANK, n }) });
-  return out.personas.map((p) => ({ engine: "persona", leitwert: p.leitwert, world: "Persona", scene: p.persona, mood: p.mood }));
+  return out.personas.map((p) => ({ engine: "persona", leitwert: p.leitwert, world: "Persona", scene: p.persona, mood: p.mood, typo: p.typoDirection, layout: p.layoutMotion }));
 }
 
 const mWorld = z.object({ worlds: z.array(z.object({ world: z.string(), domain: z.string(), innerLogic: z.string() })) });
@@ -84,7 +84,10 @@ async function main() {
         const scored = cards.map((c, i) => ({ ...c, score: scores[i] ?? NaN }));
         (all[e.id] ??= []).push({ briefing: b.id, cards: scored });
         console.log(`  ✓ ${e.id.padEnd(12)} ${cards.length} cards`);
-        for (const c of scored) console.log(`     [${(c.score || 0).toFixed(1)}] ${c.leitwert}  ⟨${c.world}⟩`);
+        for (const c of scored) {
+          console.log(`     [${(c.score || 0).toFixed(1)}] ${c.leitwert}  ⟨${c.world}⟩`);
+          if (c.typo || c.layout) console.log(`         typo: ${c.typo ?? "—"} | layout: ${c.layout ?? "—"}`);
+        }
       } catch (err) {
         console.log(`  ✗ ${e.id.padEnd(12)} ${String(err).slice(0, 140)}`);
       }

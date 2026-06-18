@@ -51,6 +51,8 @@ function bridgeToCard(b: Bridge, source: string): VibeCard {
       derivation: b.creativeDerivation,
       affordances: b.affordances,
       domainDistance: b.domainDistance,
+      typoDirection: b.typoDirection,
+      layoutMotion: b.layoutMotion,
     },
   };
 }
@@ -67,7 +69,7 @@ function personaToCard(p: Persona, source: string): VibeCard {
     coherence: { sharedAxes: [], ok: true },
     origin: { home: "Persona", intrusion: "—", object: "—", engineNote: p.persona },
     source,
-    detail: { derivation: p.persona },
+    detail: { derivation: p.persona, typoDirection: p.typoDirection, layoutMotion: p.layoutMotion },
   };
 }
 
