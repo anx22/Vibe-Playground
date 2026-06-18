@@ -13,8 +13,9 @@ const CENTER = 190;
 const HUB = 124;
 const TILE = 98;
 const ANCHOR = 84;
-const R_CLUSTER = 340; // quadrant cluster centre distance
-const R_SAT = 120; // satellite ring radius around a hub
+const R_CLUSTER_X = 388; // quadrant cluster centre — elliptical (landscape-friendly, no top/bottom clip)
+const R_CLUSTER_Y = 250;
+const R_SAT = 112; // satellite ring radius around a hub
 const R_ANCHOR = 150; // anchored gold ring radius
 
 const accentOf = (id?: string) => SOURCES.find((s) => s.id === id)?.accent ?? "#999";
@@ -61,8 +62,8 @@ export function Constellation({ onExport }: { onExport: (c: VibeCard) => void })
 
     SOURCES.forEach((src, i) => {
       const ang = (i / m) * Math.PI * 2 + Math.PI / m - Math.PI / 2; // sit in the diagonals
-      const cx = Math.cos(ang) * R_CLUSTER;
-      const cy = Math.sin(ang) * R_CLUSTER;
+      const cx = Math.cos(ang) * R_CLUSTER_X;
+      const cy = Math.sin(ang) * R_CLUSTER_Y;
       const group = cards.filter((c) => c.source === src.id && !anchorIds.has(c.id));
       if (!group.length) return;
       const [hub, ...sats] = group;
@@ -118,6 +119,7 @@ export function Constellation({ onExport }: { onExport: (c: VibeCard) => void })
                 aria-label={`${nd.card.leitwert} — Details`}
                 initial={{ opacity: 0, scale: 0.5, x: 0, y: 0 }}
                 animate={{ opacity: 1, scale: 1, x: nd.x, y: nd.y }}
+                whileTap={{ scale: 0.94 }}
                 transition={{ type: "spring", stiffness: 220, damping: 26 }}
                 className={`gem gem--${nd.kind}${isAnchor ? " is-anchor" : ""}${isFocus ? " is-focus" : ""}`}
                 style={{ width: nd.size, height: nd.size, marginLeft: -nd.size / 2, marginTop: -nd.size / 2, ["--accent" as string]: nd.accent } as CSSProperties}
