@@ -1557,3 +1557,49 @@ body {
 .gem:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
 
 .cst-loading, .cst-hint { position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%); background: #fff; color: var(--ink-soft); border: 2px solid #eef1f9; box-shadow: 0 8px 18px -8px rgba(43,45,66,.4); padding: 9px 18px; border-radius: 99px; font-weight: 700; font-family: "Nunito"; }
+
+/* ════════════════ BOARD (E-055) — structured lanes, Duolingo-tactile ════════════════ */
+.board { height: calc(100dvh - 64px); display: flex; flex-direction: column; gap: 13px; padding: 16px 18px 18px; overflow: hidden; font-family: "Nunito", system-ui, sans-serif; }
+
+.board-brief { display: flex; flex-direction: column; gap: 2px; background: #fff; border-radius: 18px; padding: 11px 18px; box-shadow: 0 4px 0 #e7ebf7, 0 10px 18px -10px rgba(43,45,66,.3); }
+.be-kicker { font-weight: 800; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-soft); }
+.be-text { font-weight: 800; font-size: 18px; line-height: 1.2; color: var(--ink); }
+
+.anchor-strip { display: flex; align-items: center; gap: 10px; background: #fff8e6; border: 2px solid #ffe6a8; border-radius: 16px; padding: 8px 14px; flex-wrap: wrap; }
+.as-label { font-weight: 800; font-size: 13px; color: #b8860b; white-space: nowrap; }
+.as-hint { font-weight: 600; font-size: 13px; color: #ad8838; }
+.as-chip { font-weight: 800; font-size: 12px; color: #fff; background: var(--accent); border: none; border-radius: 99px; padding: 5px 12px; box-shadow: 0 3px 0 color-mix(in srgb, var(--accent) 58%, #000); cursor: pointer; }
+
+.board-note { background: #fff4e0; border: 1px solid #f0d9a8; color: #6b4e16; border-radius: 12px; padding: 8px 14px; font-weight: 700; font-size: 13px; }
+
+.lanes { display: flex; gap: 14px; flex: 1; min-height: 0; }
+.lane { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; background: #fff; border-radius: 20px; box-shadow: 0 5px 0 #e7ebf7, 0 16px 30px -16px rgba(43,45,66,.35); overflow: hidden; }
+.lane-head { display: flex; align-items: center; gap: 8px; padding: 13px 16px; border-bottom: 2px solid #f0f2f9; }
+.lane-dot { width: 14px; height: 14px; border-radius: 6px; background: var(--accent); box-shadow: 0 2px 0 color-mix(in srgb, var(--accent) 58%, #000); }
+.lane-title { font-weight: 800; font-size: 15px; color: var(--ink); flex: 1; }
+.lane-count { font-weight: 800; font-size: 12px; color: var(--ink-soft); background: #f0f2f9; border-radius: 99px; padding: 2px 9px; }
+.lane-body { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.lane-skeleton, .lane-empty { color: var(--ink-soft); font-weight: 700; font-size: 13px; text-align: center; padding: 16px; opacity: .55; }
+
+.row { background: #fff; border-radius: 14px; box-shadow: 0 3px 0 #e9edf6, 0 8px 14px -10px rgba(43,45,66,.3); border: 2px solid #eef1f9; overflow: hidden; }
+.row.is-anchored { border-color: #ffc800; box-shadow: 0 0 0 2px #ffc800, 0 3px 0 #e9b500; }
+.row-main { width: 100%; display: flex; align-items: center; gap: 11px; padding: 11px 12px; background: none; border: none; cursor: pointer; text-align: left; }
+.row-bar { width: 6px; align-self: stretch; min-height: 36px; border-radius: 99px; background: var(--accent); flex: none; }
+.row-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.row-name { font-weight: 800; font-size: 14.5px; color: var(--ink); line-height: 1.15; }
+.row-sub { font-weight: 600; font-size: 12px; color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row-pal { display: flex; width: 34px; height: 14px; border-radius: 99px; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(0,0,0,.06); flex: none; }
+.row-pal span { flex: 1; }
+.row-chev { color: var(--ink-soft); font-size: 16px; transition: transform .18s; flex: none; }
+.row-chev.up { transform: rotate(180deg); }
+
+.row-detail { overflow: hidden; }
+.rd-inner { padding: 2px 14px 14px 29px; display: flex; flex-direction: column; gap: 7px; }
+.rd-tag { align-self: flex-start; font-weight: 800; font-size: 11px; color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, #fff); border: 1.5px solid color-mix(in srgb, var(--accent) 30%, #fff); border-radius: 99px; padding: 2px 9px; }
+.rd-mood { font-weight: 700; font-size: 12px; color: var(--ink-soft); }
+.rd-block p, .rd-line { font-weight: 600; font-size: 13px; line-height: 1.45; color: var(--ink); margin: 0; }
+.rd-role { color: var(--ink-soft); font-size: 11px; }
+.rd-rhyme { font-style: italic; color: var(--ink-soft); }
+.rd-k { font-weight: 800; color: var(--accent); margin-right: 5px; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; }
+.rd-actions { display: flex; gap: 8px; margin-top: 6px; }
+.btn-sm { padding: 8px 12px !important; font-size: 13px !important; border-radius: 12px !important; }

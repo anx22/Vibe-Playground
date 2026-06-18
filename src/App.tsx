@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { VibeCard as Card } from "./engine";
 import { useVibeStore, MAX_ANCHORS } from "./store/useVibeStore";
-import { Constellation } from "./components/Constellation";
+import { Board } from "./components/Board";
 import { ExportModal } from "./components/ExportModal";
 
 export default function App() {
@@ -76,7 +76,7 @@ export default function App() {
           </div>
         </main>
       ) : (
-        <Constellation onExport={setExportCard} />
+        <Board onExport={setExportCard} />
       )}
 
       {exportCard && <ExportModal card={exportCard} onClose={() => setExportCard(null)} />}
