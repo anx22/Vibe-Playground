@@ -4,17 +4,18 @@
 leitwert: |
   <leitwert_format>
   Ein Leitwert ist ein VERDICHTETER WELT-VERWEIS: ein Kompositum aus 2–4 KONKRETEN, sichtbaren Welt-/Handwerks-/Material-/Ort-Begriffen, mit Bindestrichen, das sofort eine VISUELLE Designwelt auslöst.
-  GUT: «Black-Box-Vigilanz» · «Leuchtfeuer-Logbuch» · «Kartograf-Synthese» · «Reinraum-Almanach».
-  VERBOTEN: ganze Sätze; Verb-/Imperativ-Phrasen («… sichtbar machen»); «X ist Y»/«X trägt Y»; abstrakte Aphorismen; Wert-/Tugend-/Gefühlswörter als Leitwert («Stille», «Mut», «Würde», «Vertrauen», «Risiko», «Messung ist Mut», «Stille trägt Gewicht»).
-  Der Leitwert benennt WELTEN, keine Botschaft — man muss ihn SEHEN können.
+  MATERIALITÄT (zentral): MINDESTENS ein Teil muss ANFASSBAR sein — ein Material, eine Oberfläche, ein Objekt oder eine charakteristische Form (Glasur, Wachs, Selvedge-Kante, Raster, Fassdaube), etwas das sofort KOPFKINO und fühlbare Materialität auslöst. Rein abstrakte System-Komposita sind ein „Substantiv-Schlachtfeld" — gemeint ist eine Welt zum Anfassen, kein Diagramm.
+  GUT: «Brennofen-Glasur» · «Selvedge-Webkante» · «Trafohaus-Kupfer» · «Tidenhub-Schlick».
+  VERBOTEN: ganze Sätze; Verb-/Imperativ-Phrasen («… sichtbar machen»); «X ist Y»/«X trägt Y»; abstrakte Aphorismen; Wert-/Tugend-/Gefühlswörter als Leitwert («Stille», «Mut», «Würde», «Vertrauen», «Risiko», «Messung ist Mut»); rein abstrakte System-Komposita ohne anfassbaren Anker («Fehlerkorrektur-Signalfeld», bloße «-Schnittstelle»/«-Index»/«-Frequenz»).
+  Der Leitwert benennt WELTEN, keine Botschaft — man muss ihn SEHEN UND ANFASSEN können.
   </leitwert_format>
 
 diversity: |
   <diversität>
   Beispiele in diesem Prompt zeigen NUR Form und Methode, NIE den Inhalt — übernimm KEINE ihrer Welten, Berufe, Domänen oder Wörter.
-  MEIDE deine Gewohnheits-Spender, die durch Übergebrauch selbst zum Klischee wurden: Tiefsee/Hydrothermalquellen, Vulkanologie/Geologie, Buchbinderei/Bleisatz, Uhrmacherei, Kartografie, Damaststahl, Nō-Theater, Quipu, Leuchtturm/Leuchtfeuer, Imkerei, Alchemie. Nutze sie NUR, wenn der Reim wirklich einzigartig ist — sonst FRISCHE, ungenutzte Domänen.
+  MEIDE deine Gewohnheits-Spender, die durch Übergebrauch selbst zum Klischee wurden: Tiefsee/Hydrothermalquellen, Vulkanologie/Geologie, Buchbinderei/Bleisatz, Uhrmacherei, Kartografie, Damaststahl, Nō-Theater, Quipu, Leuchtturm/Leuchtfeuer, Imkerei, Alchemie, Fermentation/Miso/Koji/Kombucha. Nutze sie NUR, wenn der Reim wirklich einzigartig ist — sonst FRISCHE, ungenutzte Domänen.
   Scanne das GESAMTE menschliche Wissen aus ALLEN Epochen — historisch BIS gegenwärtig, digital, futuristisch, spekulativ; NICHT nur historisch/vintage — und ALLEN Kulturen, Wissenschaften, Berufen, Alltag, Subkulturen, Sport, Recht, Logistik, Landwirtschaft, Medizin, Spiel, Musik. Jede der N Richtungen aus einer KOMPLETT anderen Wissensregion — keine zwei aus derselben Familie.
-  Variiere Wortform UND Objekt-Metapher stark: NICHT immer dieselben Endungen (-Logbuch, -Almanach, -Protokoll, -Raster, -Kodex) und NICHT immer Buch-/Archiv-Objekte. Das verdichtende Objekt kann ALLES sein — Werkzeug, Maschine, Kleidung, Speise, Instrument, Fahrzeug, Software, Körper, Gebäude.
+  Variiere Wortform UND Objekt-Metapher stark: KEINE zwei Leitwerte im Batch mit DERSELBEN Endung, und die übernutzten Endungen -Protokoll/-Membran/-Logbuch/-Almanach/-Raster/-Kodex möglichst GANZ meiden (nur wenn der Reim sie zwingend verlangt). NICHT immer Buch-/Archiv-Objekte. Das verdichtende Objekt kann ALLES sein — Werkzeug, Maschine, Kleidung, Speise, Instrument, Fahrzeug, Software, Körper, Gebäude.
   In jeder Antwort echte Überraschung statt der naheliegenden 'kreativen' Standardwelten.
   </diversität>
 
