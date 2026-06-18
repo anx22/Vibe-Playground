@@ -1,9 +1,10 @@
 import type { VibeCard } from "./engine";
 
 /**
- * A compact STYLE TRIGGER to paste into a design AI (landing page / brandboard / pitch slide) —
- * not a derivation essay (E-057). The Leitwert is the trigger; this adds only the few visual cues
- * a model needs to render it: the colliding worlds (or the person), mood, palette, key textures.
+ * A compact, LAYERED style trigger to paste into a design/image AI (landing page · brandboard ·
+ * pitch slide) — Valsecchi-style visual-prompt layering (world · material/texture · colour ·
+ * light/mood · anti-cliché), not a derivation essay (E-057/E-059). The Leitwert is the trigger;
+ * the layers are only the visual cues a generator needs to render it on-brand.
  */
 export function buildExportPrompt(c: VibeCard): string {
   const d = c.detail;
@@ -12,16 +13,17 @@ export function buildExportPrompt(c: VibeCard): string {
     : c.origin.home && c.origin.home !== "Persona"
       ? c.origin.home
       : "";
-  const cues = (d?.affordances ?? []).slice(0, 4).join(", ");
+  const texture = (d?.affordances ?? []).slice(0, 5).join(", ");
 
   const lines = [
     `Stil-Trigger: «${c.leitwert}»`,
-    worlds ? `Welten: ${worlds}` : d?.derivation ? `Quelle: ${d.derivation}` : "",
-    `Stimmung: ${c.mood}`,
-    `Palette: ${c.palette.join(" · ")}`,
-    cues ? `Visuell: ${cues}` : "",
+    worlds ? `Welt: ${worlds}` : d?.derivation ? `Quelle: ${d.derivation}` : "",
+    texture ? `Material & Textur: ${texture}` : "",
+    `Farbe: ${c.palette.join(" · ")}`,
+    `Licht & Stimmung: ${c.mood}`,
+    `Anti-Klischee: die Welt(en) visuell übersetzen, NICHT wörtlich abbilden; keine generische AI-Ästhetik, keine Stock-Verläufe.`,
     "",
-    `Wende diesen Stil auf [Landingpage / Brandboard / Slide / Pitch] an — die Welten visuell umsetzen, nicht wörtlich abbilden; keine generische AI-Ästhetik.`,
+    `→ Wende diesen Stil konsequent auf [Landingpage / Brandboard / Slide / Pitch] an.`,
   ].filter(Boolean);
   return lines.join("\n");
 }

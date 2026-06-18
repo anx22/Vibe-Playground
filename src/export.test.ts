@@ -36,18 +36,19 @@ const personaCard: VibeCard = {
 };
 
 describe("buildExportPrompt (compact style trigger)", () => {
-  it("is a tight style trigger for a bridge card (worlds + palette, no essay)", () => {
+  it("is a tight layered style trigger for a bridge card (world + texture + palette, no essay)", () => {
     const out = buildExportPrompt(bridgeCard);
     expect(out).toContain("Stil-Trigger: «Black-Box-Vigilanz»");
-    expect(out).toContain("Welten: Flugschreiber");
+    expect(out).toContain("Welt: Flugschreiber");
+    expect(out).toContain("Material & Textur:");
     expect(out).toContain("#101010");
-    expect(out.split("\n").length).toBeLessThan(8); // compact, not a Riesenbuch
+    expect(out.split("\n").length).toBeLessThan(10); // compact layers, not a Riesenbuch
   });
 
   it("uses the person as the source for a persona card (no worlds)", () => {
     const out = buildExportPrompt(personaCard);
     expect(out).toContain("Stil-Trigger: «Stille Würde»");
     expect(out).toContain("Quelle:");
-    expect(out).not.toContain("Welten:");
+    expect(out).not.toContain("Welt:");
   });
 });
