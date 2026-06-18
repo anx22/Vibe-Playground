@@ -79,7 +79,7 @@ async function attempt<T>(fn: () => Promise<T>, retries: number): Promise<CallRe
 }
 
 interface Failure { engine: string; briefing: string; error: string; ms: number; }
-interface EngineReport { format?: number; concreteness?: number; antiCliche?: number; distinctness?: number; overall: number | null; n: number; judge?: Record<string, number>; }
+interface EngineReport { format?: number; concreteness?: number; antiCliche?: number; distinctness?: number; overall: number | null; n: number; latencyMs?: number; retries?: number; judge?: Record<string, number>; }
 interface Report { mode: string; n: number; failures: Failure[]; engines: Record<string, EngineReport>; weakest: string | null; }
 
 async function main() {
@@ -99,6 +99,8 @@ async function main() {
   const batches: Record<string, Card[][]> = {};
   for (const e of engines) batches[e.id] = [];
   const failures: Failure[] = [];
+  const timing: Record<string, { ms: number; tries: number; cells: number }> = {};
+  for (const e of engines) timing[e.id] = { ms: 0, tries: 0, cells: 0 };
 
   // ── source: frozen fixture (offline, deterministic) OR live generation (timeout-bounded) ──
   if (inFile) {
@@ -119,6 +121,7 @@ async function main() {
         if (r.ok && r.value) {
           for (const card of r.value) card.briefing = b.text;
           batches[e.id].push(r.value);
+          timing[e.id].ms += r.ms; timing[e.id].tries += r.tries; timing[e.id].cells += 1;
           console.log(`   ${c.ok("✓")} ${e.id.padEnd(12)} ${String(r.value.length).padStart(2)} cards  ${c.dim(`${r.ms}ms${r.tries > 1 ? ` ·${r.tries}t` : ""}`)}`);
           if (!quiet) for (const card of r.value) console.log(c.dim(`        ● ${card.leitwert}   [${card.world}]`));
         } else {
@@ -158,8 +161,23 @@ async function main() {
     }
   }
 
+  // ── observed (empirical) latency + reliability — the north-star (speed) differentiator ──
+  if (!inFile && Object.values(timing).some((t) => t.cells)) {
+    console.log(`\n  OBSERVED ${c.dim("· empirical latency · reliability")}`);
+    console.log(`    ${"engine".padEnd(12)} latency  retries`);
+    for (const e of engines) {
+      const t = timing[e.id];
+      if (!t.cells) { console.log(`    ${e.id.padEnd(12)} ${c.bad("—")}`); continue; }
+      const meanMs = Math.round(t.ms / t.cells);
+      const retries = t.tries - t.cells;
+      console.log(`    ${e.id.padEnd(12)} ${(meanMs / 1000).toFixed(1).padStart(6)}s  ${String(retries).padStart(6)}`);
+      report.engines[e.id] = { ...(report.engines[e.id] ?? { overall: null, n: 0 }), latencyMs: meanMs, retries };
+    }
+  }
+
   // ── LLM-judge scorecard (timeout-bounded, failures recorded) ──
   if (useJudge) {
+    setApiBase(process.env.VIBE_API_BASE ?? "");
     setRequestTimeout(timeout);
     console.log(`\n${"─".repeat(72)}\n  JUDGE SCORECARD (${judgeTier}) ${c.dim("· subjective · LLM")}`);
     console.log(`    ${"engine".padEnd(12)} onTgt surp craft dVal   overall  n`);
