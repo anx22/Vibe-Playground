@@ -11,7 +11,7 @@ fast.
 |-----|---------|
 | [`PROJECT.md`](./PROJECT.md) | Stable facts — concept, engines, tech |
 | [`KONZEPT.md`](./KONZEPT.md) | Concept (German) |
-| [`DESIGN.md`](./DESIGN.md) | The constellation UI |
+| [`DESIGN.md`](./DESIGN.md) | The Studio UI (bento field) |
 | [`DECISIONS.md`](./DECISIONS.md) | Decision log |
 | [`NOW.md`](./NOW.md) | Current state, deferred, watch-outs |
 | [`docs/engines/`](./docs/engines) | Engine specs D · E · F |
@@ -30,7 +30,7 @@ VIBE_API_BASE=https://<app>.vercel.app npm run eval -- --judge   # compare engin
 ## Engines (one harness)
 
 Each engine is a serverless endpoint emitting the shared **bridge contract**; the client maps it via
-`bridgeToCard` into the constellation. Adding one = **1 endpoint + 1 client fn + 1 `Source` entry**.
+`bridgeToCard` into the Board field. Adding one = **1 endpoint + 1 client fn + 1 `Source` entry**.
 
 - **D · Verschränkung** (`api/entangle`) — essence → burn clichés → far-but-rhyming worlds → bridge.
 - **E · Latent-Agent** (`api/latent`) — LLM leaps; **embeddings measure "far"** (percentile rank).
@@ -53,7 +53,7 @@ src/
   engine/      types · axes · derive (palette/typo) · pools (fonts + lexicon) · index
   llm/         schema (zod, shared) · client (fetchers) · select (judge-rank)
   store/       useVibeStore (zustand) — SOURCES registry, anchors, explore/iterate
-  components/  Constellation (the canvas) · ExportModal
+  components/  Board (bento field + detail drawer) · ExportModal
   export.ts    block → ready design-brief prompt
 api/           entangle · latent · workbench · persona · judge · interpret · health
   _lib/        gateway (tiers · caching · embed · cosineDist) · prompts · schema

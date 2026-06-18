@@ -4,15 +4,18 @@
 
 ## Where it stands
 
-Live on Vercel. The app is the **constellation**: briefing → four engine clusters of hex blocks →
-anchor up to 5 gold → "aus Ankern ableiten" → flyout → copy/export. All four generators run live
-(Verschränkung · Latent-Agent · Werkbank · Persona), judge-selected per cluster. Glossy-plastic
-theme. North star: speed to a credible, surprising direction.
+Live on Vercel. The Studio is a **bento field**: briefing → four engine **panels** (each a hero
+direction over satellite tiles) → anchor up to 5 gold → "aus Ankern ableiten" → detail drawer →
+copy/export. All four generators run live (Verschränkung · Latent-Agent · Werkbank · Persona),
+judge-selected per panel; Werkbank's satellites sub-cluster by taste-direction. Glossy-plastic theme.
+North star: speed to a credible, surprising direction.
 
 ## What exists
 
-- **Constellation UI** (`components/Constellation.tsx`) — center Leitidee, per-engine clusters,
-  anchors-as-gravity, draggable canvas, focus flyout, copy/export. Framer-Motion.
+- **Bento-field Studio** (`components/Board.tsx`, E-067) — `App` renders the Board: a masonry of
+  engine panels, each a **hero** tile (judge-#1) over satellite tiles, a **register** chip per tile
+  (E-065), Werkbank satellites grouped by **taste-direction** (D12); a tile opens a **detail drawer**
+  with progressive depth (E-066). Leitidee header + anchor strip on top. Framer-Motion.
 - **Four engines** as a pluggable `Source` registry (`store/useVibeStore.ts`), each an `api/`
   endpoint sharing one bridge contract + `bridgeToCard`: `entangle` (D) · `latent` (E) ·
   `workbench` (F) · `persona`. Plus `judge`, `interpret`, `health`.
@@ -33,7 +36,6 @@ theme. North star: speed to a credible, surprising direction.
   **embedding-semantic** novelty — catching paraphrase-dups, not just exact/normalized repeats. Today E
   is single-round, in-request.
 - **Courage dial** (F) and **attract/repel beyond anchors** — feedback currently = anchors only.
-- **Sub-clustering F's taste-directions** visually inside its cluster (now a flat cluster + flyout tag).
 - **Accounts / sharing / persistence backend** — only if it goes public.
 
 ## Watch-outs

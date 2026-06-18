@@ -9,6 +9,8 @@ const ty = {
 const v0 = { material: 0, energy: 0, time: 0, structure: 0, density: 0, formality: 0 };
 
 let n = 0;
+/** Eight render-registers cycled through the mocks so the register chips (E-065) show variety. */
+const REGS = ["Metall-Industrie", "Papier-Archiv", "Organisch-Weich", "Glas-Flüssig", "Digital-Leuchtend", "Stein-Keramik", "Textil-Faser", "Roh-Elementar"];
 const c = (
   source: string,
   leitwert: string,
@@ -16,25 +18,29 @@ const c = (
   palette: [string, string, string],
   world: string,
   taste?: string,
-): VibeCard => ({
-  id: `${source}-mock-${n++}`,
-  leitwert,
-  mood,
-  scene: "Warum die Brücke trägt — die geteilte Struktur macht es zwingend.",
-  typography: ty,
-  palette,
-  vector: v0,
-  coherence: { sharedAxes: [], ok: true },
-  source,
-  origin: { home: world, intrusion: "—", object: "Logbuch", engineNote: "…" },
-  detail: {
-    worlds: [{ name: world, role: "Spender", rhyme: "lückenlose Wachsamkeit" }],
-    object: "Logbuch",
-    derivation: "Beide laufen auf instrumenteller Wachsamkeit — ruhig, exakt, absolut.",
-    affordances: ["matte Oberfläche", "graviert", "redundant", "Signalrhythmus", "Linsenoptik"],
-    tasteDirection: taste,
-  },
-});
+): VibeCard => {
+  const i = n;
+  return {
+    id: `${source}-mock-${n++}`,
+    leitwert,
+    mood,
+    scene: "Warum die Brücke trägt — die geteilte Struktur macht es zwingend.",
+    typography: ty,
+    palette,
+    vector: v0,
+    coherence: { sharedAxes: [], ok: true },
+    source,
+    origin: { home: world, intrusion: "—", object: "Logbuch", engineNote: "…" },
+    quality: { onTarget: 4, surprise: 4, craft: 4, designValue: 4, overall: 4, note: "", register: REGS[i % REGS.length] },
+    detail: {
+      worlds: [{ name: world, role: "Spender", rhyme: "lückenlose Wachsamkeit" }],
+      object: "Logbuch",
+      derivation: "Beide laufen auf instrumenteller Wachsamkeit — ruhig, exakt, absolut.",
+      affordances: ["matte Oberfläche", "graviert", "redundant", "Signalrhythmus", "Linsenoptik"],
+      tasteDirection: taste,
+    },
+  };
+};
 
 export const MOCK_SEED = "Sicherheitskomponenten für Industrieanlagen, ingenieursgetrieben";
 
