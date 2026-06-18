@@ -24,14 +24,30 @@ export const setApiBase = (base: string) => {
   API_BASE = base.replace(/\/$/, "");
 };
 
+/** Per-request timeout (ms); 0 = none. The eval sets it so a stalled engine fails fast, never hangs. */
+let requestTimeoutMs = 0;
+export const setRequestTimeout = (ms: number) => {
+  requestTimeoutMs = ms;
+};
+
 async function post<T>(path: string, body: unknown, schema: { parse(x: unknown): T }): Promise<T> {
-  const res = await fetch(API_BASE + path, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  if (!res.ok) throw new Error(`${path} → ${res.status}`);
-  return schema.parse(await res.json());
+  const ctrl = requestTimeoutMs > 0 ? new AbortController() : undefined;
+  const timer = ctrl ? setTimeout(() => ctrl.abort(), requestTimeoutMs) : undefined;
+  try {
+    const res = await fetch(API_BASE + path, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+      signal: ctrl?.signal,
+    });
+    if (!res.ok) throw new Error(`${path} → HTTP ${res.status}`);
+    return schema.parse(await res.json());
+  } catch (e) {
+    if (ctrl?.signal.aborted) throw new Error(`${path} → timeout ${requestTimeoutMs}ms`);
+    throw e;
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
 }
 
 /** Model tier — `strong` (Sonnet) for the user-facing Studio, `cheap` (Haiku) for Lab evals, `premium` (Opus) for the strict judge run. */
