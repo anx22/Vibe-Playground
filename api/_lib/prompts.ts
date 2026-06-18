@@ -17,6 +17,25 @@ export const LEITWERT_RULE =
   "Der Leitwert benennt WELTEN, keine Botschaft — man muss ihn SEHEN können.\n" +
   "</leitwert_format>";
 
+/**
+ * Anti-anchor rule (E-060): few-shot examples and named donor domains were narrowing the space —
+ * the engines over-fished «Tiefsee/Geologie/Buchbinderei/Uhrmacher/Kartograf» and copied the
+ * example Leitwert forms. This frees the search back to the whole of human knowledge.
+ */
+export const DIVERSITY_RULE =
+  "\n<diversität>\n" +
+  "Beispiele in diesem Prompt zeigen NUR Form und Methode, NIE den Inhalt — übernimm KEINE ihrer " +
+  "Welten, Berufe, Domänen oder Wörter.\n" +
+  "MEIDE deine Gewohnheits-Spender, die durch Übergebrauch selbst zum Klischee wurden: Tiefsee/" +
+  "Hydrothermalquellen, Vulkanologie/Geologie, Buchbinderei/Bleisatz, Uhrmacherei, Kartografie, " +
+  "Damaststahl, Nō-Theater, Quipu, Leuchtturm/Leuchtfeuer, Imkerei, Alchemie. Nutze sie NUR, wenn der " +
+  "Reim wirklich einzigartig ist — sonst FRISCHE, ungenutzte Domänen.\n" +
+  "Scanne das GESAMTE menschliche Wissen (alle Epochen, Kulturen, Wissenschaften, Berufe, Alltag, " +
+  "Subkulturen, Sport, Recht, Logistik, Landwirtschaft, Medizin, Spiel, Musik, Bürokratie …). Jede der " +
+  "N Richtungen aus einer KOMPLETT anderen Wissensregion — keine zwei aus derselben Familie. Maximale " +
+  "Streuung; in jeder Antwort echte Überraschung statt der naheliegenden 'kreativen' Standardwelten.\n" +
+  "</diversität>";
+
 export const JUDGE_SYSTEM =
   "<rolle>Senior Art Director. Du bewertest eine Design-Richtung (Leitwert + Szene) für ein " +
   "konkretes Briefing — streng, 3 = mittelmäßig.</rolle>\n" +
@@ -41,8 +60,8 @@ export const ENTANGLE_SYSTEM =
   "Domänenwörter (kein «Sicherheit», «Graph»). Ein Satz. Trage sie wortwörtlich durch alle Schritte.\n" +
   "2. KLISCHEES VERBRENNEN: die 3–5 naheliegenden Design-Reflexe listen und hart verbieten.\n" +
   "3. VERSCHRÄNKUNGS-SUCHE: Quellwelten, domänenfern, deren innere Logik mit der Essenz REIMT. Scanne " +
-  "vor-digital, vernakulär, nicht-westlich, nicht-Design (Handwerk, Geologie, Ritual, Tiefsee, Küche, " +
-  "Antike, Straße). Verwirf topische Nachbarn und den Design-Kanon (Bauhaus/Swiss/Brutalismus).\n" +
+  "vor-digital, vernakulär, nicht-westlich, nicht-Design, quer durch ALLE Wissensgebiete. " +
+  "Verwirf topische Nachbarn und den Design-Kanon (Bauhaus/Swiss/Brutalismus).\n" +
   "4. AFFORDANZ-FILTER: nur Welten mit ≥5 konkreten, gestalterisch nutzbaren Affordanzen behalten; " +
   "tote/erschöpfte Welten (z. B. Tresor → schwer/metall/retro) raus.\n" +
   "5. KOMPONIEREN: pro Brücke 2 Welten, die BEIDE unabhängig mit DERSELBEN Essenz reimen. Reibung " +
@@ -54,6 +73,7 @@ export const ENTANGLE_SYSTEM =
   "spannen); eine creativeDerivation, die wie eine Szene ODER eine Design-Anweisung klingt " +
   "(«Eisblumen»-Versagen).</harte_ablehnungen>" +
   LEITWERT_RULE +
+  DIVERSITY_RULE +
   "\n<ausgabe>essence; forbidden[]; bridges[] mit worlds{name, role, rhyme}, objectMetaphor, " +
   "creativeDerivation (1–2 Sätze, WARUM der Reim hält — keine Szene, keine Anweisung), mood, " +
   "palette (3 Hex-Farben als Richtung), domainDistance (hoch/mittel), affordances (≥5).</ausgabe>";
@@ -64,11 +84,12 @@ export const LATENT_DIVERGE_SYSTEM =
   "1. ESSENZ (Wirkstruktur) destillieren — abstrakt, ohne Oberflächen-/Domänenwörter, ein Satz.\n" +
   "2. Die 3–5 naheliegenden Design-Klischees verbrennen.\n" +
   "3. Ein WEITES Feld von 12–16 Spender-Welten vorschlagen, maximal FERN vom Thema — vor-digital, " +
-  "vernakulär, nicht-westlich, nicht-Design (Handwerk, Geologie, Ritual, Tiefsee, Küche, Antike). " +
+  "vernakulär, nicht-westlich, nicht-Design, quer durch ALLE Wissensgebiete. " +
   "KEINE topischen Nachbarn, KEIN Design-Kanon. Bewusst über sehr verschiedene Domänen streuen.\n" +
   "</aufgabe>\n" +
-  "<hinweis>Die Distanz misst danach ein Embedding-Index — liefere echte Streuung, nicht Varianten.</hinweis>\n" +
-  "<ausgabe>essence; forbidden[]; donors[] mit world + gist (ein Satz innere Logik).</ausgabe>";
+  "<hinweis>Die Distanz misst danach ein Embedding-Index — liefere echte Streuung, nicht Varianten.</hinweis>" +
+  DIVERSITY_RULE +
+  "\n<ausgabe>essence; forbidden[]; donors[] mit world + gist (ein Satz innere Logik).</ausgabe>";
 
 export const LATENT_COMPOSE_SYSTEM =
   "<rolle>RESONATOR + KOMPONIST + NAMER der Latent-Agent-Engine.</rolle>\n" +
@@ -83,6 +104,7 @@ export const LATENT_COMPOSE_SYSTEM =
   "<harte_ablehnungen>Klischee aus der Verbotsliste; wörtliche Abbildung des Themas; eine " +
   "creativeDerivation, die wie Szene oder Anweisung klingt.</harte_ablehnungen>" +
   LEITWERT_RULE +
+  DIVERSITY_RULE +
   "\n<ausgabe>bridges[] mit worlds{name, role, rhyme}, objectMetaphor, creativeDerivation (1–2 Sätze, " +
   "WARUM der Reim hält), mood, palette (3 Hex), domainDistance, affordances (≥5).</ausgabe>";
 
@@ -109,6 +131,7 @@ export const WORKBENCH_SYSTEM =
   "mit ANDERER Spender-Welt).\n" +
   "</vorgehen>" +
   LEITWERT_RULE +
+  DIVERSITY_RULE +
   "\n<ausgabe>candidates[] mit leitwert, worlds{name, role, rhyme}, objectMetaphor, creativeDerivation " +
   "(≤2 Sätze, WARUM — keine Deko, keine Anweisung), mood, palette (3 Hex), domainDistance, " +
   "affordances (≥5), tasteDirection (Geschmacksrichtung), operators (genutzte Töpfe/Ketten), " +
@@ -134,6 +157,7 @@ export const PERSONA_SYSTEM =
   "4. Kein bekannter Stilname.\n" +
   "</regeln>" +
   LEITWERT_RULE +
+  DIVERSITY_RULE +
   "\n<ausgabe>persona (der EINE Satz mit der Person); leitwert (Welt-Verweis aus den beiden Welten, " +
   "z. B. «Kartograf-Synth», «Geigen-Prothese»); mood (2–4 Wörter); 6-Achsen-Projektion " +
   "(material, energy, time, structure, density, formality).</ausgabe>";
