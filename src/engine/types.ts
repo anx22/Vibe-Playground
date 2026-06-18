@@ -46,8 +46,8 @@ export interface Quality {
   onTarget: number;
   surprise: number;
   craft: number;
-  /** A derivable design-value (world/material/style/mood), NOT a story — the north-star win/fail axis (E-063). */
-  designValue: number;
+  /** A derivable design-value (world/material/style/mood), NOT a story — the north-star win/fail axis (E-063). Optional: an older/leaner judge may omit it. */
+  designValue?: number;
   /** Render/material register the judge assigned — spreads a cluster across material feels (E-065). */
   register?: string;
   overall: number;

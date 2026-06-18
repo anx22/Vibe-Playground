@@ -184,17 +184,22 @@ async function main() {
     for (const e of engines) {
       const all = (batches[e.id] ?? []).flat();
       if (!all.length) { console.log(`    ${e.id.padEnd(12)} ${c.bad("(no output)")}`); continue; }
-      let tgt = 0, surp = 0, craft = 0, dv = 0, nn = 0;
+      let tgt = 0, surp = 0, craft = 0, dv = 0, dvN = 0, nn = 0;
       for (const card of all) {
         const r = await attempt(() => judge({ briefing: card.briefing ?? "", leitwert: card.leitwert, scene: card.scene, mood: card.mood }, judgeTier), retries);
-        if (r.ok && r.value) { tgt += r.value.onTarget; surp += r.value.surprise; craft += r.value.craft; dv += r.value.designValue; nn++; }
-        else failures.push({ engine: e.id, briefing: "judge", error: r.error ?? "?", ms: r.ms });
+        if (r.ok && r.value) {
+          tgt += r.value.onTarget; surp += r.value.surprise; craft += r.value.craft;
+          if (typeof r.value.designValue === "number") { dv += r.value.designValue; dvN++; }
+          nn++;
+        } else failures.push({ engine: e.id, briefing: "judge", error: r.error ?? "?", ms: r.ms });
       }
       if (!nn) { console.log(`    ${e.id.padEnd(12)} ${c.bad("(no scores)")}`); continue; }
-      const o = (tgt + surp + craft + dv) / (4 * nn);
-      const f = (x: number) => (x / nn).toFixed(2).padStart(5);
-      console.log(`    ${e.id.padEnd(12)}${f(tgt)}${f(surp)}${f(craft)}${f(dv)}   ${bar(o)} ${o.toFixed(2)}  ${nn}`);
-      report.engines[e.id] = { ...(report.engines[e.id] ?? { overall: null, n: nn }), judge: { onTarget: tgt / nn, surprise: surp / nn, craft: craft / nn, designValue: dv / nn, overall: o, n: nn } };
+      const axes = [tgt / nn, surp / nn, craft / nn, ...(dvN ? [dv / dvN] : [])];
+      const o = axes.reduce((a, b) => a + b, 0) / axes.length;
+      const f = (x: number) => x.toFixed(2).padStart(5);
+      const dvStr = dvN ? f(dv / dvN) : "    —";
+      console.log(`    ${e.id.padEnd(12)}${f(tgt / nn)}${f(surp / nn)}${f(craft / nn)}${dvStr}   ${bar(o / 5)} ${o.toFixed(2)}  ${nn}`);
+      report.engines[e.id] = { ...(report.engines[e.id] ?? { overall: null, n: nn }), judge: { onTarget: tgt / nn, surprise: surp / nn, craft: craft / nn, designValue: dvN ? dv / dvN : 0, overall: o, n: nn } };
     }
   }
 
