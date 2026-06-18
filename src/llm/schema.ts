@@ -59,3 +59,6 @@ export const judgeSchema = z.object({
   note: z.string(),
 });
 export type JudgeScore = z.infer<typeof judgeSchema>;
+
+/** Batched judge — N scores in one call, aligned to input order. */
+export const judgeBatchSchema = z.object({ scores: z.array(judgeSchema) });

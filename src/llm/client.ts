@@ -1,6 +1,6 @@
 import {
   entangleSchema,
-  judgeSchema,
+  judgeBatchSchema,
   personaListSchema,
   workbenchSchema,
   type Entangle,
@@ -89,11 +89,21 @@ export const generateWorkbench = (input: {
 }): Promise<WorkbenchCandidate[]> =>
   post("/api/workbench", input, workbenchSchema).then((r) => r.candidates);
 
-/** LLM quality judge — scores one direction against the briefing (on-target × surprise × craft). */
-export const judge = (
+/** Batched LLM judge — scores MANY directions in ONE call (a structure in, scores[] out). */
+export const judgeBatch = (
+  input: { briefing: string; items: { leitwert: string; scene: string; mood: string }[] },
+  tier: Tier = "cheap",
+): Promise<{ scores: JudgeScore[] }> => post("/api/judge", { ...input, tier }, judgeBatchSchema);
+
+/** Convenience: score a single direction (a 1-item batch — keeps the eval's per-card path working). */
+export const judge = async (
   input: { briefing: string; leitwert: string; scene?: string; mood: string },
   tier: Tier = "cheap",
-): Promise<JudgeScore> => post("/api/judge", { ...input, tier }, judgeSchema);
+): Promise<JudgeScore> => {
+  const { briefing, leitwert, scene, mood } = input;
+  const { scores } = await judgeBatch({ briefing, items: [{ leitwert, scene: scene ?? "", mood }] }, tier);
+  return scores[0];
+};
 
 /** Is the LLM proxy reachable? (The authoritative test of generation is an actual render.) */
 export async function llmReady(): Promise<boolean> {

@@ -80,3 +80,6 @@ export const judgeSchema = z.object({
   register: z.string().describe("Render-/Material-Register — nächstliegendes aus Metall-Industrie, Organisch-Weich, Digital-Leuchtend, Papier-Archiv, Stein-Keramik, Textil-Faser, Glas-Flüssig, Roh-Elementar (für Register-Vielfalt im Cluster)"),
   note: z.string().describe("ein kurzer Satz Begründung"),
 });
+
+/** Batched judge — score MANY directions in ONE call; scores[] aligns to the input order. */
+export const judgeBatchSchema = z.object({ scores: z.array(judgeSchema) });

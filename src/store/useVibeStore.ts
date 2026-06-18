@@ -9,11 +9,11 @@ import { judgeRank, passesFloor, spreadByRegister } from "../llm/select";
 
 /** Per method we generate a few extra and judge-select the strongest into the cluster (E-041). */
 const PER_METHOD = 5;
-/** Over-generate at the guard's max so the quality floor (E-063) can cut weak cards and still fill the cluster. */
-const OVERSCAN = 8;
+/** Over-generate above the floor so it can cut weak cards and still fill the cluster — trimmed 8→6 to cut spend (E-076). */
+const OVERSCAN = 6;
 /** Cross-round novelty memory (E-063): how many produced Leitwerte to remember, and how many to repel per prompt. */
 const NOVELTY_CAP = 200;
-const NOVELTY_INJECT = 50;
+const NOVELTY_INJECT = 20;
 const MAX_ANCHORS = 5;
 // Session-unique prefix so cards minted this session can never collide with persisted cards/anchors
 // rehydrated from a previous one (which restart their own counter at 0). Fixes a dup-key/anchor bug.

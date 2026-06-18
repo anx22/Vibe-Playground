@@ -1,5 +1,6 @@
 import type { VibeCard } from "../engine";
-import { judge, type Tier } from "./client";
+import { judgeBatch, type Tier } from "./client";
+import type { JudgeScore } from "./schema";
 
 /**
  * Judge-select (E-041) — the production fitness step the eval proved is the real
@@ -19,21 +20,24 @@ export async function judgeRank(
   briefing: string,
   tier: Tier = "cheap",
 ): Promise<VibeCard[]> {
-  const scored = await Promise.all(
-    cards.map(async (c): Promise<VibeCard> => {
-      try {
-        const s = await judge(
-          { briefing, leitwert: c.leitwert, scene: c.scene, mood: c.mood },
-          tier,
-        );
-        const axes = [s.onTarget, s.surprise, s.craft, s.designValue].filter((x): x is number => typeof x === "number");
-        const overall = axes.reduce((a, b) => a + b, 0) / axes.length;
-        return { ...c, quality: { ...s, overall } };
-      } catch {
-        return c; // unscored — sinks to the bottom, never blocks the loop
-      }
-    }),
-  );
+  // ONE call scores the whole batch (a structure in, scores[] out) — not one billed call per card.
+  let scores: (JudgeScore | undefined)[] = [];
+  try {
+    const r = await judgeBatch(
+      { briefing, items: cards.map((c) => ({ leitwert: c.leitwert, scene: c.scene ?? "", mood: c.mood })) },
+      tier,
+    );
+    scores = r.scores;
+  } catch {
+    scores = []; // judge unreachable → all unscored → show-all, never blocks the loop
+  }
+  const scored = cards.map((c, i): VibeCard => {
+    const s = scores[i];
+    if (!s) return c; // unscored — sinks to the bottom
+    const axes = [s.onTarget, s.surprise, s.craft, s.designValue].filter((x): x is number => typeof x === "number");
+    const overall = axes.reduce((a, b) => a + b, 0) / axes.length;
+    return { ...c, quality: { ...s, overall } };
+  });
   return scored.sort((a, b) => (b.quality?.overall ?? -1) - (a.quality?.overall ?? -1));
 }
 

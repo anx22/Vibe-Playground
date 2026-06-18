@@ -39,6 +39,8 @@ export async function genObject<T>(opts: {
   prompt: string;
   /** Bypass the in-instance cache (e.g. when you want variety per call). */
   noCache?: boolean;
+  /** Hard cap on output tokens — guardrail against runaway structured output (default 8000). */
+  maxOutputTokens?: number;
 }): Promise<T> {
   const ck = key("object", opts.model, opts.system, opts.prompt);
   if (!opts.noCache) {
@@ -51,6 +53,7 @@ export async function genObject<T>(opts: {
     schema: opts.schema,
     system: opts.system,
     prompt: opts.prompt,
+    maxOutputTokens: opts.maxOutputTokens ?? 8000,
     providerOptions: {
       gateway: {
         caching: "auto",

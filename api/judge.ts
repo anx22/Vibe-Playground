@@ -1,28 +1,41 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { judgeSchema } from "./_lib/schema.js";
+import { judgeBatchSchema } from "./_lib/schema.js";
 import { genObject, modelFor } from "./_lib/gateway.js";
 import { JUDGE_SYSTEM } from "./_lib/prompts.js";
 import { clampStr, clampTier } from "./_lib/guard.js";
 
-/** Quality judge: scores one direction against the briefing (eval fitness function). */
+/**
+ * Quality judge — scores MANY directions in ONE call (the whole batch in a single structure, scores[]
+ * out, aligned to input order). Falls back to a 1-item batch for a single {leitwert,scene,mood} body,
+ * so older callers keep working. Judging N cards used to be N billed calls; now it is one.
+ */
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
   try {
     const briefing = clampStr(req.body?.briefing);
-    const leitwert = clampStr(req.body?.leitwert, 200);
-    const scene = clampStr(req.body?.scene, 600);
-    const mood = clampStr(req.body?.mood, 200);
     // Premium allowed here: judge outputs are tiny and the headless eval grades on Opus.
     const tier = clampTier(req.body?.tier, true, "cheap");
+    const raw: unknown = Array.isArray(req.body?.items) ? req.body.items : [req.body];
+    const items = (raw as Array<Record<string, unknown>>).slice(0, 64).map((it) => ({
+      leitwert: clampStr(it?.leitwert, 200),
+      scene: clampStr(it?.scene, 600),
+      mood: clampStr(it?.mood, 200),
+    }));
+    const list = items
+      .map((it, i) => `${i + 1}. Leitwert «${it.leitwert}» — Szene: ${it.scene || "—"} — Mood: ${it.mood || "—"}`)
+      .join("\n");
     const out = await genObject({
       model: modelFor(tier),
-      schema: judgeSchema,
+      schema: judgeBatchSchema,
       system: JUDGE_SYSTEM,
       prompt:
         `Briefing: ${briefing || "(blank slate)"}\n` +
-        `Leitwert: ${leitwert}\nSzene: ${scene || "—"}\nMood: ${mood || "—"}\nBewerte.`,
+        `Bewerte JEDE der ${items.length} Richtungen einzeln und streng. Gib genau ${items.length} ` +
+        `Score-Objekte in scores[] zurück, in DERSELBEN Reihenfolge:\n${list}`,
       // Strict measurement: never serve a cached score for the premium judge run.
       noCache: tier === "premium",
+      // Scores are tiny; cap tight to bound the batch.
+      maxOutputTokens: 256 + items.length * 140,
     });
     return res.status(200).json(out);
   } catch (err) {
