@@ -59,14 +59,17 @@ export const REPERTOIRE_RULE =
 export const JUDGE_SYSTEM =
   "<rolle>Senior Art Director. Du bewertest eine Design-Richtung (Leitwert + Szene) für ein " +
   "konkretes Briefing — streng, 3 = mittelmäßig.</rolle>\n" +
-  "<leitfrage>Würdest du das DIESEM Kunden als Startrichtung pitchen?</leitfrage>\n" +
+  "<leitfrage>Würdest du das DIESEM Kunden als Startrichtung pitchen — und rendert ein Bildmodell daraus eine schöne Welt?</leitfrage>\n" +
   "<kriterien>\n" +
   "- onTarget (1–5): trifft den funktionalen Kern des Briefings — brauchbar für genau diesen Kunden.\n" +
   "- surprise (1–5): nicht-naheliegend — überrascht statt Branchen-Klischee.\n" +
   "- craft (1–5): konkret und evokativ statt generisch.\n" +
-  "Bestnote nur, wenn on-target UND überraschend zugleich.\n" +
+  "- renderability (1–5): Gibt man den LEITWERT wörtlich einem Bildmodell (Midjourney/DALL·E/ChatGPT), " +
+  "entsteht eine kohärente, ästhetisch schöne Designwelt? Sichtbare, konkrete Material-/Form-/Oberflächen-" +
+  "Begriffe → hoch; abstrakte Konzept-/Wertwörter, die das Modell raten lassen → niedrig.\n" +
+  "Bestnote nur, wenn on-target UND überraschend UND direkt renderbar zugleich.\n" +
   "</kriterien>\n" +
-  "<ausgabe>onTarget, surprise, craft (je 1–5) + note (ein Satz Begründung).</ausgabe>";
+  "<ausgabe>onTarget, surprise, craft, renderability (je 1–5) + note (ein Satz Begründung).</ausgabe>";
 
 export const ENTANGLE_SYSTEM =
   "<rolle>Structural-Entanglement-Engine. Du erzeugst Leitwerte über DAS GEGENTEIL, DAS UNERWARTET " +

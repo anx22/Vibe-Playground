@@ -26,7 +26,7 @@ export async function judgeRank(
           { briefing, leitwert: c.leitwert, scene: c.scene, mood: c.mood },
           tier,
         );
-        const overall = (s.onTarget + s.surprise + s.craft) / 3;
+        const overall = (s.onTarget + s.surprise + s.craft + s.renderability) / 4;
         return { ...c, quality: { ...s, overall } };
       } catch {
         return c; // unscored — sinks to the bottom, never blocks the loop
@@ -35,3 +35,15 @@ export async function judgeRank(
   );
   return scored.sort((a, b) => (b.quality?.overall ?? -1) - (a.quality?.overall ?? -1));
 }
+
+/**
+ * The quality floor (E-063): a card must clear this mean score to reach the board — otherwise the
+ * cluster regenerates once rather than surfacing "best of bad". The judge rubric calls 3 = mittelmäßig,
+ * so a floor above 3 means "better than mediocre". Tunable.
+ *
+ * An UNSCORED card (judge unreachable) is NOT floored out, so a judge outage degrades to
+ * "show everything" — never to an empty board.
+ */
+export const QUALITY_FLOOR = 3.3;
+export const passesFloor = (c: VibeCard): boolean =>
+  c.quality === undefined || c.quality.overall >= QUALITY_FLOOR;

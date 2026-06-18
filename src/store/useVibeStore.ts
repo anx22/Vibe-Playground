@@ -5,11 +5,17 @@ import type { VibeCard } from "../engine";
 import { paletteFor, typoFor } from "../engine/derive";
 import { generateBridges, generateLatent, generatePersonas, generateWorkbench } from "../llm/client";
 import type { Bridge, Persona, WorkbenchCandidate } from "../llm/schema";
-import { judgeRank } from "../llm/select";
+import { judgeRank, passesFloor } from "../llm/select";
 
 /** Per method we generate a few extra and judge-select the strongest into the cluster (E-041). */
 const PER_METHOD = 5;
-const OVERSCAN = PER_METHOD + 1;
+/** Over-generate at the guard's max so the quality floor (E-063) can cut weak cards and still fill the cluster. */
+const OVERSCAN = 8;
+/** Below this many floor-passing cards, a cluster regenerates once instead of surfacing "best of bad" (E-063). */
+const MIN_PER_METHOD = 3;
+/** Cross-round novelty memory (E-063): how many produced Leitwerte to remember, and how many to repel per prompt. */
+const NOVELTY_CAP = 200;
+const NOVELTY_INJECT = 50;
 const MAX_ANCHORS = 5;
 // Session-unique prefix so cards minted this session can never collide with persisted cards/anchors
 // rehydrated from a previous one (which restart their own counter at 0). Fixes a dup-key/anchor bug.
@@ -134,6 +140,64 @@ function gravityText(anchors: VibeCard[]): string {
 /** Normalised leitwert for dedup (a round of clones is the main "many identical entries" bug). */
 const normLw = (s: string) => s.toLowerCase().replace(/[^a-z0-9äöü]/g, "");
 
+/**
+ * Cross-round novelty memory (E-063): repel the Leitwerte already produced so round 100 stays as
+ * fresh as round 1. Text-level for now (exact/near-form repeats); embedding-semantic dedup is Tier-1.
+ */
+export function noveltyText(produced: string[]): string {
+  if (!produced.length) return "";
+  const recent = produced.slice(-NOVELTY_INJECT);
+  return (
+    `\nBEREITS ERZEUGT (NICHT wiederholen, keine Near-Variants, andere Wort- UND Objektformen): ` +
+    `${recent.join(", ")}. Wähle bewusst FRISCHE Welten/Domänen, die hier noch nicht vorkamen.`
+  );
+}
+
+/** Append produced Leitwerte to the memory, deduped by normalized form and capped (most-recent-last). */
+export function pushProduced(produced: string[], add: string[]): string[] {
+  const seen = new Set(produced.map(normLw));
+  const merged = [...produced];
+  for (const lw of add) {
+    const k = normLw(lw);
+    if (seen.has(k)) continue;
+    seen.add(k);
+    merged.push(lw);
+  }
+  return merged.slice(-NOVELTY_CAP);
+}
+
+/**
+ * One source's pipeline (E-063): generate → judge-rank → quality FLOOR (+ in-source dedup). If too
+ * few clear the floor, regenerate the cluster ONCE (bounded cost), repelling what we just saw, rather
+ * than padding the board with "best of bad". Refill is best-effort — a refill failure keeps batch one.
+ */
+async function produceForSource(src: Source, briefing: string, steer: string): Promise<VibeCard[]> {
+  const seen = new Set<string>();
+  const keep = (cards: VibeCard[]): VibeCard[] => {
+    const out: VibeCard[] = [];
+    for (const c of cards) {
+      if (!passesFloor(c)) continue;
+      const k = normLw(c.leitwert);
+      if (seen.has(k)) continue;
+      seen.add(k);
+      out.push(c);
+    }
+    return out;
+  };
+  const ranked = await judgeRank(await src.gen(briefing, steer, OVERSCAN), briefing);
+  let survivors = keep(ranked);
+  if (survivors.length < MIN_PER_METHOD) {
+    try {
+      const avoid = noveltyText(ranked.map((c) => c.leitwert));
+      const refill = await judgeRank(await src.gen(briefing, steer + avoid, OVERSCAN), briefing);
+      survivors = [...survivors, ...keep(refill)];
+    } catch {
+      /* refill is best-effort — keep batch one */
+    }
+  }
+  return survivors;
+}
+
 /** Monotonic round id so late results from a superseded round are dropped. */
 let roundSeq = 0;
 
@@ -150,6 +214,8 @@ interface VibeState {
   failedSources: string[];
   /** Source ids still generating this round — each lane shows a spinner until its id clears. */
   pendingSources: string[];
+  /** Cross-round novelty memory — Leitwerte already produced, repelled in later rounds (E-063). */
+  produced: string[];
 
   setSeed: (w: string) => void;
   explore: () => Promise<void>;
@@ -167,8 +233,10 @@ export const useVibeStore = create<VibeState>()(
        * cards into its lane the moment it finishes — no engine waits for the slowest. A round id
        * drops late results from a superseded round; loading/pending clear as each settles.
        */
-      const runRound = (briefing: string, steer: string) => {
+      const runRound = (briefing: string, baseSteer: string) => {
         const round = ++roundSeq;
+        // Read the novelty memory ONCE per round — it repels PAST rounds; same-round dedup is below.
+        const steer = baseSteer + noveltyText(get().produced);
         set({
           loading: true,
           cards: [],
@@ -187,20 +255,23 @@ export const useVibeStore = create<VibeState>()(
             };
           });
         for (const src of SOURCES) {
-          src
-            .gen(briefing, steer, OVERSCAN)
-            .then((cards) => judgeRank(cards, briefing))
-            .then((ranked) => {
+          produceForSource(src, briefing, steer)
+            .then((survivors) => {
               if (round !== roundSeq) return;
               set((s) => {
                 const seen = new Set(s.cards.map((c) => normLw(c.leitwert)));
-                const fresh = ranked.slice(0, PER_METHOD).filter((c) => {
-                  const k = normLw(c.leitwert);
-                  if (seen.has(k)) return false;
-                  seen.add(k);
-                  return true;
-                });
-                return { cards: [...s.cards, ...fresh] };
+                const fresh = survivors
+                  .filter((c) => {
+                    const k = normLw(c.leitwert);
+                    if (seen.has(k)) return false;
+                    seen.add(k);
+                    return true;
+                  })
+                  .slice(0, PER_METHOD);
+                return {
+                  cards: [...s.cards, ...fresh],
+                  produced: pushProduced(s.produced, fresh.map((c) => c.leitwert)),
+                };
               });
             })
             .catch((e) => {
@@ -225,6 +296,7 @@ export const useVibeStore = create<VibeState>()(
       llmFallback: false,
       failedSources: [],
       pendingSources: [],
+      produced: [],
 
       setSeed: (w) => set({ seed: w }),
 
@@ -251,7 +323,7 @@ export const useVibeStore = create<VibeState>()(
 
       reset: () => {
         roundSeq++; // cancel any in-flight round
-        set({ phase: "blank", seed: "", cards: [], anchors: [], focusId: null, generation: 0, loading: false, failedSources: [], pendingSources: [] });
+        set({ phase: "blank", seed: "", cards: [], anchors: [], focusId: null, generation: 0, loading: false, failedSources: [], pendingSources: [], produced: [] });
       },
       };
     },
@@ -264,6 +336,7 @@ export const useVibeStore = create<VibeState>()(
         cards: s.cards,
         anchors: s.anchors,
         generation: s.generation,
+        produced: s.produced,
       }),
     },
   ),

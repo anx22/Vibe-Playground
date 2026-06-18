@@ -16,14 +16,19 @@ theme. North star: speed to a credible, surprising direction.
 - **Four engines** as a pluggable `Source` registry (`store/useVibeStore.ts`), each an `api/`
   endpoint sharing one bridge contract + `bridgeToCard`: `entangle` (D) · `latent` (E) ·
   `workbench` (F) · `persona`. Plus `judge`, `interpret`, `health`.
-- **Judge-select** (`llm/select.ts`) — generate a few extra, score on-target×surprise×craft, keep best.
+- **Judge-select + quality floor** (`llm/select.ts`, E-063) — over-generate (guard-max), score
+  on-target×surprise×craft×**renderability**, drop everything under the floor; a cluster that comes
+  back thin regenerates once (never "best of bad"). A persisted **novelty memory** (`useVibeStore`)
+  repels already-produced Leitwerte each round so quality stays consistent at scale.
 - **Eval** (`scripts/eval.ts`) — `npm run eval -- --judge` compares engines on shared briefings.
 - **Gateway proxy** (`api/_lib/`) — tiers, `caching:'auto'`, fallbacks; `embed`/`cosineDist` for E.
 
 ## Deferred / not yet built
 
 - **Engine E Tier-1**: external concept corpus + pgvector (Supabase/Neon connected), multi-generation
-  QD/MAP-Elites archive, cross-session novelty memory. Today E is single-round, in-request.
+  QD/MAP-Elites archive. Cross-session novelty now exists at the **text level** (E-063); the upgrade is
+  **embedding-semantic** novelty — catching paraphrase-dups, not just exact/normalized repeats. Today E
+  is single-round, in-request.
 - **Courage dial** (F) and **attract/repel beyond anchors** — feedback currently = anchors only.
 - **Sub-clustering F's taste-directions** visually inside its cluster (now a flat cluster + flyout tag).
 - **Accounts / sharing / persistence backend** — only if it goes public.

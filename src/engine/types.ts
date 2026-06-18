@@ -41,11 +41,13 @@ export interface VibeCard {
   quality?: Quality;
 }
 
-/** The judge's verdict on one card — the production fitness signal (E-046: on-target × surprise × craft). */
+/** The judge's verdict on one card — the production fitness signal (E-063: on-target × surprise × craft × renderability). */
 export interface Quality {
   onTarget: number;
   surprise: number;
   craft: number;
+  /** Does the Leitwert, fed verbatim to an image model, render to a coherent/beautiful world? (E-063) */
+  renderability: number;
   overall: number;
   note: string;
 }
