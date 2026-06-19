@@ -41,13 +41,15 @@ export function PersonaChip({ p }: { p: LabPersona }) {
             <line x1="0" y1="100" x2="50" y2="50" />
           </svg>
           <div className="pfigwrap">
-            <svg viewBox="0 0 76 100" aria-hidden="true">
-              <rect className="ps" x="29" y="64" width="8" height="28" rx="4" fill={p.palette[2]} />
-              <rect className="ps" x="39" y="64" width="8" height="28" rx="4" fill={p.palette[2]} />
-              <rect className="ps" x="14" y="36" width="8" height="26" rx="4" fill={p.palette[0]} />
-              <rect className="ps" x="54" y="36" width="8" height="26" rx="4" fill={p.palette[0]} />
-              <rect className="ps" x="26" y="32" width="24" height="34" rx="9" fill={p.palette[1]} />
-              <circle className="ps head" cx="38" cy="20" r="12" />
+            <svg viewBox="0 0 76 102" aria-hidden="true">
+              <rect className="ps" x="29" y="62" width="7" height="26" rx="3.5" fill={p.palette[2]} />
+              <rect className="ps" x="40" y="62" width="7" height="26" rx="3.5" fill={p.palette[2]} />
+              <circle className="ps" cx="16" cy="48" r="6.5" fill={p.palette[0]} />
+              <circle className="ps" cx="60" cy="48" r="6.5" fill={p.palette[0]} />
+              <path className="ps" d="M22 47 Q22 33 38 33 Q54 33 54 47 L54 60 Q54 67 47 67 L29 67 Q22 67 22 60 Z" fill={p.palette[1]} />
+              <ellipse cx="33" cy="41" rx="7" ry="4" fill="rgba(255,255,255,0.16)" />
+              <circle className="ps head" cx="38" cy="18" r="13" />
+              <ellipse cx="33" cy="13" rx="4.2" ry="3" fill="rgba(255,255,255,0.42)" />
             </svg>
           </div>
           {seg.n && <div className="pseg pseg--n"><span className="pseg-part">Kopf · Mood</span><span className="pseg-text">{seg.n}</span></div>}
