@@ -1,116 +1,110 @@
-/* Komponenten-Lab — isolierte Vorschau der methoden-eigenen UI-Bausteine (#lab).
-   Duolingo-Playstyle: chunky Ink-Rahmen, harte Schatten, Nunito 900, Akzent. */
+/* Komponenten-Lab (#lab) — modern · soft · etwas Glas · weiche Schatten.
+   Weg vom groben Duolingo: Hairline-Borders, diffuse Schatten, feine Typo. */
 
 .lab {
   min-height: 100%;
-  background: var(--bg);
-  padding: 34px;
+  padding: 42px;
   display: flex;
   flex-wrap: wrap;
-  gap: 28px;
+  gap: 30px;
   align-items: flex-start;
   font-family: var(--ui);
   color: var(--ink);
+  background:
+    radial-gradient(680px 440px at 13% 14%, rgba(232, 128, 74, 0.13), transparent 60%),
+    radial-gradient(760px 520px at 88% 86%, rgba(70, 166, 255, 0.13), transparent 58%),
+    linear-gradient(180deg, #f7f4ed 0%, #edeae1 100%);
 }
 .lab-head {
   width: 100%;
   font-family: var(--mono);
-  font-weight: 700;
-  font-size: 13px;
+  font-weight: 600;
+  font-size: 12px;
   text-transform: uppercase;
-  letter-spacing: 0.09em;
+  letter-spacing: 0.12em;
   color: var(--ink-soft);
+  opacity: 0.85;
 }
 
-/* ── Persona-Multichip ─────────────────────────────────── */
-.pchip {
-  width: 396px;
-  background: var(--paper);
-  border: 2px solid var(--ink);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 5px 0 var(--ink);
+/* shared glass surface */
+.pchip, .coll {
+  background: rgba(255, 253, 248, 0.55);
+  -webkit-backdrop-filter: blur(20px) saturate(1.15);
+  backdrop-filter: blur(20px) saturate(1.15);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 20px 48px rgba(28, 26, 23, 0.12), 0 3px 10px rgba(28, 26, 23, 0.05);
+  border-radius: 26px;
   overflow: hidden;
 }
-.pchip-pal { display: flex; height: 18px; }
-.pchip-pal span { flex: 1; }
-.pchip-in { padding: 15px 18px 18px; }
+.pal-line { display: flex; height: 6px; }
+.pal-line span { flex: 1; }
 
-.pchip-tagrow { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
-.pchip-kind {
-  font-family: var(--mono); font-size: 10.5px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft);
+.kind { font-family: var(--mono); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft); }
+.bigname { font-weight: 800; font-size: 25px; letter-spacing: -0.02em; line-height: 1.04; }
+.soft-tag {
+  font-size: 11px; font-weight: 700; color: var(--ink-soft);
+  background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(28, 26, 23, 0.07);
+  border-radius: 999px; padding: 4px 11px; box-shadow: 0 2px 6px rgba(28, 26, 23, 0.04); white-space: nowrap;
 }
-.pchip-mood {
-  margin-left: auto; font-size: 11px; font-weight: 800; color: #fff;
-  background: var(--ink); border-radius: 999px; padding: 3px 10px; white-space: nowrap;
-}
-.pchip-name { font-weight: 900; font-size: 26px; letter-spacing: -0.02em; line-height: 1.0; margin-bottom: 14px; }
 
-/* the big figure + its body-zones */
-.pchip-body { display: flex; gap: 16px; }
-.pfig { width: 120px; height: auto; flex: none; }
-.pfig rect, .pfig circle { stroke: var(--ink); stroke-width: 3; stroke-linejoin: round; }
-.pfig .head { fill: var(--accent); }
+/* ── Persona — Figur mittig, von Winkel-Linien segmentiert ─ */
+.pchip { width: 410px; }
+.pchip-in { padding: 18px 20px 20px; }
+.pchip-head { display: flex; flex-direction: column; gap: 3px; margin-bottom: 4px; }
 
-.pchip-zones { flex: 1; display: flex; flex-direction: column; gap: 10px; padding-top: 4px; min-width: 0; }
-.pzone { display: flex; gap: 9px; align-items: flex-start; }
-.pzone-dot { width: 15px; height: 15px; border-radius: 50%; border: 2px solid var(--ink); box-shadow: 0 2px 0 var(--ink); margin-top: 3px; flex: none; }
-.pzone-part { font-family: var(--mono); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); display: block; }
-.pzone-text { font-size: 12.5px; font-weight: 700; line-height: 1.26; display: block; }
+.pstage { position: relative; height: 252px; margin: 4px -6px 2px; }
+.pdiv { position: absolute; inset: 0; width: 100%; height: 100%; }
+.pdiv line { stroke: rgba(28, 26, 23, 0.14); stroke-width: 1; stroke-dasharray: 2.5 4; }
+.pfigwrap {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: 86px; filter: drop-shadow(0 9px 14px rgba(28, 26, 23, 0.18));
+}
+.pfigwrap svg { width: 100%; display: block; }
+.pfigwrap .ps { stroke: rgba(28, 26, 23, 0.16); stroke-width: 1.1; }
+.pfigwrap .head { fill: var(--accent); }
 
-.pchip-story {
-  margin-top: 16px; border: 2px solid var(--ink); border-radius: 14px;
-  background: var(--bg); padding: 13px 13px 11px; position: relative; box-shadow: 0 3px 0 var(--ink);
-}
-.pchip-story .tab {
-  position: absolute; top: -10px; left: 13px; background: var(--accent); color: #fff;
-  font-family: var(--mono); font-size: 9.5px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.06em; padding: 2px 8px; border: 2px solid var(--ink); border-radius: 8px;
-}
-.pchip-story p { margin: 2px 0 0; font-size: 13.5px; font-weight: 700; line-height: 1.34; }
+.pseg { position: absolute; }
+.pseg-part { display: block; font-family: var(--mono); font-size: 8.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); margin-bottom: 1px; }
+.pseg-text { display: block; font-size: 11.5px; font-weight: 600; line-height: 1.24; color: var(--ink); }
+.pseg--n { top: 0; left: 50%; transform: translateX(-50%); text-align: center; width: 56%; }
+.pseg--s { bottom: 0; left: 50%; transform: translateX(-50%); text-align: center; width: 56%; }
+.pseg--w { left: 2px; top: 50%; transform: translateY(-50%); width: 30%; }
+.pseg--e { right: 2px; top: 50%; transform: translateY(-50%); width: 30%; text-align: right; }
 
-.pchip-hand {
-  margin-top: 13px; border-top: 2px dashed var(--line); padding-top: 10px;
-  font-size: 11.5px; line-height: 1.5; color: var(--ink-soft);
-}
-.pchip-hand b { color: var(--ink); font-weight: 800; }
+.pchip-story { margin-top: 8px; background: rgba(255, 255, 255, 0.42); border: 1px solid rgba(28, 26, 23, 0.06); border-radius: 16px; padding: 12px 14px; }
+.pchip-story .tab { font-family: var(--mono); font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--accent); }
+.pchip-story p { margin: 4px 0 0; font-size: 13.5px; font-weight: 500; line-height: 1.4; }
+.pchip-hand { margin-top: 11px; font-size: 11px; line-height: 1.5; color: var(--ink-soft); }
+.pchip-hand b { color: var(--ink); font-weight: 700; }
 
-/* ── Synthese-Kollisions-Karte (auseinandergerissen) ───── */
-.coll {
-  width: 564px;
-  background: var(--paper);
-  border: 2px solid var(--ink);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 5px 0 var(--ink);
-  overflow: hidden;
-}
-.coll-pal { display: flex; height: 16px; }
-.coll-pal span { flex: 1; }
-.coll-in { padding: 15px 18px 18px; }
-.coll-tagrow { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
-.coll-kind { font-family: var(--mono); font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); }
-.coll-mood { margin-left: auto; font-size: 11px; font-weight: 800; color: #fff; background: var(--ink); border-radius: 999px; padding: 3px 10px; white-space: nowrap; }
-.coll-name { font-weight: 900; font-size: 26px; letter-spacing: -0.02em; line-height: 1.0; margin-bottom: 18px; }
+/* ── Collision — soft, zwei verkantete Welten ──────────── */
+.coll { width: 582px; }
+.coll-in { padding: 18px 20px 20px; }
+.coll-head { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+.coll-mood { margin-left: auto; }
+.coll .bigname { margin-bottom: 16px; }
 
 .coll-bridge { display: flex; align-items: center; }
-.world { flex: 1; border: 2px solid var(--ink); border-radius: 16px; box-shadow: 0 4px 0 var(--ink); background: var(--bg); padding: 11px 13px; }
-.world--a { transform: rotate(-1.4deg); }
-.world--b { transform: rotate(1.4deg); }
-.world-role { font-family: var(--mono); font-size: 9px; font-weight: 700; text-transform: uppercase; color: var(--accent); letter-spacing: 0.05em; }
-.world-name { font-weight: 900; font-size: 18px; line-height: 1.04; margin: 1px 0 7px; }
-.world-rhyme { font-size: 11.5px; font-weight: 700; line-height: 1.32; color: var(--ink-soft); }
-.world-rhyme b { color: var(--ink); }
+.world {
+  flex: 1; background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(28, 26, 23, 0.07);
+  border-radius: 18px; box-shadow: 0 10px 24px rgba(28, 26, 23, 0.08); padding: 13px 15px;
+}
+.world--a { transform: rotate(-1.6deg); }
+.world--b { transform: rotate(1.6deg); }
+.world-role { font-family: var(--mono); font-size: 9px; font-weight: 600; text-transform: uppercase; color: var(--accent); letter-spacing: 0.05em; }
+.world-name { font-weight: 800; font-size: 18px; line-height: 1.05; margin: 2px 0 7px; }
+.world-rhyme { font-size: 11.5px; font-weight: 500; line-height: 1.34; color: var(--ink-soft); }
+.world-rhyme b { color: var(--ink); font-weight: 700; }
 
-.joint { flex: none; width: 104px; display: flex; flex-direction: column; align-items: center; gap: 4px; z-index: 2; }
-.joint-label { font-family: var(--mono); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); }
-.joint-obj { background: var(--accent); color: #fff; border: 2px solid var(--ink); border-radius: 12px; box-shadow: 0 3px 0 var(--ink); padding: 8px 11px; text-align: center; font-weight: 800; font-size: 12px; line-height: 1.1; }
-.joint-sub { font-size: 9px; font-weight: 700; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.04em; }
+.joint { flex: none; width: 112px; display: flex; flex-direction: column; align-items: center; gap: 5px; z-index: 2; }
+.joint-label { font-family: var(--mono); font-size: 8.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-soft); }
+.joint-obj { background: linear-gradient(180deg, #ef8e63, var(--accent)); color: #fff; border-radius: 14px; box-shadow: 0 10px 20px rgba(232, 128, 74, 0.38); padding: 9px 12px; text-align: center; font-weight: 700; font-size: 12px; line-height: 1.1; }
+.joint-sub { font-size: 8.5px; font-weight: 600; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.04em; }
 
-.coll-why { margin-top: 18px; border: 2px solid var(--ink); border-radius: 14px; background: var(--paper); padding: 13px 13px 11px; position: relative; box-shadow: 0 3px 0 var(--ink); }
-.coll-why .tab { position: absolute; top: -10px; left: 13px; background: var(--ink); color: #fff; font-family: var(--mono); font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 8px; border-radius: 8px; }
-.coll-why p { margin: 2px 0 0; font-size: 13px; font-weight: 700; line-height: 1.34; }
+.coll-why { margin-top: 16px; background: rgba(255, 255, 255, 0.42); border: 1px solid rgba(28, 26, 23, 0.06); border-radius: 16px; padding: 12px 14px; }
+.coll-why .tab { font-family: var(--mono); font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); }
+.coll-why p { margin: 4px 0 0; font-size: 13px; font-weight: 500; line-height: 1.4; }
 
-.coll-foot { margin-top: 14px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.coll-foot { margin-top: 14px; display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
 .coll-sw { display: flex; gap: 5px; }
-.coll-sw span { width: 22px; height: 22px; border: 2px solid var(--ink); border-radius: 7px; box-shadow: 0 2px 0 var(--ink); }
-.coll-tag { font-size: 11px; font-weight: 800; border: 2px solid var(--ink); border-radius: 999px; padding: 3px 11px; box-shadow: 0 3px 0 var(--ink); background: var(--paper); }
+.coll-sw span { width: 22px; height: 22px; border-radius: 8px; box-shadow: inset 0 0 0 1px rgba(28, 26, 23, 0.08), 0 2px 6px rgba(28, 26, 23, 0.08); }

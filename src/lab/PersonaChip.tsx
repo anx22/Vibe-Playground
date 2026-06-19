@@ -1,11 +1,9 @@
 import "./lab.css";
 
 /**
- * Persona-Multichip — the bespoke component for the Persona methodology.
- * A persona IS a figure, so the component leads with a big stylized PERSON.
- * Its body-zones stand for the persona's zones: head = idea/mood, torso = form,
- * hands = material, stance = motion — colour-linked between figure and labels.
- * The one-sentence story + handwriting (typo/layout) ground it.
+ * Persona-Multichip — bespoke component for the Persona methodology.
+ * The figure sits in the CENTER; angled dashed lines split the stage into
+ * four pieces, and each piece holds one persona zone (Kopf/Körper/Hände/Stand).
  */
 export type LabPersona = {
   leitwert: string;
@@ -20,49 +18,45 @@ export type LabPersona = {
 
 export function PersonaChip({ p }: { p: LabPersona }) {
   const byLayer = (l: string) => p.elements.find((e) => e.layer.toLowerCase().startsWith(l))?.element;
-  const zones = [
-    { part: "Kopf · Idee", color: "var(--accent)", text: p.mood },
-    { part: "Körper · Form", color: p.palette[1], text: byLayer("form") },
-    { part: "Hände · Material", color: p.palette[0], text: byLayer("material") },
-    { part: "Stand · Bewegung", color: p.palette[2], text: byLayer("bewegung") ?? byLayer("farbe") },
-  ].filter((z) => z.text);
-
+  const seg = {
+    n: p.mood,
+    e: byLayer("form"),
+    s: byLayer("bewegung") ?? byLayer("farbe"),
+    w: byLayer("material"),
+  };
   return (
     <article className="pchip">
-      <div className="pchip-pal">{p.palette.map((c, i) => <span key={i} style={{ background: c }} />)}</div>
+      <div className="pal-line">{p.palette.map((c, i) => <span key={i} style={{ background: c }} />)}</div>
       <div className="pchip-in">
-        <div className="pchip-tagrow">
-          <span className="pchip-kind">Persona · {p.source}</span>
-          <span className="pchip-mood">{p.mood}</span>
+        <div className="pchip-head">
+          <span className="kind">Persona · {p.source}</span>
+          <span className="bigname">{p.leitwert}</span>
         </div>
-        <div className="pchip-name">{p.leitwert}</div>
 
-        <div className="pchip-body">
-          <svg className="pfig" viewBox="0 0 110 160" aria-hidden="true">
-            <rect x="38" y="104" width="15" height="50" rx="7" fill={p.palette[2]} />
-            <rect x="57" y="104" width="15" height="50" rx="7" fill={p.palette[2]} />
-            <rect x="15" y="54" width="15" height="48" rx="7" fill={p.palette[0]} />
-            <rect x="80" y="54" width="15" height="48" rx="7" fill={p.palette[0]} />
-            <rect x="33" y="48" width="44" height="60" rx="16" fill={p.palette[1]} />
-            <circle className="head" cx="55" cy="28" r="19" />
+        <div className="pstage">
+          <svg className="pdiv" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <line x1="0" y1="0" x2="50" y2="50" />
+            <line x1="100" y1="0" x2="50" y2="50" />
+            <line x1="100" y1="100" x2="50" y2="50" />
+            <line x1="0" y1="100" x2="50" y2="50" />
           </svg>
-          <div className="pchip-zones">
-            {zones.map((z, i) => (
-              <div key={i} className="pzone">
-                <span className="pzone-dot" style={{ background: z.color }} />
-                <span style={{ minWidth: 0 }}>
-                  <span className="pzone-part">{z.part}</span>
-                  <span className="pzone-text">{z.text}</span>
-                </span>
-              </div>
-            ))}
+          <div className="pfigwrap">
+            <svg viewBox="0 0 76 100" aria-hidden="true">
+              <rect className="ps" x="29" y="64" width="8" height="28" rx="4" fill={p.palette[2]} />
+              <rect className="ps" x="39" y="64" width="8" height="28" rx="4" fill={p.palette[2]} />
+              <rect className="ps" x="14" y="36" width="8" height="26" rx="4" fill={p.palette[0]} />
+              <rect className="ps" x="54" y="36" width="8" height="26" rx="4" fill={p.palette[0]} />
+              <rect className="ps" x="26" y="32" width="24" height="34" rx="9" fill={p.palette[1]} />
+              <circle className="ps head" cx="38" cy="20" r="12" />
+            </svg>
           </div>
+          {seg.n && <div className="pseg pseg--n"><span className="pseg-part">Kopf · Mood</span><span className="pseg-text">{seg.n}</span></div>}
+          {seg.e && <div className="pseg pseg--e"><span className="pseg-part">Körper · Form</span><span className="pseg-text">{seg.e}</span></div>}
+          {seg.s && <div className="pseg pseg--s"><span className="pseg-part">Stand · Bewegung</span><span className="pseg-text">{seg.s}</span></div>}
+          {seg.w && <div className="pseg pseg--w"><span className="pseg-part">Hände · Material</span><span className="pseg-text">{seg.w}</span></div>}
         </div>
 
-        <div className="pchip-story">
-          <span className="tab">Die Figur</span>
-          <p>{p.persona}</p>
-        </div>
+        <div className="pchip-story"><span className="tab">Die Figur</span><p>{p.persona}</p></div>
         <div className="pchip-hand"><b>Handschrift:</b> {p.typo} · {p.layout}</div>
       </div>
     </article>
