@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { zero } from "../engine";
 import type { VibeCard } from "../engine";
 import { paletteFor, typoFor } from "../engine/derive";
 import { generatePersonas, generateSynthese } from "../llm/client";
@@ -34,9 +33,9 @@ function bridgeToCard(b: Bridge, source: string): VibeCard {
     leitwert: b.leitwert,
     mood: b.mood,
     scene: b.creativeDerivation,
-    typography: typoFor(zero(), rng),
+    typography: typoFor(b.vector, rng),
     palette: palette3(b.palette),
-    vector: zero(),
+    vector: b.vector,
     coherence: { sharedAxes: [], ok: true },
     origin: {
       home: b.worlds.map((w) => w.name).join(" × "),
@@ -53,6 +52,7 @@ function bridgeToCard(b: Bridge, source: string): VibeCard {
       domainDistance: b.domainDistance,
       typoDirection: b.typoDirection,
       layoutMotion: b.layoutMotion,
+      elements: b.elements,
     },
   };
 }
@@ -69,7 +69,7 @@ function personaToCard(p: Persona, source: string): VibeCard {
     coherence: { sharedAxes: [], ok: true },
     origin: { home: "Persona", intrusion: "—", object: "—", engineNote: p.persona },
     source,
-    detail: { derivation: p.persona, typoDirection: p.typoDirection, layoutMotion: p.layoutMotion },
+    detail: { derivation: p.persona, typoDirection: p.typoDirection, layoutMotion: p.layoutMotion, elements: p.elements },
   };
 }
 

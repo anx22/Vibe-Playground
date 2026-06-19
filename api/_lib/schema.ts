@@ -11,6 +11,13 @@ export const axisVectorSchema = z.object({
   formality: z.number().min(-1).max(1),
 });
 
+/** One concrete, result-specific design element walked out of the result's world. */
+export const designElement = z.object({
+  layer: z.string().describe("Material | Form | Layout | Farbe | Bewegung"),
+  element: z.string().describe("das konkrete, ergebnis-eigene Design-Element"),
+  why: z.string().describe("ein Satz: warum design-stark"),
+});
+
 export const personaSchema = z.object({
   persona: z.string().describe("a fictional source: person/studio/workshop in one sentence, with a Macke"),
   leitwert: z.string(),
@@ -18,6 +25,7 @@ export const personaSchema = z.object({
   vector: axisVectorSchema,
   typoDirection: z.string().describe("Typo-Richtung: Schrift-Charakter + ein konkreter Vorschlag, eine Zeile"),
   layoutMotion: z.string().describe("Layout & Motion: Raster-/Kompositions-Idee + EIN Bewegungsprinzip, eine Zeile"),
+  elements: z.array(designElement).describe("≥3 konkrete Design-Elemente aus dem Ergebnis"),
 });
 /** Batched personas — N distinct sources in one call. */
 export const personaListSchema = z.object({ personas: z.array(personaSchema) });
@@ -40,6 +48,8 @@ export const bridgeShape = z.object({
   affordances: z.array(z.string()).describe("≥5 concrete, design-actionable affordances"),
   typoDirection: z.string().describe("Typo-Richtung: Schrift-Charakter + ein konkreter Vorschlag, eine Zeile"),
   layoutMotion: z.string().describe("Layout & Motion: Raster-/Kompositions-Idee + EIN Bewegungsprinzip, eine Zeile"),
+  vector: axisVectorSchema.describe("6-Achsen-Projektion des Ergebnisses (für Typo/Regler)"),
+  elements: z.array(designElement).describe("≥3 konkrete Design-Elemente aus dem Ergebnis"),
 });
 
 /** Engine F — Technique Workbench. Curated survivors, each tagged with its taste-direction + pots. */

@@ -39,6 +39,15 @@ compass: |
   Bei blank slate oder unklarer Domäne: wähle die naheliegendste, ziehe nur ganz leicht.
   </design_kompass>
 
+extract: |
+  <design_extraktion>
+  Steht die Idee/Kollision, dann BEWEGE DICH DURCH DIE WELT DEINES ERGEBNISSES und nimm heraus, was man dort konkret SIEHT und ANFASSEN kann — bewusst, nicht beiläufig.
+  Sammle das STÄRKSTE, ERGEBNIS-EIGENE: was dort herumliegt und typisch ist, Dinge zum Anfassen, Materialien und Oberflächen, charakteristische Formen, treffende Metaphern — auch Fiktives/Eigenes, das es nur in dieser Welt gibt.
+  Ordne es über die Schichten (je das Stärkste, nicht alle erzwingen): MATERIAL/Oberfläche · FORM/Silhouette · LAYOUT/Anordnung · FARBE/Licht · BEWEGUNG.
+  Jedes Element konkret, spezifisch, ownable — nichts Beliebiges/Erwartbares (Selbsttest: zögen 5 andere Tools dasselbe → raus). Leite daraus eine konkrete Palette, Typo-Richtung und Layout/Bewegung ab, die zu DIESEM Ergebnis passen.
+  Ändere NICHT die Idee/den Leitwert — das ist die Übersetzung des Ergebnisses in Design, keine neue Idee.
+  </design_extraktion>
+
 render_probe: |
   <render_probe>
   Selbst-Render-Probe je Leitwert: stell dir vor, NUR der Leitwert (ohne Szene/Begründung) geht an ein Bildmodell. Entsteht eine VIVIDE, SPEZIFISCHE Welt — oder etwas Generisches/Vages? Wenn vage: schärfe ihn mit einem KONKRETEREN Welt-/Material-Begriff, bis er von selbst eine spezifische Designwelt zieht. Schärfe NUR die vagen — bereits konkrete Leitwerte NICHT überschärfen/verflachen. Er bleibt ein 2–4-teiliges Konkret-Kompositum, NIE eine Szene oder Anweisung.

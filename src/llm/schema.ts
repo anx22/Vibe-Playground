@@ -11,6 +11,13 @@ export const axisVectorSchema = z.object({
   formality: z.number().min(-1).max(1),
 });
 
+/** One concrete, result-specific design element walked out of the result's world. */
+export const designElement = z.object({
+  layer: z.string(),
+  element: z.string(),
+  why: z.string(),
+});
+
 /** Persona: a fictional source whose aesthetic falls out as a coherent vibe (kept building block). */
 export const personaSchema = z.object({
   persona: z.string().describe("a fictional source: person/studio/workshop in one sentence, with a Macke"),
@@ -19,6 +26,7 @@ export const personaSchema = z.object({
   vector: axisVectorSchema,
   typoDirection: z.string(),
   layoutMotion: z.string(),
+  elements: z.array(designElement),
 });
 export type Persona = z.infer<typeof personaSchema>;
 export const personaListSchema = z.object({ personas: z.array(personaSchema) });
@@ -35,6 +43,8 @@ export const bridgeSchema = z.object({
   affordances: z.array(z.string()),
   typoDirection: z.string(),
   layoutMotion: z.string(),
+  vector: axisVectorSchema,
+  elements: z.array(designElement),
 });
 export const entangleSchema = z.object({
   essence: z.string(),
