@@ -1,0 +1,79 @@
+/* Komponenten-Lab — isolierte Vorschau der methoden-eigenen UI-Bausteine (#lab).
+   Duolingo-Playstyle: chunky Ink-Rahmen, harte Schatten, Nunito 900, Akzent. */
+
+.lab {
+  min-height: 100%;
+  background: var(--bg);
+  padding: 34px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  align-items: flex-start;
+  font-family: var(--ui);
+  color: var(--ink);
+}
+.lab-head {
+  width: 100%;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--ink-soft);
+}
+
+/* ── Persona-Multichip ─────────────────────────────────── */
+.pchip {
+  width: 344px;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 5px 0 var(--ink);
+  overflow: hidden;
+}
+.pchip-pal { display: flex; height: 18px; }
+.pchip-pal span { flex: 1; }
+.pchip-in { padding: 15px 17px 18px; }
+
+.pchip-tagrow { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.pchip-kind {
+  font-family: var(--mono); font-size: 10.5px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft);
+}
+.pchip-mood {
+  margin-left: auto; font-size: 11px; font-weight: 800; color: #fff;
+  background: var(--ink); border-radius: 999px; padding: 3px 10px; white-space: nowrap;
+}
+.pchip-name { font-weight: 900; font-size: 25px; letter-spacing: -0.02em; line-height: 1.0; }
+
+.pchip-story {
+  margin-top: 14px; border: 2px solid var(--ink); border-radius: 14px;
+  background: var(--bg); padding: 13px 13px 11px; position: relative; box-shadow: 0 3px 0 var(--ink);
+}
+.pchip-story .tab {
+  position: absolute; top: -10px; left: 13px; background: var(--accent); color: #fff;
+  font-family: var(--mono); font-size: 9.5px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.06em; padding: 2px 8px; border: 2px solid var(--ink); border-radius: 8px;
+}
+.pchip-story p { margin: 2px 0 0; font-size: 14px; font-weight: 700; line-height: 1.34; }
+
+.pchip-seclabel {
+  font-family: var(--mono); font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--ink-soft); margin: 16px 0 9px;
+}
+.pchip-els { display: flex; flex-wrap: wrap; gap: 8px; }
+.mchip {
+  border: 2px solid var(--ink); border-radius: 12px; background: var(--paper);
+  box-shadow: 0 3px 0 var(--ink); padding: 6px 10px;
+}
+.mchip b {
+  display: block; font-family: var(--mono); font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent); margin-bottom: 1px;
+}
+.mchip span { font-size: 12px; font-weight: 700; line-height: 1.2; }
+
+.pchip-hand {
+  margin-top: 14px; border-top: 2px dashed var(--line); padding-top: 11px;
+  font-size: 11.5px; line-height: 1.5; color: var(--ink-soft);
+}
+.pchip-hand b { color: var(--ink); font-weight: 800; }

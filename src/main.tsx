@@ -2,13 +2,11 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import CockpitPreview from "./CockpitPreview";
+import LabPreview from "./lab/LabPreview";
 import "./styles/global.css";
 
-// #cockpit renders the isolated static cockpit preview (mock data); everything else is the live App.
-const isCockpit = typeof location !== "undefined" && location.hash.includes("cockpit");
+// Isolated previews by hash; everything else is the live App.
+const hash = typeof location !== "undefined" ? location.hash : "";
+const view = hash.includes("lab") ? <LabPreview /> : hash.includes("cockpit") ? <CockpitPreview /> : <App />;
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    {isCockpit ? <CockpitPreview /> : <App />}
-  </StrictMode>,
-);
+createRoot(document.getElementById("root")!).render(<StrictMode>{view}</StrictMode>);
