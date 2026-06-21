@@ -56,11 +56,10 @@
 .pdiv line { stroke: rgba(28, 26, 23, 0.16); stroke-width: 1.3; stroke-dasharray: 3 4; }
 .pfigwrap {
   position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-  width: 94px; filter: drop-shadow(0 10px 14px rgba(28, 26, 23, 0.2));
+  width: 90px; filter: drop-shadow(0 3px 5px rgba(28, 26, 23, 0.1));
 }
 .pfigwrap svg { width: 100%; display: block; }
-.pfigwrap .ps { stroke: rgba(28, 26, 23, 0.18); stroke-width: 1.1; stroke-linejoin: round; }
-.pfigwrap .head { fill: var(--accent); }
+.pfig-min path, .pfig-min circle { fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 
 .pseg { position: absolute; }
 .pseg-part { display: block; font-family: var(--mono); font-size: 8.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); margin-bottom: 1px; }

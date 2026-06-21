@@ -41,15 +41,11 @@ export function PersonaChip({ p }: { p: LabPersona }) {
             <line x1="0" y1="100" x2="50" y2="50" />
           </svg>
           <div className="pfigwrap">
-            <svg viewBox="0 0 76 102" aria-hidden="true">
-              <rect className="ps" x="29" y="62" width="7" height="26" rx="3.5" fill={p.palette[2]} />
-              <rect className="ps" x="40" y="62" width="7" height="26" rx="3.5" fill={p.palette[2]} />
-              <circle className="ps" cx="16" cy="48" r="6.5" fill={p.palette[0]} />
-              <circle className="ps" cx="60" cy="48" r="6.5" fill={p.palette[0]} />
-              <path className="ps" d="M22 47 Q22 33 38 33 Q54 33 54 47 L54 60 Q54 67 47 67 L29 67 Q22 67 22 60 Z" fill={p.palette[1]} />
-              <ellipse cx="33" cy="41" rx="7" ry="4" fill="rgba(255,255,255,0.16)" />
-              <circle className="ps head" cx="38" cy="18" r="13" />
-              <ellipse cx="33" cy="13" rx="4.2" ry="3" fill="rgba(255,255,255,0.42)" />
+            <svg className="pfig-min" viewBox="0 0 76 112" aria-hidden="true" style={{ stroke: p.palette[1] }}>
+              <circle cx="38" cy="16" r="9" />
+              <path d="M38 25 V60" />
+              <path d="M19 52 Q25 34 38 33 Q51 34 57 52" />
+              <path d="M27 96 Q30 70 38 60 Q46 70 49 96" />
             </svg>
           </div>
           {seg.n && <div className="pseg pseg--n"><span className="pseg-part">Kopf · Mood</span><span className="pseg-text">{seg.n}</span></div>}
