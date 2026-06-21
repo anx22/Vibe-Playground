@@ -84,11 +84,11 @@ const PERSONAS: LabPersona[] = [
 export default function LabPreview() {
   return (
     <div className="lab">
-      <div className="lab-head">Komponenten-Lab · Synthese-Kollisions-Karte — zwei aufgerissene Welten (Mock)</div>
-      {COLLISIONS.map((c, i) => <CollisionCard key={i} c={c} />)}
-
-      <div className="lab-head" style={{ marginTop: 14 }}>Komponenten-Lab · Persona-Multichip — Figur + Body-Zonen (Mock)</div>
+      <div className="lab-head">Komponenten-Lab · Persona — Line-Art im Kreis-Medaillon, Trenner radial (Mock)</div>
       {PERSONAS.map((p, i) => <PersonaChip key={i} p={p} />)}
+
+      <div className="lab-head" style={{ marginTop: 14 }}>Komponenten-Lab · Synthese-Kollisions-Karte — zwei aufgerissene Welten (Mock)</div>
+      {COLLISIONS.map((c, i) => <CollisionCard key={i} c={c} />)}
     </div>
   );
 }

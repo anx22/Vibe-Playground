@@ -51,23 +51,19 @@
 .pchip-in { padding: 18px 20px 20px; }
 .pchip-head { display: flex; flex-direction: column; gap: 3px; margin-bottom: 4px; }
 
-.pstage { position: relative; height: 256px; margin: 4px -6px 2px; }
-.pdiv { position: absolute; inset: 0; width: 100%; height: 100%; }
-.pdiv line { stroke: rgba(28, 26, 23, 0.16); stroke-width: 1.3; stroke-dasharray: 3 4; }
-.pfigwrap {
-  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-  width: 90px; filter: drop-shadow(0 3px 5px rgba(28, 26, 23, 0.1));
-}
-.pfigwrap svg { width: 100%; display: block; }
-.pfig-min path, .pfig-min circle { fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.pstage { position: relative; width: 100%; aspect-ratio: 1 / 1; margin: 6px auto 2px; }
+.pstage-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.spoke { stroke: rgba(28, 26, 23, 0.15); stroke-width: 1.1; stroke-dasharray: 3 4; }
+.medallion { fill: rgba(255, 255, 255, 0.42); stroke-width: 1.6; }
+.bust { fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 
 .pseg { position: absolute; }
 .pseg-part { display: block; font-family: var(--mono); font-size: 8.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); margin-bottom: 1px; }
 .pseg-text { display: block; font-size: 11.5px; font-weight: 600; line-height: 1.24; color: var(--ink); }
-.pseg--n { top: 0; left: 50%; transform: translateX(-50%); text-align: center; width: 58%; }
-.pseg--s { bottom: 0; left: 50%; transform: translateX(-50%); text-align: center; width: 58%; }
-.pseg--w { left: 2px; top: 50%; transform: translateY(-50%); width: 30%; }
-.pseg--e { right: 2px; top: 50%; transform: translateY(-50%); width: 30%; text-align: right; }
+.pseg--n { top: 0; left: 50%; transform: translateX(-50%); text-align: center; width: 50%; }
+.pseg--s { bottom: 0; left: 50%; transform: translateX(-50%); text-align: center; width: 50%; }
+.pseg--w { left: 0; top: 50%; transform: translateY(-50%); width: 26%; }
+.pseg--e { right: 0; top: 50%; transform: translateY(-50%); width: 26%; text-align: right; }
 
 .pchip-story { margin-top: 8px; background: rgba(255, 255, 255, 0.6); border: 1.5px solid rgba(28, 26, 23, 0.1); border-radius: 16px; padding: 12px 14px; }
 .pchip-story .tab { font-family: var(--mono); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); }
