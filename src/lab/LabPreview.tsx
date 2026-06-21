@@ -1,6 +1,7 @@
 import "./lab.css";
 import { PersonaChip, type LabPersona } from "./PersonaChip";
 import { CollisionCard, type LabCollision } from "./CollisionCard";
+import { ElementProbe } from "./ElementProbe";
 
 /** Isolated component lab (#lab). Mock data, no store, no LLM — for designing the
  *  methodology-derived components piece by piece. Throwaway until ported. */
@@ -81,10 +82,22 @@ const PERSONAS: LabPersona[] = [
   },
 ];
 
+const PROBE_PAL: [string, string, string] = ["#e8804a", "#7a2e12", "#f4d3b0"];
+const PROBE_ELS = [
+  { layer: "Material", element: "Schamott-Glasur, matt mit Haarrissen" },
+  { layer: "Form", element: "Trichter-Silhouette des Ofenmauls" },
+  { layer: "Layout", element: "enges Raster, von einem Riss durchbrochen" },
+  { layer: "Farbe", element: "Glut-Orange auf Ascheweiß" },
+  { layer: "Bewegung", element: "langsames Glühen, Hitzeflimmern" },
+];
+
 export default function LabPreview() {
   return (
     <div className="lab">
-      <div className="lab-head">Komponenten-Lab · Persona — Line-Art im Kreis-Medaillon, Trenner radial (Mock)</div>
+      <div className="lab-head">Komponenten-Lab · Element-Probe — taktile Musterstücke (Mock)</div>
+      <div className="eprobe-row">{PROBE_ELS.map((e, i) => <ElementProbe key={i} el={e} palette={PROBE_PAL} />)}</div>
+
+      <div className="lab-head" style={{ marginTop: 14 }}>Komponenten-Lab · Persona — Line-Art im Kreis-Medaillon, Trenner radial (Mock)</div>
       {PERSONAS.map((p, i) => <PersonaChip key={i} p={p} />)}
 
       <div className="lab-head" style={{ marginTop: 14 }}>Komponenten-Lab · Synthese-Kollisions-Karte — zwei aufgerissene Welten (Mock)</div>
