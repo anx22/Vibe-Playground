@@ -1,4 +1,4 @@
-import { embedMany, gateway, generateObject } from "ai";
+import { embedMany, gateway, generateObject, NoObjectGeneratedError } from "ai";
 import type { z } from "zod";
 
 /**
@@ -52,20 +52,37 @@ export async function genObject<T>(opts: {
     if (hit && Date.now() - hit.at < TTL_MS) return hit.value as T;
   }
 
-  const result = await generateObject({
-    model: opts.model,
-    schema: opts.schema,
-    system: opts.system,
-    prompt: opts.prompt,
-    maxOutputTokens: opts.maxOutputTokens ?? 8000,
-    providerOptions: {
-      gateway: {
-        caching: "auto",
-        models: FALLBACKS[opts.model] ?? [],
-        sort: "cost",
+  // Heavy structured schemas (Synthese/Persona: N candidates × 8–12 elements each) occasionally
+  // return output that fails schema validation. The AI SDK does NOT retry NoObjectGeneratedError —
+  // its maxRetries only covers transient transport errors — so a single flaky miss would otherwise
+  // drop a whole engine lane to empty for the round. A resample almost always passes, so we re-roll
+  // that ONE error class up to 2× (other errors propagate immediately). (E-094 / QS-16.)
+  const run = () =>
+    generateObject({
+      model: opts.model,
+      schema: opts.schema,
+      system: opts.system,
+      prompt: opts.prompt,
+      maxOutputTokens: opts.maxOutputTokens ?? 8000,
+      providerOptions: {
+        gateway: {
+          caching: "auto",
+          models: FALLBACKS[opts.model] ?? [],
+          sort: "cost",
+        },
       },
-    },
-  });
+    });
+  const ATTEMPTS = 3;
+  let result: Awaited<ReturnType<typeof run>>;
+  for (let attempt = 1; ; attempt++) {
+    try {
+      result = await run();
+      break;
+    } catch (err) {
+      if (attempt >= ATTEMPTS || !NoObjectGeneratedError.isInstance(err)) throw err;
+      console.warn(`[gw] ${opts.model} schema miss — retry ${attempt}/${ATTEMPTS - 1}`);
+    }
+  }
   // Token visibility (shows up in Vercel runtime logs) — guards against silent overspend.
   try {
     console.log(`[gw] ${opts.model} usage=${JSON.stringify(result.usage)}`);
