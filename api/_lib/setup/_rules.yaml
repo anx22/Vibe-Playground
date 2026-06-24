@@ -42,11 +42,12 @@ compass: |
 
 extract: |
   <design_extraktion>
-  Steht die Idee/Kollision, dann BEWEGE DICH DURCH DIE WELT DEINES ERGEBNISSES und nimm heraus, was man dort konkret SIEHT und ANFASSEN kann — bewusst, nicht beiläufig.
-  Sammle das STÄRKSTE, ERGEBNIS-EIGENE: was dort herumliegt und typisch ist, Dinge zum Anfassen, Materialien und Oberflächen, charakteristische Formen, treffende Metaphern — auch Fiktives/Eigenes, das es nur in dieser Welt gibt.
-  Ordne es über die Schichten (je das Stärkste, nicht alle erzwingen): MATERIAL/Oberfläche · FORM/Silhouette · LAYOUT/Anordnung · FARBE/Licht · BEWEGUNG.
-  Jedes Element konkret, spezifisch, ownable — nichts Beliebiges/Erwartbares (Selbsttest: zögen 5 andere Tools dasselbe → raus). Leite daraus eine konkrete Palette, Typo-Richtung und Layout/Bewegung ab, die zu DIESEM Ergebnis passen.
-  Ändere NICHT die Idee/den Leitwert — das ist die Übersetzung des Ergebnisses in Design, keine neue Idee.
+  Steht die Idee/Kollision, dann GEH DURCH DIE WELT DEINES ERGEBNISSES und sammle eine ganze REIHE konkreter, welt-eigener Funde — Materialien, Oberflächen, Formen, Anordnungen, Bewegungen, Licht, typische Dinge, treffende Metaphern, auch Fiktives, das es nur dort gibt. Reich sammeln (Ziel 8–12), NICHT ein Stück pro Schicht.
+  ÜBERSETZE JEDEN FUND in ein KONKRETES, BREIT ANWENDBARES DIGITALES DESIGN-PATTERN — nicht das physische Ding selbst, sondern was es im Web-/App-/Brand-Design WIRD. Beispiel: eine Flaschen-Silhouette ist kein Screen-Element → übersetzt zu „asymmetrische, am Rand beschnittene Hero-Komposition"; eine Bruchkante im Glas → „bewusster Grid-Break als Sektions-Trenner" oder „Haarriss-Linie als Hover-Akzent".
+  Lande in den etablierten Design-Dimensionen, pro Fund die passende: RASTER/LAYOUT · TYPOGRAFIE · FARB-STRATEGIE · MOTION/INTERAKTION · OBERFLÄCHE/TEXTUR (digital: Grain, Frosted-Glas, Halbton, matt) · KOMPONENTE/FORM (Radius, Rahmen, Trenner, Badge) · BILDSPRACHE · DICHTE. Mehrere Funde dürfen dieselbe Dimension treffen — Multiplikation ist erwünscht.
+  REGELN: jedes Element muss DIREKT in digitalem Design umsetzbar sein und für sich ein einfaches, starkes Pattern (funktioniert auf Landingpage, Slide UND Brandboard) — bevorzuge bewährte, breit anwendbare Patterns vor Gimmicks; kein physisches Inventar, das man nicht aufs Screen bringt; nichts Beliebiges (Selbsttest: zögen 5 andere Tools dasselbe → raus). Die ÜBERRASCHUNG kommt aus dem Welt-Fund, die ANWENDBARKEIT aus der Übersetzung.
+  Pro Element: layer (die Design-Dimension), element (das konkrete, anwendbare Design-Pattern, eine Zeile), why (der Welt-Fund, der es trägt + warum stark, eine Zeile).
+  Ändere NICHT die Idee/den Leitwert.
   </design_extraktion>
 
 render_probe: |

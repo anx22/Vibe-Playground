@@ -18,7 +18,8 @@ function parts(c: VibeCard) {
   const source = worlds || d?.derivation || "";
   const typo = d?.typoDirection ?? "";
   const layout = d?.layoutMotion ?? "";
-  return { worlds, texture, palette: c.palette.join(" · "), mood: c.mood, source, typo, layout };
+  const elements = d?.elements ?? [];
+  return { worlds, texture, palette: c.palette.join(" · "), mood: c.mood, source, typo, layout, elements };
 }
 
 /** One line that carries the vibe on its own — paste-anywhere, flavoured per target (C9). */
@@ -49,7 +50,7 @@ export function buildTrigger(c: VibeCard, target: ExportTarget = "brandboard"): 
 
 /** The full, target-formatted brief/prompt. Default = brandboard (the layered style spec). */
 export function buildExportPrompt(c: VibeCard, target: ExportTarget = "brandboard"): string {
-  const { worlds, texture, palette, mood, source, typo, layout } = parts(c);
+  const { worlds, texture, palette, mood, source, typo, layout, elements } = parts(c);
   const lw = c.leitwert;
 
   if (target === "midjourney") {
@@ -59,6 +60,7 @@ export function buildExportPrompt(c: VibeCard, target: ExportTarget = "brandboar
       texture && `${texture} surfaces`,
       typo && `${typo} typography`,
       layout && layout,
+      ...elements.map((e) => e.element),
       `color palette ${c.palette.join(" ")}`,
       mood && `${mood} mood`,
       "editorial brand design, cinematic studio light",
@@ -78,6 +80,7 @@ export function buildExportPrompt(c: VibeCard, target: ExportTarget = "brandboar
       `- Licht & Stimmung: ${mood}`,
       typo ? `- Typografie: ${typo}` : "",
       layout ? `- Layout & Motion: ${layout}` : "",
+      ...elements.map((e) => `- ${e.layer}: ${e.element}`),
       `Übersetze die Welt(en) visuell, niemals wörtlich; vermeide generische AI-Ästhetik und Stock-Verläufe.`,
       `Liefere [Landingpage / Brandboard / Slide] konsequent in diesem Stil.`,
     ]
@@ -94,6 +97,8 @@ export function buildExportPrompt(c: VibeCard, target: ExportTarget = "brandboar
     `Licht & Stimmung: ${mood}`,
     typo ? `Typografie: ${typo}` : "",
     layout ? `Layout & Motion: ${layout}` : "",
+    elements.length ? "Design-Patterns (anwendbar):" : "",
+    ...elements.map((e) => `  · ${e.layer}: ${e.element}`),
     `Anti-Klischee: die Welt(en) visuell übersetzen, NICHT wörtlich abbilden; keine generische AI-Ästhetik, keine Stock-Verläufe.`,
     "",
     `→ Wende diesen Stil konsequent auf [Landingpage / Brandboard / Slide / Pitch] an.`,

@@ -13,9 +13,9 @@ export const axisVectorSchema = z.object({
 
 /** One concrete, result-specific design element walked out of the result's world. */
 export const designElement = z.object({
-  layer: z.string().describe("Material | Form | Layout | Farbe | Bewegung"),
-  element: z.string().describe("das konkrete, ergebnis-eigene Design-Element"),
-  why: z.string().describe("ein Satz: warum design-stark"),
+  layer: z.string().describe("Design-Dimension: Raster | Typo | Farbe | Motion | Oberfläche | Komponente | Bildsprache | Dichte"),
+  element: z.string().describe("ein konkretes, breit anwendbares digitales Design-Pattern (eine Zeile)"),
+  why: z.string().describe("der Welt-Fund, der es trägt + warum stark (eine Zeile)"),
 });
 
 export const personaSchema = z.object({
