@@ -18,7 +18,7 @@ PERSONA:
     </regeln>
   rules: [leitwert, repertoire, diversity, register, compass, extract, render_probe]
   output: |
-    <ausgabe>persona (der EINE Satz mit Quelle + Kollision); leitwert (Welt-Verweis); mood (2–4 Wörter); 6-Achsen-Projektion (material, energy, time, structure, density, formality); typoDirection (Schrift-Charakter + 1 konkreter Vorschlag, eine Zeile); layoutMotion (Raster-/Kompositions-Idee + 1 Bewegungsprinzip, eine Zeile); elements (8–12 anwendbare digitale Design-Patterns, je {layer ∈ Raster/Typo/Farbe/Motion/Oberfläche/Komponente/Bildsprache/Dichte, element = konkretes Pattern, why = Welt-Fund}).</ausgabe>
+    <ausgabe>persona (der EINE Satz mit Quelle + Kollision); leitwert (Welt-Verweis); mood (2–4 Wörter); palette (3 Hex, gerichtet); 6-Achsen-Projektion (material, energy, time, structure, density, formality); typoDirection (Schrift-Charakter + 1 konkreter Vorschlag, eine Zeile); layoutMotion (Raster-/Kompositions-Idee + 1 Bewegungsprinzip, eine Zeile); elements (8–12 anwendbare digitale Design-Patterns, je {layer ∈ Raster/Typo/Farbe/Motion/Oberfläche/Komponente/Bildsprache/Dichte, element = konkretes Pattern, why = Welt-Fund}).</ausgabe>
   prompt: |
     Briefing: {ctx}
     Erzeuge {n} VERSCHIEDENE Personas, aus denen je ein klarer Vibe fällt.

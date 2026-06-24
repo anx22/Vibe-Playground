@@ -64,7 +64,7 @@ function personaToCard(p: Persona, source: string): VibeCard {
     mood: p.mood,
     scene: p.persona,
     typography: typoFor(p.vector, rng),
-    palette: paletteFor(p.vector),
+    palette: p.palette?.length ? palette3(p.palette) : paletteFor(p.vector),
     vector: p.vector,
     coherence: { sharedAxes: [], ok: true },
     origin: { home: "Persona", intrusion: "—", object: "—", engineNote: p.persona },

@@ -45,7 +45,7 @@ async function runPersona(ctx: string): Promise<Res[]> {
   });
   return out.personas.map((p) => ({
     engine: "persona", leitwert: p.leitwert, worlds: `Persona: ${p.persona.slice(0, 70)}`,
-    mood: p.mood, palette: [], typo: p.typoDirection, layout: p.layoutMotion,
+    mood: p.mood, palette: p.palette ?? [], typo: p.typoDirection, layout: p.layoutMotion,
     elements: p.elements, derivation: p.persona,
   }));
 }

@@ -23,6 +23,7 @@ export const personaSchema = z.object({
   persona: z.string().describe("a fictional source: person/studio/workshop in one sentence, with a Macke"),
   leitwert: z.string(),
   mood: z.string(),
+  palette: z.array(z.string()),
   vector: axisVectorSchema,
   typoDirection: z.string(),
   layoutMotion: z.string(),

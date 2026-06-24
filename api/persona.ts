@@ -17,6 +17,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       system: PERSONA_SYSTEM,
       prompt: fill(PERSONA_PROMPT, { ctx: briefing || PERSONA_BLANK, n }),
       noCache: true,
+      maxOutputTokens: 16000,
     });
     return res.status(200).json(out);
   } catch (err) {

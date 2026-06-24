@@ -22,6 +22,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       system: SYNTHESE_SYSTEM,
       prompt: fill(SYNTHESE_PROMPT, { ctx, steer, n }),
       noCache: true,
+      maxOutputTokens: 16000,
     });
     return res.status(200).json(out);
   } catch (err) {
