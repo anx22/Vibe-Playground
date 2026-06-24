@@ -24,23 +24,14 @@ export interface VibeCard {
   origin: { home: string; intrusion: string; object: string; engineNote: string };
   /** Which methodology produced this block — drives the constellation clustering (E-047). */
   source?: string;
-  /** Rich expand detail (Engine D bridge: the worlds, their rhyme, object, derivation, affordances). */
+  /** Rich expand detail (Engine D bridge: the worlds, their rhyme, object, derivation). */
   detail?: {
     worlds?: { name: string; role: string; rhyme: string }[];
     object?: string;
     derivation?: string;
-    affordances?: string[];
-    /** Engine F: the orthogonal taste-direction this candidate belongs to, and the pots used. */
-    tasteDirection?: string;
-    operators?: string[];
-    comfortRating?: string;
-    /** Engine D/E self-rated donor distance (hoch / mittel). */
-    domainDistance?: string;
-    /** Design-Kompass: domänen-magnetisierte Typo-Richtung + Layout & Motion, fließt in den Export (E-080). */
-    typoDirection?: string;
-    layoutMotion?: string;
-    /** Aus dem Ergebnis herausgearbeitete konkrete Design-Elemente (Material/Form/Layout/Farbe/Bewegung). */
-    elements?: { layer: string; element: string; why: string }[];
+    /** 2–3 gleichwertige holistische Design-Lesarten derselben Welt — konsolidierte
+     *  Gesamtbeschreibungen statt atomisierter Pattern-Liste, ohne Motion (E-095). */
+    designs?: { title: string; description: string }[];
   };
   /** LLM-judge score (1..5 each + overall), attached by the judge-select step (E-041). */
   quality?: Quality;

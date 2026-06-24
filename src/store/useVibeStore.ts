@@ -48,11 +48,7 @@ function bridgeToCard(b: Bridge, source: string): VibeCard {
       worlds: b.worlds,
       object: b.objectMetaphor,
       derivation: b.creativeDerivation,
-      affordances: b.affordances,
-      domainDistance: b.domainDistance,
-      typoDirection: b.typoDirection,
-      layoutMotion: b.layoutMotion,
-      elements: b.elements,
+      designs: b.designs,
     },
   };
 }
@@ -69,19 +65,13 @@ function personaToCard(p: Persona, source: string): VibeCard {
     coherence: { sharedAxes: [], ok: true },
     origin: { home: "Persona", intrusion: "—", object: "—", engineNote: p.persona },
     source,
-    detail: { derivation: p.persona, typoDirection: p.typoDirection, layoutMotion: p.layoutMotion, elements: p.elements },
+    detail: { derivation: p.persona, designs: p.designs },
   };
 }
 
+/** WorkbenchCandidate === Bridge now (taste/operators/comfort trimmed, QS-5) — thin alias. */
 function candidateToCard(c: WorkbenchCandidate, source: string): VibeCard {
-  const card = bridgeToCard(c, source);
-  card.detail = {
-    ...card.detail,
-    tasteDirection: c.tasteDirection,
-    operators: c.operators,
-    comfortRating: c.comfortRating,
-  };
-  return card;
+  return bridgeToCard(c, source);
 }
 
 /** The creative derivations, each its own constellation cluster (E-047). Pluggable — add a source here. */

@@ -15,14 +15,12 @@ export function cardToCollision(c: VibeCard): LabCollision {
       : [worlds[0], { name: c.origin.object && c.origin.object !== "—" ? c.origin.object : "Gegenwelt", role: "Gegenwelt", rhyme: "" }];
   return {
     leitwert: c.leitwert,
-    distance: d?.domainDistance ?? "—",
     mood: c.mood,
     palette: c.palette,
     worlds: two,
     object: d?.object && d.object !== "—" ? d.object : c.origin.object || "—",
     derivation: d?.derivation ?? c.scene ?? "",
-    taste: d?.tasteDirection ?? "",
-    comfort: d?.comfortRating ?? "",
+    designs: d?.designs ?? [],
   };
 }
 
@@ -34,8 +32,6 @@ export function cardToPersona(c: VibeCard): LabPersona {
     persona: d?.derivation ?? c.scene ?? "",
     mood: c.mood,
     palette: c.palette,
-    typo: d?.typoDirection ?? "",
-    layout: d?.layoutMotion ?? "",
-    elements: d?.elements ?? [],
+    designs: d?.designs ?? [],
   };
 }

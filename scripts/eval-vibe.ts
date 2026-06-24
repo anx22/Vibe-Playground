@@ -21,10 +21,10 @@ const BRIEFINGS = [
 ];
 const N = 4;
 
-type El = { layer: string; element: string; why: string };
+type Design = { title: string; description: string };
 type Res = {
   engine: string; leitwert: string; worlds: string; mood: string;
-  palette: string[]; typo: string; layout: string; elements: El[]; derivation: string;
+  palette: string[]; designs: Design[]; derivation: string;
 };
 
 async function runSynthese(ctx: string): Promise<Res[]> {
@@ -34,8 +34,7 @@ async function runSynthese(ctx: string): Promise<Res[]> {
   });
   return out.candidates.map((b) => ({
     engine: "synthese", leitwert: b.leitwert, worlds: b.worlds.map((w) => w.name).join(" × "),
-    mood: b.mood, palette: b.palette, typo: b.typoDirection, layout: b.layoutMotion,
-    elements: b.elements, derivation: b.creativeDerivation,
+    mood: b.mood, palette: b.palette, designs: b.designs, derivation: b.creativeDerivation,
   }));
 }
 async function runPersona(ctx: string): Promise<Res[]> {
@@ -45,8 +44,7 @@ async function runPersona(ctx: string): Promise<Res[]> {
   });
   return out.personas.map((p) => ({
     engine: "persona", leitwert: p.leitwert, worlds: `Persona: ${p.persona.slice(0, 70)}`,
-    mood: p.mood, palette: p.palette ?? [], typo: p.typoDirection, layout: p.layoutMotion,
-    elements: p.elements, derivation: p.persona,
+    mood: p.mood, palette: p.palette ?? [], designs: p.designs, derivation: p.persona,
   }));
 }
 
@@ -66,8 +64,8 @@ const JUDGE_SYS =
 async function judge(briefing: string, rs: Res[]): Promise<{ anwendbar: number; fuehlbar: number; versagen: string }[]> {
   if (!rs.length) return [];
   const list = rs.map((r, i) =>
-    `${i + 1}. «${r.leitwert}» — Mood: ${r.mood} — Typo: ${r.typo} — Layout/Motion: ${r.layout} — ` +
-    `Elemente: ${r.elements.map((e) => `${e.layer}: ${e.element}`).join(" · ") || "—"}`).join("\n");
+    `${i + 1}. «${r.leitwert}» — Mood: ${r.mood} — Designs: ` +
+    `${r.designs.map((d) => `${d.title}: ${d.description}`).join("  |  ") || "—"}`).join("\n");
   const out = await genObject({
     model: modelFor("cheap"), schema: vibeJudge, system: JUDGE_SYS, maxOutputTokens: 220 + rs.length * 130,
     prompt: `Briefing: ${briefing}\nBewerte JEDE der ${rs.length} Richtungen: anwendbar (1-5), fuehlbar (1-5), ` +
@@ -89,8 +87,8 @@ async function main() {
           all.push({ briefing: b.id, ...r, ...j });
           console.log(`\n  [${r.engine}] «${r.leitwert}»   anwendbar ${j.anwendbar}/5 · fuehlbar ${j.fuehlbar}/5`);
           console.log(`     Welten: ${r.worlds}`);
-          console.log(`     Mood: ${r.mood} | Palette: ${r.palette.join(" ") || "(aus Vektor abgeleitet)"} | Typo: ${r.typo} | Layout: ${r.layout}`);
-          console.log(`     Elemente: ${r.elements.map((e) => `[${e.layer}] ${e.element}`).join("  ·  ") || "—"}`);
+          console.log(`     Mood: ${r.mood} | Palette: ${r.palette.join(" ") || "(aus Vektor abgeleitet)"}`);
+          r.designs.forEach((d) => console.log(`     ▷ ${d.title} — ${d.description}`));
           console.log(`     ✗ ${j.versagen}`);
         });
       } catch (err) {

@@ -2,10 +2,10 @@ import { readFileSync } from "node:fs";
 import { buildExportPrompt, buildTrigger } from "../src/export.js";
 
 /** Shows, for ONE real eval result, the raw engine JSON vs. what the app's export
- *  actually puts on your clipboard — and checks each element for presence. No LLM. */
+ *  actually puts on your clipboard — and checks each design reading is carried. No LLM. */
 
 const all = JSON.parse(readFileSync("/tmp/eval-vibe.json", "utf8")) as any[];
-const e = all[0]; // «Patina-Industrieglas»
+const e = all[0];
 
 // Build the VibeCard from the captured fields, as the store would.
 const card: any = {
@@ -21,10 +21,7 @@ const card: any = {
   source: e.engine,
   detail: {
     derivation: e.derivation,
-    typoDirection: e.typo,
-    layoutMotion: e.layout,
-    elements: e.elements,
-    // affordances NOT captured by the eval — note: the live app would have a generic one here.
+    designs: e.designs,
   },
 };
 
@@ -35,13 +32,13 @@ line(JSON.stringify(e, null, 2));
 line("\n\n════════ 2) WAS BEIM EXPORT BEI DIR ANKOMMT (Brandboard) ════════");
 line(buildExportPrompt(card, "brandboard"));
 
-line("\n\n════════ 3) DIE 3 KONKRETEN ELEMENTE — stehen sie im Export? ════════");
+line("\n\n════════ 3) DIE DESIGN-LESARTEN — stehen sie im Export? ════════");
 const everywhere =
   buildExportPrompt(card, "brandboard") + "\n" +
   buildExportPrompt(card, "chatgpt") + "\n" +
   buildExportPrompt(card, "midjourney") + "\n" +
   buildTrigger(card, "brandboard");
-for (const el of e.elements) {
-  line(`  [${el.layer}] ${el.element}`);
-  line(`      → im Export enthalten: ${everywhere.includes(el.element) ? "JA" : "NEIN"}`);
+for (const d of e.designs ?? []) {
+  line(`  ▷ ${d.title}`);
+  line(`      → im Export enthalten: ${everywhere.includes(d.description) ? "JA" : "NEIN"}`);
 }

@@ -11,18 +11,15 @@ export type LabPersona = {
   persona: string;
   mood: string;
   palette: [string, string, string];
-  typo: string;
-  layout: string;
-  elements: { layer: string; element: string }[];
+  designs: { title: string; description: string }[];
 };
 
 export function PersonaChip({ p }: { p: LabPersona }) {
-  const byLayer = (l: string) => p.elements.find((e) => e.layer.toLowerCase().startsWith(l))?.element;
   const seg = {
     n: p.mood,
-    e: byLayer("form"),
-    s: byLayer("bewegung") ?? byLayer("farbe"),
-    w: byLayer("material"),
+    e: p.designs[0]?.title,
+    s: p.designs[1]?.title,
+    w: p.designs[2]?.title,
   };
   return (
     <article className="pchip">
@@ -47,14 +44,25 @@ export function PersonaChip({ p }: { p: LabPersona }) {
               <path d="M114 196 Q117 162 150 157 Q183 162 186 196" />
             </g>
           </svg>
-          {seg.n && <div className="pseg pseg--n"><span className="pseg-part">Kopf · Mood</span><span className="pseg-text">{seg.n}</span></div>}
-          {seg.e && <div className="pseg pseg--e"><span className="pseg-part">Körper · Form</span><span className="pseg-text">{seg.e}</span></div>}
-          {seg.s && <div className="pseg pseg--s"><span className="pseg-part">Stand · Bewegung</span><span className="pseg-text">{seg.s}</span></div>}
-          {seg.w && <div className="pseg pseg--w"><span className="pseg-part">Hände · Material</span><span className="pseg-text">{seg.w}</span></div>}
+          {seg.n && <div className="pseg pseg--n"><span className="pseg-part">Mood</span><span className="pseg-text">{seg.n}</span></div>}
+          {seg.e && <div className="pseg pseg--e"><span className="pseg-part">Lesart ①</span><span className="pseg-text">{seg.e}</span></div>}
+          {seg.s && <div className="pseg pseg--s"><span className="pseg-part">Lesart ②</span><span className="pseg-text">{seg.s}</span></div>}
+          {seg.w && <div className="pseg pseg--w"><span className="pseg-part">Lesart ③</span><span className="pseg-text">{seg.w}</span></div>}
         </div>
 
         <div className="pchip-story"><span className="tab">Die Figur</span><p>{p.persona}</p></div>
-        <div className="pchip-hand"><b>Handschrift:</b> {p.typo} · {p.layout}</div>
+
+        {p.designs.length > 0 && (
+          <div className="designs">
+            <span className="tab">Denkbare Designs</span>
+            {p.designs.map((d, i) => (
+              <div className="design" key={i}>
+                <div className="design-title">{d.title}</div>
+                <p className="design-desc">{d.description}</p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </article>
   );

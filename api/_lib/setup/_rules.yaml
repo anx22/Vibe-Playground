@@ -35,20 +35,18 @@ compass: |
   Spüre die DESIGN-DOMÄNE des Briefings (z. B. Fintech, Luxus, KI, Developer, Health, SaaS, Editorial, Architektur, Food, Fashion, Automotive, Legal …) und ihr gestalterisches Schwerefeld — das Register, in dem die Domäne natürlich lebt (Palette · Typo · Layout/Motion).
   Diese Domäne wirkt MAGNETISCH und LEICHT: ein sanfter Sog, der deine KONKRETEN Design-Parameter in die Resonanz der Domäne zieht. KEINE Schablone zum Abschreiben (kein harter Ref), KEIN Klischee, das gebrochen werden muss — nur eine Orientierung, damit das Ergebnis im richtigen Feld landet.
   Die ÜBERRASCHUNG kommt aus der fernen Kollision (dem Leitwert), NICHT aus der Domäne. Der Kompass macht die Übersetzung nur DESIGN-ANWENDBAR und domänen-stimmig — er ersetzt nie die kreative Idee und glättet sie nie zur Branchen-Norm.
-  Übersetze die Kollision so in konkrete, domänen-magnetisierte Parameter: eine TYPO-RICHTUNG (Schrift-Charakter + ein konkreter Vorschlag) und LAYOUT & MOTION (Raster-/Kompositions-Idee + EIN Bewegungsprinzip) — je eine knappe Zeile, passend zu DIESEM Briefing. Lass die Palette ebenfalls leicht in die Domäne ziehen.
+  Lass die Domäne deine Design-Lesarten (siehe unten) sanft magnetisieren: Palette, Schrift-Charakter, Raster/Komposition, Oberfläche und Dichte ziehen leicht in die Resonanz der Domäne — als Orientierung, nicht als Schablone. KEINE Bewegung/Motion/Animation (bleibt außen vor).
   Optional und FREIWILLIG: passt eine STIL-EPOCHE natürlich zum Ergebnis (z. B. Swiss, Bauhaus, Mid-Century, Editorial-Revival, 90er-Rave …), darf sie die Komposition leicht prägen — nie erzwungen, kein Klischee, jederzeit ignorierbar, sobald sie einengt. Die Idee bleibt frei.
   Bei blank slate oder unklarer Domäne: wähle die naheliegendste, ziehe nur ganz leicht.
   </design_kompass>
 
 extract: |
-  <design_extraktion>
-  Steht die Idee/Kollision, dann GEH DURCH DIE WELT DEINES ERGEBNISSES und sammle eine ganze REIHE konkreter, welt-eigener Funde — Materialien, Oberflächen, Formen, Anordnungen, Bewegungen, Licht, typische Dinge, treffende Metaphern, auch Fiktives, das es nur dort gibt. Reich sammeln (Ziel 8–12), NICHT ein Stück pro Schicht.
-  ÜBERSETZE JEDEN FUND in ein KONKRETES, BREIT ANWENDBARES DIGITALES DESIGN-PATTERN — nicht das physische Ding selbst, sondern was es im Web-/App-/Brand-Design WIRD. Beispiel: eine Flaschen-Silhouette ist kein Screen-Element → übersetzt zu „asymmetrische, am Rand beschnittene Hero-Komposition"; eine Bruchkante im Glas → „bewusster Grid-Break als Sektions-Trenner" oder „Haarriss-Linie als Hover-Akzent".
-  Lande in den etablierten Design-Dimensionen, pro Fund die passende: RASTER/LAYOUT · TYPOGRAFIE · FARB-STRATEGIE · MOTION/INTERAKTION · OBERFLÄCHE/TEXTUR (digital: Grain, Frosted-Glas, Halbton, matt) · KOMPONENTE/FORM (Radius, Rahmen, Trenner, Badge) · BILDSPRACHE · DICHTE. Mehrere Funde dürfen dieselbe Dimension treffen — Multiplikation ist erwünscht.
-  REGELN: jedes Element muss DIREKT in digitalem Design umsetzbar sein und für sich ein einfaches, starkes Pattern (funktioniert auf Landingpage, Slide UND Brandboard) — bevorzuge bewährte, breit anwendbare Patterns vor Gimmicks; kein physisches Inventar, das man nicht aufs Screen bringt; nichts Beliebiges (Selbsttest: zögen 5 andere Tools dasselbe → raus). Die ÜBERRASCHUNG kommt aus dem Welt-Fund, die ANWENDBARKEIT aus der Übersetzung.
-  Pro Element: layer (die Design-Dimension), element (das konkrete, anwendbare Design-Pattern, eine Zeile), why (der Welt-Fund, der es trägt + warum stark, eine Zeile).
-  Ändere NICHT die Idee/den Leitwert.
-  </design_extraktion>
+  <design_lesarten>
+  Steht die Idee/Kollision, dann LIES die Welt deines Ergebnisses als DESIGN — aber NICHT als Stückliste. Erzeuge 2–3 GLEICHWERTIGE, in sich GESCHLOSSENE Design-Lesarten DERSELBEN Welt: verschiedene, klar voneinander unterscheidbare Arten, wie diese Welt zu einem digitalen Design (Web/App/Brand) werden kann. Jede Lesart ist ein eigener kohärenter Vorschlag, nicht Variante derselben Sache — sie dürfen sich in Komposition, Schrift-Geste, Farb-Einsatz und Dichte deutlich unterscheiden, bleiben aber alle aus DIESER Welt abgeleitet.
+  Jede Lesart ist eine KONSOLIDIERTE GESAMTBESCHREIBUNG als Fließtext (2–4 Sätze), die Komposition/Layout, Schrift-Charakter, Farb-Logik, Oberfläche/Textur und Dichte ZU EINEM Bild verwebt. KEINE Stichpunktliste, KEINE „Dimension: Pattern"-Aufzählung, KEIN Vorbauen durch Aufzählen einzelner Elemente. KEINE Bewegung/Motion/Animation — Bewegung wird weggelassen.
+  KONKRET UND ANWENDBAR: ein Designer ODER ein Bildmodell muss jede Lesart direkt umsetzen können — benenne reale gestalterische Mittel (Rasterart, Schrift-Charakter, Farb-Logik, Oberflächen-Gefühl, Dichte), aber gewoben, nicht zerlegt. Übersetze Welt-Funde ins Digitale statt sie physisch/wörtlich abzubilden (eine Flaschen-Silhouette → „am Rand beschnittene, asymmetrische Hero-Komposition"; eine Bruchkante → „bewusster Grid-Break als Sektions-Trenner"). Die ÜBERRASCHUNG kommt aus der Welt/Kollision, die ANWENDBARKEIT aus der konkreten Übersetzung. Selbsttest: zögen 5 andere Tools dieselbe Lesart → schärfen.
+  Pro Lesart: title (kurzer, treffender Name) und description (die Gesamtbeschreibung). Ändere NICHT die Idee/den Leitwert.
+  </design_lesarten>
 
 render_probe: |
   <render_probe>

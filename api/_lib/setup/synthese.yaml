@@ -13,7 +13,7 @@ SYNTHESE:
     </vorgehen>
   rules: [leitwert, repertoire, diversity, register, compass, extract, render_probe]
   output: |
-    <ausgabe>candidates[] mit leitwert, worlds{name, role, rhyme}, objectMetaphor, creativeDerivation (≤2 Sätze, WARUM die zwei Welten dieselbe innere Logik teilen — keine Szene, keine Anweisung), mood, palette (3 Hex), domainDistance, affordances (≥5), tasteDirection (Geschmacksrichtung), operators (genutzte Töpfe/Ketten), comfortRating (sicher…unbequem), typoDirection (Schrift-Charakter + 1 konkreter Vorschlag, eine Zeile), layoutMotion (Raster-/Kompositions-Idee + 1 Bewegungsprinzip, eine Zeile), elements (8–12 anwendbare digitale Design-Patterns, je {layer ∈ Raster/Typo/Farbe/Motion/Oberfläche/Komponente/Bildsprache/Dichte, element = konkretes Pattern, why = Welt-Fund}), vector (6 Achsen material/energy/time/structure/density/formality, je −1..1).</ausgabe>
+    <ausgabe>candidates[] mit leitwert, worlds{name, role, rhyme}, objectMetaphor, creativeDerivation (≤2 Sätze, WARUM die zwei Welten dieselbe innere Logik teilen — keine Szene, keine Anweisung), mood, palette (3 Hex), designs (2–3 gleichwertige Design-Lesarten derselben Welt, je {title = kurzer Name, description = konsolidierte Gesamtbeschreibung als Fließtext, KEINE Motion/Bewegung, KEINE Stichpunktliste}), vector (6 Achsen material/energy/time/structure/density/formality, je −1..1).</ausgabe>
   prompt: |
     Briefing: {ctx}.{steer}
     Erst viele Kandidaten intern (≥3×), dann hart aussortieren (≥⅔ weg) nach dem Verschränkungs-Gate, und gib {n} starke, gut vorstellbare Richtungen über 3–4 Geschmacksrichtungen zurück.

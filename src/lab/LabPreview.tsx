@@ -1,7 +1,6 @@
 import "./lab.css";
 import { PersonaChip, type LabPersona } from "./PersonaChip";
 import { CollisionCard, type LabCollision } from "./CollisionCard";
-import { ElementProbe } from "./ElementProbe";
 
 /** Isolated component lab (#lab). Mock data, no store, no LLM — for designing the
  *  methodology-derived components piece by piece. Throwaway until ported. */
@@ -9,7 +8,6 @@ import { ElementProbe } from "./ElementProbe";
 const COLLISIONS: LabCollision[] = [
   {
     leitwert: "Brennofen-Glasur",
-    distance: "hoch",
     mood: "kühl · wachsam",
     palette: ["#e8804a", "#7a2e12", "#f4d3b0"],
     worlds: [
@@ -18,12 +16,21 @@ const COLLISIONS: LabCollision[] = [
     ],
     object: "Glasur-Probe",
     derivation: "Beide leben von kontrollierter Hitze und einem Punkt, an dem nichts schiefgehen darf.",
-    taste: "Kühle Autorität",
-    comfort: "unbequem",
+    designs: [
+      {
+        title: "Glasur-Schliere",
+        description:
+          "Tiefes Ofen-Anthrazit als Grundfläche, durchbrochen von einer einzigen Glut-Orange-Schliere, die wie eine Glasur über eine Sektion läuft. Schwere Display-Grotesk, viel Schwarzraum, ein körniger Matt-Overlay statt glatter Flächen.",
+      },
+      {
+        title: "Prüfprotokoll",
+        description:
+          "Nüchtern, laborklar: enges Datenraster, dünne Haarlinien, Messziffern in Monospace. Farbe nur als schmaler Status-Balken am Rand — Vertrauen aus Strenge, kein Dekor.",
+      },
+    ],
   },
   {
     leitwert: "Tidenhub-Schlick",
-    distance: "mittel",
     mood: "weich · zyklisch",
     palette: ["#6b7a5a", "#262b1e", "#cdd2bf"],
     worlds: [
@@ -32,8 +39,18 @@ const COLLISIONS: LabCollision[] = [
     ],
     object: "Schlick-Kern",
     derivation: "Beide geben in festem Takt frei und sichern, was das nächste Hoch verschluckt.",
-    taste: "Geerdetes Handwerk",
-    comfort: "mittel",
+    designs: [
+      {
+        title: "Wattlinien",
+        description:
+          "Horizontale Schicht-Bänder in gedämpftem Schlick-Grün und Sand, wie Sediment-Lagen übereinander. Weiche Serif für Überschriften, großzügige Ränder, Flächen mit feiner Faser-Textur.",
+      },
+      {
+        title: "Pegel-Raster",
+        description:
+          "Strenges Baseline-Raster wie eine Gezeitentabelle: große Zahlenwerte, dichte Zeilen, ruhiges Off-White. Ein einzelner Petrol-Akzent markiert den aktuellen Stand.",
+      },
+    ],
   },
 ];
 
@@ -44,12 +61,17 @@ const PERSONAS: LabPersona[] = [
     persona: "Ein pensionierter Schweizer Kartograf, der jetzt Synthesizer-Module baut — Höhenlinien werden zu Wellenformen.",
     mood: "präzise · elektronisch",
     palette: ["#46a6ff", "#10477a", "#c4e3ff"],
-    typo: "Neo-Grotesk mit Messziffern",
-    layout: "Höhenlinien-Raster, modulare Patchfelder",
-    elements: [
-      { layer: "Material", element: "gebürstetes Messing, gravierte Skalen" },
-      { layer: "Form", element: "Höhenlinie wird Wellenform" },
-      { layer: "Farbe", element: "See-Blau, Pegel-Weiß" },
+    designs: [
+      {
+        title: "Höhenlinien-Patch",
+        description:
+          "See-Blau-Grund mit feinen weißen Höhenlinien als durchgehendes Hintergrundmuster; modulare Karten sitzen wie Patch-Felder darauf. Neo-Grotesk mit echten Messziffern, gebürstetes Messing als Akzentfläche.",
+      },
+      {
+        title: "Pegel-Tafel",
+        description:
+          "Reduzierte Mess-Ästhetik: dünne Skalenstriche an den Rändern, Pegel-Weiß auf tiefem Marineblau, große Zahlen als Hauptelement. Sachlich, instrumentell, ohne Zierde.",
+      },
     ],
   },
   {
@@ -58,12 +80,17 @@ const PERSONAS: LabPersona[] = [
     persona: "Ein gestrandeter Alien-Botaniker, der in einem U-Bahn-Tunnel Leuchtflora züchtet.",
     mood: "feucht · leuchtend",
     palette: ["#2fd4a6", "#10302e", "#caa8ff"],
-    typo: "organische Sans mit Sporen-Punkten",
-    layout: "Kachel-Beete entlang der Tunnelröhre",
-    elements: [
-      { layer: "Material", element: "feuchter Beton, biolumineszenter Film" },
-      { layer: "Form", element: "Tunnelröhren-Bogen" },
-      { layer: "Bewegung", element: "langsames Pulsieren der Flora" },
+    designs: [
+      {
+        title: "Biolumineszenz",
+        description:
+          "Fast schwarzes Tunnel-Grün als Bühne, auf der biolumineszente Mint- und Violett-Akzente wie Pflanzen aus dem Dunkel leuchten. Organische Sans, weiche Radien, ein feuchter Glanz auf wenigen Flächen.",
+      },
+      {
+        title: "Beet-Kacheln",
+        description:
+          "Inhalt in kachelförmigen Beeten entlang einer mittigen Röhren-Achse; viel Negativraum, schwaches Innen-Glühen an den Kanten. Ruhig, dicht bepflanzt nur dort, wo es zählt.",
+      },
     ],
   },
   {
@@ -72,32 +99,25 @@ const PERSONAS: LabPersona[] = [
     persona: "Ein Schmetterling aus Uhrwerk-Teilen, der Staub statt Pollen sammelt.",
     mood: "fein · tickend",
     palette: ["#c79a4e", "#3a2c18", "#ece0c2"],
-    typo: "feine Serife mit Zahnrad-Anmutung",
-    layout: "symmetrische Flügel-Spiegelung",
-    elements: [
-      { layer: "Material", element: "gebläutes Uhrwerk, Staubpatina" },
-      { layer: "Form", element: "Flügel aus Zahnrädern" },
-      { layer: "Farbe", element: "Messing-Gold, Staubgrau" },
+    designs: [
+      {
+        title: "Flügel-Symmetrie",
+        description:
+          "Streng spiegelsymmetrisches Layout um eine Mittelachse, wie aufgespannte Flügel; feine Serife mit Zahnrad-Anmutung, gebläutes Messing-Gold auf Staubgrau, haarfeine Trennlinien.",
+      },
+      {
+        title: "Staub-Patina",
+        description:
+          "Warme, leicht vergilbte Flächen mit feiner Staub-Körnung, als läge Patina über allem. Kleine, präzise gesetzte Typo, viel Ruhe, ein einzelnes glänzendes Detail pro Sektion.",
+      },
     ],
   },
-];
-
-const PROBE_PAL: [string, string, string] = ["#e8804a", "#7a2e12", "#f4d3b0"];
-const PROBE_ELS = [
-  { layer: "Material", element: "Schamott-Glasur, matt mit Haarrissen" },
-  { layer: "Form", element: "Trichter-Silhouette des Ofenmauls" },
-  { layer: "Layout", element: "enges Raster, von einem Riss durchbrochen" },
-  { layer: "Farbe", element: "Glut-Orange auf Ascheweiß" },
-  { layer: "Bewegung", element: "langsames Glühen, Hitzeflimmern" },
 ];
 
 export default function LabPreview() {
   return (
     <div className="lab">
-      <div className="lab-head">Komponenten-Lab · Element-Probe — taktile Musterstücke (Mock)</div>
-      <div className="eprobe-row">{PROBE_ELS.map((e, i) => <ElementProbe key={i} el={e} palette={PROBE_PAL} />)}</div>
-
-      <div className="lab-head" style={{ marginTop: 14 }}>Komponenten-Lab · Persona — Line-Art im Kreis-Medaillon, Trenner radial (Mock)</div>
+      <div className="lab-head">Komponenten-Lab · Persona — Line-Art im Kreis-Medaillon, Trenner radial (Mock)</div>
       {PERSONAS.map((p, i) => <PersonaChip key={i} p={p} />)}
 
       <div className="lab-head" style={{ marginTop: 14 }}>Komponenten-Lab · Synthese-Kollisions-Karte — zwei aufgerissene Welten (Mock)</div>

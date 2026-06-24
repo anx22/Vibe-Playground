@@ -11,11 +11,11 @@ export const axisVectorSchema = z.object({
   formality: z.number().min(-1).max(1),
 });
 
-/** One concrete, result-specific design element walked out of the result's world. */
-export const designElement = z.object({
-  layer: z.string(),
-  element: z.string(),
-  why: z.string(),
+/** One holistic, applicable design reading of the result's world — a consolidated
+ *  Gesamtbeschreibung (no atomized pattern list, no motion). Several per result. */
+export const designReading = z.object({
+  title: z.string(),
+  description: z.string(),
 });
 
 /** Persona: a fictional source whose aesthetic falls out as a coherent vibe (kept building block). */
@@ -25,9 +25,7 @@ export const personaSchema = z.object({
   mood: z.string(),
   palette: z.array(z.string()),
   vector: axisVectorSchema,
-  typoDirection: z.string(),
-  layoutMotion: z.string(),
-  elements: z.array(designElement),
+  designs: z.array(designReading),
 });
 export type Persona = z.infer<typeof personaSchema>;
 export const personaListSchema = z.object({ personas: z.array(personaSchema) });
@@ -40,12 +38,8 @@ export const bridgeSchema = z.object({
   creativeDerivation: z.string(),
   mood: z.string(),
   palette: z.array(z.string()),
-  domainDistance: z.string(),
-  affordances: z.array(z.string()),
-  typoDirection: z.string(),
-  layoutMotion: z.string(),
   vector: axisVectorSchema,
-  elements: z.array(designElement),
+  designs: z.array(designReading),
 });
 export const entangleSchema = z.object({
   essence: z.string(),
@@ -55,12 +49,8 @@ export const entangleSchema = z.object({
 export type Bridge = z.infer<typeof bridgeSchema>;
 export type Entangle = z.infer<typeof entangleSchema>;
 
-/** Engine F — Technique Workbench: a bridge plus its taste-direction + pots used. */
-export const workbenchCandidateSchema = bridgeSchema.extend({
-  tasteDirection: z.string(),
-  operators: z.array(z.string()),
-  comfortRating: z.string(),
-});
+/** Engine F — Technique Workbench: curated survivors of the synthesis pass. */
+export const workbenchCandidateSchema = bridgeSchema;
 export const workbenchSchema = z.object({ candidates: z.array(workbenchCandidateSchema) });
 export type WorkbenchCandidate = z.infer<typeof workbenchCandidateSchema>;
 

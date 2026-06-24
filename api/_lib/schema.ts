@@ -11,11 +11,16 @@ export const axisVectorSchema = z.object({
   formality: z.number().min(-1).max(1),
 });
 
-/** One concrete, result-specific design element walked out of the result's world. */
-export const designElement = z.object({
-  layer: z.string().describe("Design-Dimension: Raster | Typo | Farbe | Motion | Oberfläche | Komponente | Bildsprache | Dichte"),
-  element: z.string().describe("ein konkretes, breit anwendbares digitales Design-Pattern (eine Zeile)"),
-  why: z.string().describe("der Welt-Fund, der es trägt + warum stark (eine Zeile)"),
+/** One holistic, applicable design reading of the result's world — a consolidated
+ *  Gesamtbeschreibung (NOT an atomized pattern list, NO motion). Several equivalent
+ *  readings of the SAME world are offered per result. */
+export const designReading = z.object({
+  title: z.string().describe("kurzer Name dieser Design-Lesart, z. B. «Plakat-Takelage»"),
+  description: z
+    .string()
+    .describe(
+      "2–4 Sätze, konkrete aber als Fließtext gewobene Gesamtbeschreibung: Komposition/Layout, Typo-Geste, Farb-Einsatz, Oberfläche/Textur, Dichte. KEINE Bewegung/Motion, KEINE Stichpunkt-Aufzählung, kein Vorbauen durch Auflisten.",
+    ),
 });
 
 export const personaSchema = z.object({
@@ -24,9 +29,7 @@ export const personaSchema = z.object({
   mood: z.string(),
   palette: z.array(z.string()).describe("3 hex colors, directional"),
   vector: axisVectorSchema,
-  typoDirection: z.string().describe("Typo-Richtung: Schrift-Charakter + ein konkreter Vorschlag, eine Zeile"),
-  layoutMotion: z.string().describe("Layout & Motion: Raster-/Kompositions-Idee + EIN Bewegungsprinzip, eine Zeile"),
-  elements: z.array(designElement).describe("≥3 konkrete Design-Elemente aus dem Ergebnis"),
+  designs: z.array(designReading).describe("2–3 gleichwertige Design-Lesarten derselben Welt"),
 });
 /** Batched personas — N distinct sources in one call. */
 export const personaListSchema = z.object({ personas: z.array(personaSchema) });
@@ -45,23 +48,13 @@ export const bridgeShape = z.object({
   creativeDerivation: z.string().describe("1–2 sentences: WHY the rhyme holds — not a scene, not a design instruction"),
   mood: z.string(),
   palette: z.array(z.string()).describe("3 hex colors, directional"),
-  domainDistance: z.string().describe("hoch / mittel"),
-  affordances: z.array(z.string()).describe("≥5 concrete, design-actionable affordances"),
-  typoDirection: z.string().describe("Typo-Richtung: Schrift-Charakter + ein konkreter Vorschlag, eine Zeile"),
-  layoutMotion: z.string().describe("Layout & Motion: Raster-/Kompositions-Idee + EIN Bewegungsprinzip, eine Zeile"),
   vector: axisVectorSchema.describe("6-Achsen-Projektion des Ergebnisses (für Typo/Regler)"),
-  elements: z.array(designElement).describe("≥3 konkrete Design-Elemente aus dem Ergebnis"),
+  designs: z.array(designReading).describe("2–3 gleichwertige Design-Lesarten derselben Welt"),
 });
 
-/** Engine F — Technique Workbench. Curated survivors, each tagged with its taste-direction + pots. */
+/** Engine F — Technique Workbench. Curated survivors of the synthesis pass. */
 export const workbenchSchema = z.object({
-  candidates: z.array(
-    bridgeShape.extend({
-      tasteDirection: z.string().describe("one of 3–4 ORTHOGONAL taste-direction labels"),
-      operators: z.array(z.string()).describe("which pots/chains produced it"),
-      comfortRating: z.string().describe("sicher … unbequem (Placek comfort-test)"),
-    }),
-  ),
+  candidates: z.array(bridgeShape),
 });
 
 /** Engine D — Structural Entanglement. One batch: distilled essence, burnt clichés, and bridges. */

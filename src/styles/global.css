@@ -1156,6 +1156,11 @@ body {
 .flyout-block .rhyme { font-style: italic; color: var(--ink-soft); }
 .flyout-block ul { margin: 0; padding-left: 18px; }
 .flyout-block li { font-size: 13px; line-height: 1.5; }
+.flyout-designs { margin-bottom: 16px; }
+.flyout-designs h3 { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 8px; }
+.fd-item { border-left: 3px solid var(--accent); background: rgba(0, 0, 0, 0.03); border-radius: 10px; padding: 9px 12px; margin-bottom: 9px; }
+.fd-title { font-size: 13.5px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 3px; }
+.fd-desc { font-size: 13px; line-height: 1.45; margin: 0; }
 .flyout-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 22px; }
 .btn-anchor { background: var(--paper); color: var(--ink); border: 2px solid var(--ink); padding: 11px; border-radius: 12px; font-weight: 700; cursor: pointer; }
 .btn-anchor.is-on { background: var(--accent); color: #fff; }

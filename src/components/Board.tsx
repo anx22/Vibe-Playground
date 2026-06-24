@@ -87,7 +87,6 @@ function Panel({
   anchorIds: Set<string>;
 }) {
   const [hero, ...sats] = group;
-  const isWorkbench = src.id === "workbench";
 
   return (
     <section className="panel" style={{ ["--accent" as string]: src.accent } as CSSProperties}>
@@ -102,36 +101,12 @@ function Panel({
 
       {hero && <Tile card={hero} hero anchored={anchorIds.has(hero.id)} />}
 
-      {!isWorkbench && sats.length > 0 && (
+      {sats.length > 0 && (
         <div className="sat-grid">
           {sats.map((c) => <Tile key={c.id} card={c} anchored={anchorIds.has(c.id)} />)}
         </div>
       )}
-
-      {isWorkbench && sats.length > 0 && <TasteGroups cards={sats} anchorIds={anchorIds} />}
     </section>
-  );
-}
-
-/** D12 — Werkbank's satellites become visible sub-clusters, one per orthogonal taste-direction. */
-function TasteGroups({ cards, anchorIds }: { cards: VibeCard[]; anchorIds: Set<string> }) {
-  const groups = new Map<string, VibeCard[]>();
-  for (const c of cards) {
-    const k = c.detail?.tasteDirection?.trim() || "Weitere";
-    if (!groups.has(k)) groups.set(k, []);
-    groups.get(k)!.push(c);
-  }
-  return (
-    <div className="taste-groups">
-      {[...groups.entries()].map(([taste, cs]) => (
-        <div className="taste-group" key={taste}>
-          <div className="taste-label">{taste}</div>
-          <div className="sat-grid">
-            {cs.map((c) => <Tile key={c.id} card={c} anchored={anchorIds.has(c.id)} />)}
-          </div>
-        </div>
-      ))}
-    </div>
   );
 }
 
@@ -214,7 +189,8 @@ function DrawerContent({
   const [deep, setDeep] = useState(false);
   const d = card.detail;
   const canAnchor = anchored || !anchorsFull;
-  const hasDepth = !!(d?.worlds?.length || (d?.object && d.object !== "—") || d?.affordances?.length);
+  const designs = d?.designs ?? [];
+  const hasDepth = !!(d?.worlds?.length || (d?.object && d.object !== "—") || d?.derivation || card.scene);
 
   return (
     <motion.aside
@@ -226,32 +202,43 @@ function DrawerContent({
       style={{ ["--accent" as string]: accentOf(card.source) } as CSSProperties}
     >
       <button className="flyout-x" onClick={onClose} aria-label="schließen">✕</button>
-      <div className="flyout-src">{labelOf(card.source)}{d?.tasteDirection ? ` · ${d.tasteDirection}` : ""}</div>
+      <div className="flyout-src">{labelOf(card.source)}</div>
       <h2 className="flyout-name">{card.leitwert}</h2>
-      <div className="flyout-mood">{card.mood}{d?.operators?.length ? ` · ${d.operators.join(" + ")}` : ""}</div>
+      <div className="flyout-mood">{card.mood}</div>
 
-      {(card.quality?.register || d?.domainDistance || d?.comfortRating) && (
-        <div className="flyout-tags">
-          {card.quality?.register && <span>Register: {card.quality.register}</span>}
-          {d?.domainDistance && <span>Distanz: {d.domainDistance}</span>}
-          {d?.comfortRating && <span>Komfort: {d.comfortRating}</span>}
-        </div>
+      {card.quality?.register && (
+        <div className="flyout-tags"><span>Register: {card.quality.register}</span></div>
       )}
 
       <div className="flyout-palette">
         {card.palette.map((c, i) => <span key={i} style={{ background: c }} title={c} />)}
       </div>
 
-      <div className="flyout-block"><h3>Herleitung</h3><p>{d?.derivation ?? card.scene}</p></div>
+      {designs.length > 0 ? (
+        <div className="flyout-designs">
+          <h3>Denkbare Designs</h3>
+          {designs.map((dz, i) => (
+            <div className="fd-item" key={i}>
+              <div className="fd-title">{dz.title}</div>
+              <p className="fd-desc">{dz.description}</p>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="flyout-block"><h3>Herleitung</h3><p>{d?.derivation ?? card.scene}</p></div>
+      )}
 
       {hasDepth && (
         <>
           <button className="rd-more" onClick={() => setDeep((v) => !v)} aria-expanded={deep}>
-            {deep ? "Tiefe ausblenden ▴" : "Tiefe zeigen ▾"}
+            {deep ? "Welt ausblenden ▴" : "Welt & Herleitung ▾"}
           </button>
           <AnimatePresence initial={false}>
             {deep && (
               <motion.div className="rd-depth" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.16 }}>
+                {designs.length > 0 && (d?.derivation || card.scene) && (
+                  <div className="flyout-block"><h3>Warum es trägt</h3><p>{d?.derivation ?? card.scene}</p></div>
+                )}
                 {d?.worlds?.length ? (
                   <div className="flyout-block">
                     <h3>Verschränkung</h3>
@@ -261,9 +248,6 @@ function DrawerContent({
                   </div>
                 ) : null}
                 {d?.object && d.object !== "—" && <div className="flyout-block"><h3>Objekt</h3><p>{d.object}</p></div>}
-                {d?.affordances?.length ? (
-                  <div className="flyout-block"><h3>Affordanzen</h3><ul>{d.affordances.map((a, i) => <li key={i}>{a}</li>)}</ul></div>
-                ) : null}
               </motion.div>
             )}
           </AnimatePresence>

@@ -41,16 +41,15 @@ const c = (
       ],
       object: "Logbuch",
       derivation: "Beide laufen auf instrumenteller Wachsamkeit — ruhig, exakt, absolut.",
-      affordances: ["matte Oberfläche", "graviert", "redundant", "Signalrhythmus", "Linsenoptik"],
-      tasteDirection: taste,
-      domainDistance: "hoch",
-      comfortRating: "unbequem",
-      typoDirection: "Neo-Grotesk mit Messziffern",
-      layoutMotion: "enges Raster, ein Bruch",
-      elements: [
-        { layer: "Material", element: "mattes Gehäuse, fein graviert", why: "trägt das Vertrauen" },
-        { layer: "Form", element: "gekapselte Silhouette", why: "schützt den Kern" },
-        { layer: "Bewegung", element: "ruhiger Signalrhythmus", why: "signalisiert Wachsamkeit" },
+      designs: [
+        {
+          title: taste ?? "Instrumenten-Klarheit",
+          description: `Enges Raster mit einem bewussten Bruch, Neo-Grotesk mit Messziffern; matte ${world}-Graustufen, ein einzelner Signalakzent aus der Palette. Reduziert, exakt, kein Dekor.`,
+        },
+        {
+          title: "Logbuch-Seite",
+          description: `Dokumentarische Flächen wie eine ${world}-Notiz: dichte Datenzeilen, dünne Trennlinien, viel ruhiger Rand. Vertrauen entsteht aus Sachlichkeit statt Effekt.`,
+        },
       ],
     },
   };

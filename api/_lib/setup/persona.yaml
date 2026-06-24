@@ -10,7 +10,7 @@ PERSONA:
     • «Ein Schmetterling aus Uhrwerk-Teilen, der Staub statt Pollen sammelt.»
     • «Eine Tiefsee-Vermessungsdrohne, die alte Seefahrer-Mythen neu kartiert.»
     </beispiele>
-    <prinzip>Aus der Quelle fällt der Vibe von selbst: Material, Form, Farbe, Textur, Typografie, Bewegung.</prinzip>
+    <prinzip>Aus der Quelle fällt der Vibe von selbst: Material, Form, Farbe, Textur, Typografie, Komposition.</prinzip>
     <regeln>
     1. EIN knapper, bildhafter Satz, der die Quelle UND ihre Kollision/ihren Widerspruch zeigt.
     2. VISUELL greifbar — die Kollision muss man SEHEN können (Material, Form, Apparat, Oberfläche).
@@ -18,7 +18,7 @@ PERSONA:
     </regeln>
   rules: [leitwert, repertoire, diversity, register, compass, extract, render_probe]
   output: |
-    <ausgabe>persona (der EINE Satz mit Quelle + Kollision); leitwert (Welt-Verweis); mood (2–4 Wörter); palette (3 Hex, gerichtet); 6-Achsen-Projektion (material, energy, time, structure, density, formality); typoDirection (Schrift-Charakter + 1 konkreter Vorschlag, eine Zeile); layoutMotion (Raster-/Kompositions-Idee + 1 Bewegungsprinzip, eine Zeile); elements (8–12 anwendbare digitale Design-Patterns, je {layer ∈ Raster/Typo/Farbe/Motion/Oberfläche/Komponente/Bildsprache/Dichte, element = konkretes Pattern, why = Welt-Fund}).</ausgabe>
+    <ausgabe>persona (der EINE Satz mit Quelle + Kollision); leitwert (Welt-Verweis); mood (2–4 Wörter); palette (3 Hex, gerichtet); 6-Achsen-Projektion (material, energy, time, structure, density, formality); designs (2–3 gleichwertige Design-Lesarten derselben Welt, je {title = kurzer Name, description = konsolidierte Gesamtbeschreibung als Fließtext, KEINE Motion/Bewegung, KEINE Stichpunktliste}).</ausgabe>
   prompt: |
     Briefing: {ctx}
     Erzeuge {n} VERSCHIEDENE Personas, aus denen je ein klarer Vibe fällt.

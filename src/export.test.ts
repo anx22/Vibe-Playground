@@ -21,7 +21,9 @@ const bridgeCard: VibeCard = {
     worlds: [{ name: "Flugschreiber", role: "Spender", rhyme: "lückenlose Protokollierung" }],
     object: "Logbuch",
     derivation: "Beide protokollieren lückenlos.",
-    affordances: ["matt", "graviert", "redundant"],
+    designs: [
+      { title: "Logbuch-Strenge", description: "Enges Datenraster, Messziffern in Monospace, ein einzelner Signalakzent auf mattem Anthrazit." },
+    ],
   },
 };
 
@@ -36,13 +38,14 @@ const personaCard: VibeCard = {
 };
 
 describe("buildExportPrompt (compact style trigger)", () => {
-  it("is a tight layered style trigger for a bridge card (world + texture + palette, no essay)", () => {
+  it("is a tight layered style trigger for a bridge card (world + designs + palette, no essay)", () => {
     const out = buildExportPrompt(bridgeCard);
     expect(out).toContain("Stil-Trigger: «Black-Box-Vigilanz»");
     expect(out).toContain("Welt: Flugschreiber");
-    expect(out).toContain("Material & Textur:");
+    expect(out).toContain("Denkbare Designs");
+    expect(out).toContain("Logbuch-Strenge");
     expect(out).toContain("#101010");
-    expect(out.split("\n").length).toBeLessThan(10); // compact layers, not a Riesenbuch
+    expect(out.split("\n").length).toBeLessThan(12); // few lines (one per reading), not a Riesenbuch
   });
 
   it("uses the person as the source for a persona card (no worlds)", () => {

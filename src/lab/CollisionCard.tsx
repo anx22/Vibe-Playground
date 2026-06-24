@@ -7,14 +7,12 @@ import "./lab.css";
  */
 export type LabCollision = {
   leitwert: string;
-  distance: string;
   mood: string;
   palette: [string, string, string];
   worlds: { name: string; role: string; rhyme: string }[];
   object: string;
   derivation: string;
-  taste: string;
-  comfort: string;
+  designs: { title: string; description: string }[];
 };
 
 export function CollisionCard({ c }: { c: LabCollision }) {
@@ -24,7 +22,7 @@ export function CollisionCard({ c }: { c: LabCollision }) {
       <div className="pal-line">{c.palette.map((p, i) => <span key={i} style={{ background: p }} />)}</div>
       <div className="coll-in">
         <div className="coll-head">
-          <span className="kind">Kollision · Distanz {c.distance}</span>
+          <span className="kind">Kollision</span>
           <span className="coll-mood soft-tag">{c.mood}</span>
         </div>
         <div className="bigname">{c.leitwert}</div>
@@ -47,12 +45,20 @@ export function CollisionCard({ c }: { c: LabCollision }) {
           </div>
         </div>
 
-        <div className="coll-why"><span className="tab">Warum es trägt</span><p>{c.derivation}</p></div>
+        {c.designs.length > 0 && (
+          <div className="designs">
+            <span className="tab">Denkbare Designs</span>
+            {c.designs.map((d, i) => (
+              <div className="design" key={i}>
+                <div className="design-title">{d.title}</div>
+                <p className="design-desc">{d.description}</p>
+              </div>
+            ))}
+          </div>
+        )}
 
         <div className="coll-foot">
           <div className="coll-sw">{c.palette.map((p, i) => <span key={i} style={{ background: p }} />)}</div>
-          <span className="soft-tag">{c.taste}</span>
-          <span className="soft-tag">Komfort: {c.comfort}</span>
         </div>
       </div>
     </article>
