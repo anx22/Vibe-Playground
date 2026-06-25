@@ -1,9 +1,9 @@
 # Vibe Playground
 
-A **design-direction generator** for professional designers/art directors. It produces **Leitwerte**
-— compressed world-references (e.g. *Black-Box-Vigilanz*) that translate into coherent, non-cliché
-design output when fed to a design AI. Core job: zero → a credible, *surprising-yet-apt* direction,
-fast.
+A **Denkanstoß generator** for designers/art directors. From a briefing it produces open **clusters** of
+raw world-material — a vivid Welt-Satz, a Leitwert anchor, and loose Metaphern / Materialien /
+Bild-Vergleiche — that a downstream design/image AI turns into something beautiful. It prescribes **no
+design itself**. Core job: zero → a credible, *surprising-yet-premium* direction, fast.
 
 ## Docs
 
@@ -13,15 +13,16 @@ fast.
 | [`KONZEPT.md`](./KONZEPT.md) | Concept (German) |
 | [`DESIGN.md`](./DESIGN.md) | The Studio UI (bento field) |
 | [`DECISIONS.md`](./DECISIONS.md) | Decision log |
-| [`NOW.md`](./NOW.md) | Current state, deferred, watch-outs |
-| [`docs/engines/`](./docs/engines) | Engine specs D · E · F |
+| [`NOW.md`](./NOW.md) | Current state, watch-outs |
+
+The living engine spec is the prompt YAML in [`api/_lib/setup/`](./api/_lib/setup).
 
 ## Run
 
 ```bash
 npm install
 npm run dev            # Vite dev server (app only; engines need the gateway)
-npm run build          # typecheck + production build
+npm run build          # setup + typecheck + production build
 npm test               # vitest
 npm run typecheck:api  # type-check the serverless functions
 VIBE_API_BASE=https://<app>.vercel.app npm run eval -- --judge   # compare engines on the judge
@@ -29,36 +30,38 @@ VIBE_API_BASE=https://<app>.vercel.app npm run eval -- --judge   # compare engin
 
 ## Engines (one harness)
 
-Each engine is a serverless endpoint emitting the shared **bridge contract**; the client maps it via
-`bridgeToCard` into the Board field. Adding one = **1 endpoint + 1 client fn + 1 `Source` entry**.
+Two serverless endpoints emit the shared **cluster contract**; the client maps it via `clusterToCard`
+into the Board field. Adding one = **1 endpoint + 1 client fn + 1 `Source` entry**.
 
-- **D · Verschränkung** (`api/entangle`) — essence → burn clichés → far-but-rhyming worlds → bridge.
-- **F · Werkbank** (`api/workbench`) — Volume→Filter→Curation; over-generate, cut ⅔, taste-directions.
-- **Persona** (`api/persona`) — a fictional originator.
+- **Synthese** (`api/synthese`) — collision: nah-premium + far-rhyming worlds → cluster.
+- **Persona** (`api/persona`) — a fictional originator → cluster.
 
-No invented axes in generation. Quality via the **LLM-judge** (on-target × surprise × craft):
-judge-select in the Studio, `--judge` in the eval.
+Each engine mixes nah/premium + fern/surprising per round. Quality via the **LLM-judge** (on-target ×
+surprise × craft × designValue): judge-select in the Studio, `--judge` in the eval. All prompts live in
+`api/_lib/setup/*.yaml` (`npm run setup` assembles them into `setup.generated.ts`).
 
 ## LLM layer — Vercel AI Gateway
 
-One key for every model, no per-provider tokens. A thin proxy (`api/`) holds the key (never
-client-side; `VERCEL_OIDC_TOKEN` injected on Vercel). `MODELS` tiers: cheap=Haiku, strong=Sonnet,
-premium=Opus (judge only). `caching:'auto'` + per-instance cache + model failover.
+One key for every model. A thin proxy (`api/`) holds the key (never client-side; `VERCEL_OIDC_TOKEN` on
+Vercel). `MODELS` tiers: cheap=Haiku, strong=Sonnet, premium=Opus (judge only). `caching:'auto'` +
+per-instance cache + model failover. `guard.ts` caps the public endpoints.
 
 ## Layout
 
 ```
 src/
-  engine/      types · axes · derive (palette/typo) · pools (fonts + lexicon) · index
-  llm/         schema (zod, shared) · client (fetchers) · select (judge-rank)
+  engine/      types (VibeCard · Quality) · index
+  llm/         schema (zod cluster contract) · client (fetchers) · select (judge-rank · spreadByMix) · metrics (eval)
   store/       useVibeStore (zustand) — SOURCES registry, anchors, explore/iterate
-  components/  Board (bento field + detail drawer) · ExportModal
-  export.ts    block → one-line trigger + target prompt (MJ/ChatGPT/Brandboard)
-api/           entangle · workbench · persona · judge · interpret · health
-  _lib/        gateway (tiers · caching · embed · cosineDist) · prompts · schema
-scripts/eval.ts   headless engine comparison on the judge
+  lab/         ClusterCard (title + Welt-Satz + copyable lists) · LabPreview
+  studio/      Studio · StudioApp (#studio preview)
+  components/  Board (bento field + detail drawer)
+  export.ts    cluster → clusterText (gesamt) + groupText (gruppiert)
+api/           synthese · persona · judge · health
+  _lib/        gateway (tiers · caching) · prompts · schema · guard · setup/*.yaml
+scripts/       eval · eval-vibe · eval-local · show-one · build-setup
 ```
 
 ## Deploy
 
-Claude → GitHub → Vercel. Production builds from `main` (`vercel.json`: pinned install, `dist`).
+Claude → GitHub → Vercel. Production builds from `main`.

@@ -4,48 +4,39 @@
 
 ## Where it stands
 
-Live on Vercel. The Studio is a **bento field**: briefing → three engine **panels** (each a hero
-direction over satellite tiles) → anchor up to 5 gold → "aus Ankern ableiten" → detail drawer →
-copy/export. All three generators run live (Verschränkung · Werkbank · Persona),
-judge-selected per panel; Werkbank's satellites sub-cluster by taste-direction. Glossy-plastic theme.
-North star: speed to a credible, surprising direction.
+Live on Vercel. Briefing → two engine panels (**Synthese** · **Persona**) → each result is an open
+**Denkanstoß-Cluster** (a vivid Welt-Satz + Leitwert + Metaphern / Materialien / Bild-Vergleiche) that
+feeds a downstream design/image AI — the playground prescribes **no design itself**. Anchor up to 5 gold
+→ „aus Ankern ableiten" → detail drawer with the full cluster, copyable. North star: speed to a credible,
+surprising **and** premium-when-wanted direction.
 
 ## What exists
 
-- **Bento-field Studio** (`components/Board.tsx`, E-067) — `App` renders the Board: a masonry of
-  engine panels, each a **hero** tile (judge-#1) over satellite tiles, a **register** chip per tile
-  (E-065), Werkbank satellites grouped by **taste-direction** (D12); a tile opens a **detail drawer**
-  with progressive depth (E-066). Leitidee header + anchor strip on top. Framer-Motion.
-- **Three engines** as a pluggable `Source` registry (`store/useVibeStore.ts`), each an `api/`
-  endpoint sharing one bridge contract + `bridgeToCard`: `entangle` (D) ·
-  `workbench` (F) · `persona`. Plus `judge`, `interpret`, `health`.
-- **Judge-select + quality floor** (`llm/select.ts`, E-063) — over-generate (guard-max), score
-  on-target×surprise×craft×**designValue** (a derivable design-value, not a story/bullshit — the
-  north-star fail-conditions), drop everything under the floor; a cluster that comes back thin
-  **stays thin** — no refill pass (E-064), an honest sparse lane over "best of bad". A persisted **novelty memory** (`useVibeStore`) repels
-  already-produced Leitwerte each round so quality stays consistent at scale. The cheap judge also tags
-  each card's **render-register**; `spreadByRegister` re-threads a cluster's survivors to span material
-  feels (E-065), and two generation rules force register-variety + a self-render-probe (ground only the vague).
-- **Eval** (`scripts/eval.ts`) — `npm run eval -- --judge` compares engines on shared briefings.
-- **Gateway proxy** (`api/_lib/`) — tiers, `caching:'auto'`, fallbacks; `embed`/`cosineDist` for E.
-
-## Deferred / not yet built
-
-- **Engine E Tier-1**: external concept corpus + pgvector (Supabase/Neon connected), multi-generation
-  QD/MAP-Elites archive. Cross-session novelty now exists at the **text level** (E-063); the upgrade is
-  **embedding-semantic** novelty — catching paraphrase-dups, not just exact/normalized repeats. Today E
-  is single-round, in-request.
-- **Courage dial** (F) and **attract/repel beyond anchors** — feedback currently = anchors only.
-- **Accounts / sharing / persistence backend** — only if it goes public.
+- **Bento-field Studio** (`components/Board.tsx`) — two engine panels, each a **hero** tile (judge-#1,
+  Leitwert + Welt-Satz teaser) over satellite tiles; a tile opens a **detail drawer** rendering the
+  cluster via the reusable **`ClusterCard`**, with discreet hover-copy at three grains — single line,
+  group, whole cluster. Leitidee header + anchor strip on top. Framer-Motion.
+- **Two engines** as a pluggable `Source` registry (`store/useVibeStore.ts`), each an `api/` endpoint
+  sharing one cluster contract + `clusterToCard`: **Synthese** (collision) · **Persona** (fictional
+  source). Plus `judge`, `health`. Each engine mixes **nah/premium** (best-in-class from the brief's own
+  world, conventions OK) and **fern/surprising** per round — felt, never labeled.
+- **Judge-select + quality floor + mix-spread** (`llm/select.ts`) — over-generate, score
+  on-target × surprise × craft × **designValue** (a derivable world/material value, not a story), drop
+  everything under the floor; `spreadByMix` interleaves nah/fern so the field feels the mix. A persisted
+  **novelty memory** repels already-produced Leitwerte each round. A thin lane stays thin (no refill).
+- **Prompts in YAML** (`api/_lib/setup/*.yaml`) — the whole creative surface (engine roles, the shared
+  `cluster` / `mix` / `diversity` / `compass` / `leitwert` / `register` / `render_probe` rules, the judge
+  rubric) in one editable place; `npm run setup` assembles `setup.generated.ts`.
+- **Eval** (`scripts/eval*.ts`) — headless harness over shared briefings (deterministic metrics + LLM
+  judge); `npm run eval`.
+- **Gateway proxy** (`api/_lib/`) — model tiers, caching, fallbacks, input guards (`guard.ts`).
 
 ## Watch-outs
 
-- **Latency:** a round runs 4 engines in parallel; **Engine E is the slow path** (2 strong calls +
-  embeddings). If speed bites, gate E behind a toggle (its spec marks it Phase-2).
-- **Cost:** judge-select adds parallel cheap-judge calls per round; Opus only in the eval.
-- **Palette from F/D/E is model-suggested hex** (sanitized), not axis-derived.
+- **Latency:** a round runs both engines in parallel + one batched judge call.
+- **Cost:** judge-select adds one batched cheap-judge call per round; Opus only in the eval.
 
 ## Open questions
 
-- Should Engine E stay always-on, or gated until it beats D/F in the Lab on surprise/diversity?
-- Default blocks-per-cluster (now 6) and anchor-derivation behaviour — branch vs. blend?
+- Default results-per-panel (now ~5) and anchor-derivation — branch vs. blend?
+- Is the nah/fern split landing ~half/half in practice, or does one pole dominate per brief?

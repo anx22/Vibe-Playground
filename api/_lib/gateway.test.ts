@@ -23,8 +23,6 @@ vi.mock("ai", () => ({
     return state.impl();
   },
   NoObjectGeneratedError: state.FakeNoObject,
-  embedMany: vi.fn(),
-  gateway: { textEmbeddingModel: vi.fn() },
 }));
 
 import { genObject } from "./gateway";

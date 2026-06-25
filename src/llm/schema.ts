@@ -23,10 +23,6 @@ export const personaListSchema = z.object({ personas: z.array(clusterSchema) });
 /** Synthese engine — N clusters in one call. */
 export const workbenchSchema = z.object({ candidates: z.array(clusterSchema) });
 
-/** Back-compat aliases: both engines now emit the same cluster unit. */
-export type Persona = Cluster;
-export type WorkbenchCandidate = Cluster;
-
 /** Quality judgement: on-target × surprise × craft × designValue (would a senior AD pitch it to THIS client?). */
 export const judgeSchema = z.object({
   onTarget: z.number().min(1).max(5),

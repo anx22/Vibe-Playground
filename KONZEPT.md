@@ -1,46 +1,50 @@
 # KONZEPT.md — Vibe Playground
 
-> Das lebende Konzept, verdichtet auf den aktuellen Stand. Detailspezifikationen der Engines:
-> [`docs/engines/`](./docs/engines).
+> Das lebende Konzept, verdichtet auf den aktuellen Stand. Lebende Engine-Spezifikation:
+> die Prompt-YAMLs in [`api/_lib/setup/`](./api/_lib/setup).
 
 ## Kernidee
 
-Ein **Leitwert** benennt *das Gegenteil, das unerwartet passt*: die Wirkstruktur eines Briefings,
-gesprungen in eine ferne Domäne, die sich strukturell mit ihr **reimt**. Beispiel — Maschinen-
-sicherheit → *Black-Box-Vigilanz* (Flugschreiber). Überraschung kommt aus **Domänen-Distanz**,
-Treffsicherheit aus **struktureller Resonanz**. Beide sind entkoppelt und werden gleichzeitig
-maximiert — genau das löst „zielgenau **und** überraschend".
+Der Playground liefert **Denkanstöße, kein fertiges Design**. Aus einem Briefing fällt pro Ergebnis ein
+roher **Denkanstoß-Cluster** — ein lebendiger **Welt-Satz** (Kopfkino), ein **Leitwert** (Anker/Titel) und
+lose Trigger: **Metaphern**, **Materialien**, **Bild-Vergleiche**. Dieses offene Welt-Material füttert eine
+nachgelagerte Bild-/Design-KI, die daraus etwas Schönes baut. Wir übersetzen nichts in Layout, Typo,
+Komposition oder Farbwerte.
 
-## Zwei eiserne Regeln
+Ein **Leitwert** ist ein verdichteter Welt-Verweis: ein 2–4-teiliges Kompositum aus konkreten,
+anfassbaren Welt-/Material-Begriffen (z. B. *Letterpress-Seidenband*, *Tidenhub-Salzkruste*), das sofort
+eine visuelle Welt auslöst.
 
-1. **Keine erfundenen Achsen in der Generierung.** Koordinaten plätten die Analogie und erzeugen
-   Klischees. Kohärenz entsteht daraus, dass alle Welten von **einer destillierten Essenz** abstammen.
-2. **Leitwert (Direktive) ≠ Herleitung (warum es trägt).** Nie vermischen — sonst leckt dekorative
-   Prosa als vermeintliche Design-Anweisung ein (das *Eisblumen*-Versagen).
+## Adaptiv: nah & fern gemischt
 
-## Die Engines (vier kreative Herleitungen, ein Harness)
+Jede Engine liefert pro Runde **beide Register gemischt** — ohne Label:
 
-- **D · Verschränkung** — Essenz → Klischees verbrennen → ferne, reimende Welten → Affordanz-Test
-  (≥5) → Brücke → benennen. Ein Pass, schnell.
-- **E · Latent-Agent** — das LLM macht den Sprung, **echte Embeddings messen „fern"** (Perzentil-Rang).
-  Tiefer, vernakulärer; der langsame Weg (Phase-2).
-- **F · Werkbank** — Volumen → Filter → Kuration: weites Feld × Operatoren, 3× über-generieren / ⅔
-  eliminieren, in orthogonale Geschmacksrichtungen clustern. Der schnellste Weg.
-- **Persona** — eine fiktive Quelle, aus der der Vibe von selbst fällt.
+- **nah/premium** — bleibt in der eigenen Brief-Welt und holt dort das Schönste, Best-in-Class;
+  etablierte schöne Konventionen erlaubt (Hochzeit → Leinen, gepresste Blumen, Letterpress).
+- **fern/überraschend** — eine ferne, frische Welt/Kollision; volle Anti-Klischee-Schärfe.
 
-Eine neue Methodik = ein Endpoint + eine Client-Funktion + ein `Source`-Eintrag. Bridge-Contract,
-Karten-Mapping und Konstellation werden geteilt.
+Das löst „premium **und** überraschend": der Nutzer spürt den Mix selbst, statt ihn etikettiert zu bekommen.
 
-## Was die Engines abwehren (die LLM-Schwächen)
+## Die zwei Engines (ein Harness)
 
-Klischee-Gravitation, Oberflächen-Matching (topische Nachbarn statt Struktur), Komfort-Bias,
-Mode-Collapse, Kanon-Enge (Bauhaus/Swiss-Reflex), wörtliche Abbildung des Themas, „Justification
-Theater". Gegenmaßnahmen sind in jeder Engine eingebaut (Klischees verbrennen, Distanz erzwingen,
-Affordanz-Test, Eliminations-Quote, Distinktheit-Selbsttest). Details: `docs/engines/`.
+- **Synthese** — Kollision: den Kern des Briefings spüren, nah-premium UND fern-reimende Welten finden,
+  jede als Cluster ausgeben.
+- **Persona** — eine fiktive Quelle erfinden, aus deren Existenz eine kohärente Welt (und ihr Cluster) von
+  selbst fällt.
+
+Eine neue Methodik = ein Endpoint + eine Client-Funktion + ein `Source`-Eintrag. Cluster-Contract,
+Karten-Mapping und Feld werden geteilt. Die Prompts — die eigentliche Qualitäts-Stellschraube — liegen
+komplett in den YAMLs (`api/_lib/setup/`), zusammengesetzt über `npm run setup`.
+
+## Was die Engines abwehren
+
+Klischee-Gravitation (im fernen Register), Oberflächen-Matching, Mode-Collapse, wörtliche Abbildung des
+Themas, „Story statt Welt-Material". Gegenmaßnahmen sind in den geteilten Regeln eingebaut
+(`cluster` · `mix` · `diversity` · `compass` · `render_probe`).
 
 ## Interface & Steuerung
 
-Die **Konstellation**: Leitidee im Zentrum, je Engine ein Cluster. Das einzige Steuer-Primitiv ist
-der **Anker** (max 5) — angeheftete Gold-Bausteine ziehen die nächste Welle zu sich, das Zentrum
-bleibt. Ein **LLM-Judge** (zielgenau × Überraschung × Handwerk) wählt je Cluster den stärksten aus;
-der Mensch entscheidet final. Output ist ein fertiger Design-Brief-Prompt (Kopieren/Export).
+Das **Feld**: Leitidee oben, je Engine ein Panel (Hero über Satelliten). Das einzige Steuer-Primitiv ist
+der **Anker** (max 5) — angeheftete Gold-Cluster ziehen die nächste Welle zu sich. Ein **LLM-Judge**
+(zielgenau × Überraschung × Handwerk × ableitbarer Welt-Wert) wählt je Panel die stärksten aus; ein Klick
+öffnet den vollen Cluster, **dezent kopierbar** (einzeln / gruppiert / gesamt).

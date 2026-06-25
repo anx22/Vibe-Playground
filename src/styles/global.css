@@ -911,78 +911,6 @@ body {
   color: var(--ink);
 }
 
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(28, 26, 23, 0.45);
-  display: grid;
-  place-items: center;
-  padding: 24px;
-  z-index: 50;
-  animation: pop 0.18s ease;
-}
-.modal {
-  --card-accent: var(--accent);
-  width: min(620px, 100%);
-  background: var(--paper);
-  border: 2.5px solid var(--ink);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 8px 0 var(--card-accent);
-  padding: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.modal-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.modal-title {
-  font-size: 24px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-}
-.modal-x {
-  border: 2px solid var(--ink);
-  background: var(--paper);
-  border-radius: 10px;
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
-  font-weight: 800;
-}
-.export-text {
-  width: 100%;
-  height: 200px;
-  resize: vertical;
-  border: 2px solid var(--ink);
-  border-radius: 14px;
-  padding: 14px;
-  font-family: var(--mono);
-  font-size: 12.5px;
-  line-height: 1.55;
-  background: var(--bg);
-  color: var(--ink);
-  outline: none;
-}
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
-/* C9 — target tabs + the one-line trigger */
-.export-tabs { display: flex; gap: 6px; }
-.export-tab { flex: 1; padding: 8px 10px; border: 2px solid #eef1f9; background: #fff; border-radius: 12px; font-weight: 800; font-size: 13px; color: var(--ink-soft); cursor: pointer; box-shadow: 0 3px 0 #eef1f9; transition: transform .06s ease, filter .15s ease; }
-.export-tab:hover { filter: brightness(1.02); }
-.export-tab:active { transform: translateY(2px); box-shadow: 0 1px 0 #eef1f9; }
-.export-tab.is-on { color: #fff; background: var(--accent); border-color: var(--accent); box-shadow: 0 3px 0 color-mix(in srgb, var(--accent) 60%, #000); }
-.export-line { display: flex; flex-direction: column; gap: 7px; background: color-mix(in srgb, var(--accent) 7%, #fff); border: 2px solid color-mix(in srgb, var(--accent) 22%, #fff); border-radius: 14px; padding: 11px 13px; }
-.export-line-label { font-weight: 800; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
-.export-line-text { margin: 0; font-size: 13.5px; line-height: 1.45; color: var(--ink); font-weight: 600; overflow-wrap: anywhere; }
-.export-line-copy { align-self: flex-start; flex: 0 0 auto !important; }
-
 /* Library item with export action */
 .lib-item {
   --card-accent: var(--accent);
@@ -1145,22 +1073,6 @@ body {
   box-shadow: -10px 0 40px rgba(0,0,0,.3); }
 .flyout-x { position: absolute; top: 14px; right: 16px; background: none; border: none; font-size: 18px; cursor: pointer; color: var(--ink-soft); }
 .flyout-src { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 800; color: var(--accent); }
-.flyout-name { font-size: 26px; line-height: 1.1; margin: 4px 0 2px; font-weight: 800; letter-spacing: -0.01em; }
-.flyout-mood { color: var(--ink-soft); font-size: 13px; margin-bottom: 14px; }
-.flyout-palette { display: flex; height: 26px; border-radius: 8px; overflow: hidden; border: 1.5px solid var(--ink); margin-bottom: 18px; }
-.flyout-palette span { flex: 1; }
-.flyout-block { margin-bottom: 16px; }
-.flyout-block h3 { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 6px; }
-.flyout-block p { font-size: 14px; line-height: 1.45; margin: 0 0 8px; }
-.flyout-block .role { color: var(--ink-soft); font-size: 12px; }
-.flyout-block .rhyme { font-style: italic; color: var(--ink-soft); }
-.flyout-block ul { margin: 0; padding-left: 18px; }
-.flyout-block li { font-size: 13px; line-height: 1.5; }
-.flyout-designs { margin-bottom: 16px; }
-.flyout-designs h3 { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 8px; }
-.fd-item { border-left: 3px solid var(--accent); background: rgba(0, 0, 0, 0.03); border-radius: 10px; padding: 9px 12px; margin-bottom: 9px; }
-.fd-title { font-size: 13.5px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 3px; }
-.fd-desc { font-size: 13px; line-height: 1.45; margin: 0; }
 .flyout-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 22px; }
 .btn-anchor { background: var(--paper); color: var(--ink); border: 2px solid var(--ink); padding: 11px; border-radius: 12px; font-weight: 700; cursor: pointer; }
 .btn-anchor.is-on { background: var(--accent); color: #fff; }
@@ -1391,10 +1303,6 @@ body {
 .tile-name { font-weight: 800; font-size: 14px; line-height: 1.16; color: var(--ink); overflow-wrap: anywhere; }
 .tile--hero .tile-name { font-size: 18.5px; letter-spacing: -.01em; line-height: 1.1; }
 .tile-teaser { font-weight: 600; font-size: 12px; color: var(--ink-soft); line-height: 1.32; }
-.tile-foot { display: flex; align-items: center; gap: 8px; margin-top: 1px; }
-.tile-pal { display: flex; height: 13px; width: 50px; border-radius: 99px; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(0,0,0,.06); flex: none; }
-.tile-pal span { flex: 1; }
-.tile-reg { font-weight: 800; font-size: 9.5px; letter-spacing: .03em; text-transform: uppercase; color: var(--ink-soft); background: #f0f2f9; border-radius: 99px; padding: 2px 7px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tile-star { position: absolute; top: 7px; right: 9px; color: #f5b800; font-size: 13px; }
 
 /* D12 — Werkbank taste-direction sub-clusters */
@@ -1402,9 +1310,6 @@ body {
 .taste-label { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
 .taste-label::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex: none; }
 .taste-label::after { content: ""; flex: 1; height: 1.5px; border-radius: 9px; background: color-mix(in srgb, var(--accent) 20%, transparent); }
-.rd-more { align-self: flex-start; font-weight: 800; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); background: none; border: none; padding: 2px 0; cursor: pointer; }
-.rd-more:hover { text-decoration: underline; }
-.rd-depth { overflow: hidden; display: flex; flex-direction: column; gap: 7px; }
 .btn-sm { padding: 8px 12px !important; font-size: 13px !important; border-radius: 12px !important; flex: 1 1 auto; white-space: nowrap; }
 
 .lane-spin { display: inline-block; width: 13px; height: 13px; border: 2.5px solid color-mix(in srgb, var(--accent) 28%, #fff); border-top-color: var(--accent); border-radius: 50%; animation: lane-spin .7s linear infinite; vertical-align: middle; }

@@ -2,9 +2,8 @@ import {
   judgeBatchSchema,
   personaListSchema,
   workbenchSchema,
+  type Cluster,
   type JudgeScore,
-  type Persona,
-  type WorkbenchCandidate,
 } from "./schema";
 
 /**
@@ -51,8 +50,8 @@ async function post<T>(path: string, body: unknown, schema: { parse(x: unknown):
 /** Model tier — `strong` (Sonnet) for the user-facing Studio, `cheap` (Haiku) for Lab evals, `premium` (Opus) for the strict judge run. */
 export type Tier = "cheap" | "strong" | "premium";
 
-/** Batched: N distinct personas in one call (avoids N round-trips per round). */
-export const generatePersonas = (input: { briefing: string; n?: number; tier?: Tier }): Promise<Persona[]> =>
+/** Batched: N distinct persona clusters in one call (avoids N round-trips per round). */
+export const generatePersonas = (input: { briefing: string; n?: number; tier?: Tier }): Promise<Cluster[]> =>
   post("/api/persona", input, personaListSchema).then((r) => r.personas);
 
 /**
@@ -63,7 +62,7 @@ export const generateSynthese = (input: {
   briefing: string;
   n?: number;
   steer?: string;
-}): Promise<WorkbenchCandidate[]> =>
+}): Promise<Cluster[]> =>
   post("/api/synthese", input, workbenchSchema).then((r) => r.candidates);
 
 /** Batched LLM judge — scores MANY clusters in ONE call (a structure in, scores[] out). */
@@ -81,13 +80,3 @@ export const judge = async (
   const { scores } = await judgeBatch({ briefing, items: [{ leitwert, weltSatz: weltSatz ?? "" }] }, tier);
   return scores[0];
 };
-
-/** Is the LLM proxy reachable? (The authoritative test of generation is an actual render.) */
-export async function llmReady(): Promise<boolean> {
-  try {
-    const res = await fetch(API_BASE + "/api/health");
-    return res.ok;
-  } catch {
-    return false;
-  }
-}

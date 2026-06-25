@@ -6,7 +6,7 @@ import { clampStr, clampTier } from "./_lib/guard.js";
 
 /**
  * Quality judge — scores MANY directions in ONE call (the whole batch in a single structure, scores[]
- * out, aligned to input order). Falls back to a 1-item batch for a single {leitwert,scene,mood} body,
+ * out, aligned to input order). Falls back to a 1-item batch for a single {leitwert,weltSatz} body,
  * so older callers keep working. Judging N cards used to be N billed calls; now it is one.
  */
 export default async function handler(req: VercelRequest, res: VercelResponse) {

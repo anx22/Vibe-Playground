@@ -5,18 +5,12 @@
  *   AI_GATEWAY_API_KEY=… npx tsx scripts/eval-local.ts
  */
 import { writeFileSync } from "node:fs";
-import { z } from "zod";
 import { fill, genObject, modelFor } from "../api/_lib/gateway.js";
 import { judgeBatchSchema, personaListSchema, workbenchSchema } from "../api/_lib/schema.js";
 import {
   JUDGE_BLANK,
   JUDGE_PROMPT,
   JUDGE_SYSTEM,
-  MATERIALIST_EXTRACT_PROMPT,
-  MATERIALIST_EXTRACT_SYSTEM,
-  MATERIALIST_WORLD_BLANK,
-  MATERIALIST_WORLD_PROMPT,
-  MATERIALIST_WORLD_SYSTEM,
   PERSONA_BLANK,
   PERSONA_PROMPT,
   PERSONA_SYSTEM,
@@ -44,17 +38,6 @@ async function runPersona(ctx: string, n: number): Promise<Card[]> {
   return out.personas.map((p) => ({ engine: "persona", leitwert: p.leitwert, weltSatz: p.weltSatz, register: p.register, context: p.materialien.join(" · ") }));
 }
 
-const mWorld = z.object({ worlds: z.array(z.object({ world: z.string(), domain: z.string(), innerLogic: z.string() })) });
-const mExtract = z.object({ results: z.array(z.object({ leitwert: z.string(), anchors: z.array(z.object({ layer: z.string(), anchor: z.string(), why: z.string() })), mood: z.string() })) });
-async function runMaterialist(ctx: string, n: number): Promise<Card[]> {
-  const w = await genObject({ model: modelFor("strong"), schema: mWorld, system: MATERIALIST_WORLD_SYSTEM, noCache: true,
-    prompt: fill(MATERIALIST_WORLD_PROMPT, { ctx: ctx || MATERIALIST_WORLD_BLANK, n }) });
-  const list = w.worlds.map((x, i) => `${i + 1}. ${x.world} [${x.domain}] — innere Logik: ${x.innerLogic}`).join("\n");
-  const e = await genObject({ model: modelFor("strong"), schema: mExtract, system: MATERIALIST_EXTRACT_SYSTEM, noCache: true,
-    prompt: fill(MATERIALIST_EXTRACT_PROMPT, { ctx, count: w.worlds.length, list }) });
-  return e.results.map((r, i) => ({ engine: "materialist", leitwert: r.leitwert, weltSatz: `${(w.worlds[i]?.world ?? "—").slice(0, 90)} — ${r.anchors.map((a) => `${a.layer}: ${a.anchor}`).join(" · ")}`, register: "—", context: r.mood }));
-}
-
 async function batchJudge(briefing: string, cards: Card[]): Promise<number[]> {
   if (!cards.length) return [];
   const list = cards.map((c, i) => `${i + 1}. Leitwert «${c.leitwert}» — Welt: ${c.weltSatz || "—"}`).join("\n");
@@ -68,7 +51,6 @@ async function batchJudge(briefing: string, cards: Card[]): Promise<number[]> {
 const ENGINES = [
   { id: "synthese", run: runSynthese },
   { id: "persona", run: runPersona },
-  { id: "materialist", run: runMaterialist },
 ];
 
 async function main() {
