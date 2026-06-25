@@ -18,9 +18,10 @@ chipped.
 ## Tile → detail drawer
 
 Click a tile → a **detail drawer** slides in (frosted glass, right): source, then the full
-**Denkanstoß-Cluster** via `ClusterCard` — the Leitwert as title, the Welt-Satz, then **Metaphern /
-Materialien / Bild-Vergleiche** as clean lists. Copy is **discreet** (a hover icon) at three grains —
-single line (einzeln), one group (gruppiert), the whole cluster (gesamt) — then **anchor**.
+**Denkanstoß-Cluster** via `ClusterCard` — the Leitwert as title, the Welt-Satz (the headline/soul), then
+**Funde / Materialien / Bild-Referenzen** as clean lists. Copy is **discreet** (a hover icon) at three
+grains — single line (einzeln), one group (gruppiert), the whole cluster (gesamt) — plus a composed
+**Welt-Prompt** (paste-ready for an image AI), then **anchor**.
 
 ## Interaction — anchors as gravity
 

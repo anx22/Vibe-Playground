@@ -33,26 +33,46 @@ export async function judgeRank(
   }
   const scored = cards.map((c, i): VibeCard => {
     const s = scores[i];
-    if (!s) return c; // unscored — sinks to the bottom
+    if (!s) return c; // unscored — never gated out, but sinks to the bottom
     const axes = [s.onTarget, s.surprise, s.craft, s.formSubstanz].filter((x): x is number => typeof x === "number");
-    const overall = axes.reduce((a, b) => a + b, 0) / axes.length;
+    const overall = axes.reduce((a, b) => a + b, 0) / axes.length; // holistic readout (display/eval)
     return { ...c, quality: { ...s, overall } };
   });
-  return scored.sort((a, b) => (b.quality?.overall ?? -1) - (a.quality?.overall ?? -1));
+  // Gate-then-rank (QS-3 #5): the two non-negotiables (onTarget, formSubstanz) gate first; among the
+  // survivors, surprise+craft are the PURE rank axes (overall only breaks ties). A gate-failer sinks
+  // below every passer no matter how surprising/crafted it is.
+  return scored.sort((a, b) => {
+    const ga = passesGate(a) ? 1 : 0, gb = passesGate(b) ? 1 : 0;
+    if (ga !== gb) return gb - ga;
+    const ra = rankScore(a), rb = rankScore(b);
+    if (rb !== ra) return rb - ra;
+    return (b.quality?.overall ?? -1) - (a.quality?.overall ?? -1);
+  });
 }
 
 /**
- * The quality floor (E-063): a card must clear this mean score to reach the board — this is where the
- * north-star fail-conditions get enforced (no bullshit · no story-instead-of-design-value · nothing
- * you can't derive a design-world from). Below it the cluster regenerates once rather than surfacing
- * "best of bad". 3 = mittelmäßig in the rubric, so a floor above 3 means "better than mediocre". Tunable.
- *
- * An UNSCORED card (judge unreachable) is NOT floored out, so a judge outage degrades to
- * "show everything" — never to an empty board.
+ * The two non-negotiable GATE axes must each clear this (QS-3 #5). Scores are 1–5; 3 = mittelmäßig in
+ * the rubric, so GATE=3 culls only the clear fails (formSubstanz 1–2 = design-empty, onTarget 1–2 =
+ * off-brief) while keeping competent-or-better. Tunable upward (3.5/4) if an eval shows mediocrity slipping.
  */
-export const QUALITY_FLOOR = 3.3;
-export const passesFloor = (c: VibeCard): boolean =>
-  c.quality === undefined || c.quality.overall >= QUALITY_FLOOR;
+export const GATE = 3;
+
+/** Rank score among gate survivors — surprise+craft are the PURE rank axes (#5); the gate axes don't re-rank. */
+function rankScore(c: VibeCard): number {
+  const q = c.quality;
+  if (!q) return -1;
+  return (q.surprise + q.craft) / 2;
+}
+
+/**
+ * The quality GATE (QS-3 #5, replaces the old mean-floor): a card reaches the board only if it clears
+ * BOTH non-negotiables — formSubstanz (drawable) AND onTarget (apt). A design-empty or off-brief cluster
+ * fails no matter how surprising/crafted, closing the "high surprise compensates for low substance" leak.
+ * An UNSCORED card (judge unreachable) is NEVER gated out, so a judge outage degrades to "show
+ * everything" — never to an empty board.
+ */
+export const passesGate = (c: VibeCard): boolean =>
+  c.quality === undefined || (c.quality.onTarget >= GATE && c.quality.formSubstanz >= GATE);
 
 /**
  * Mix-aware ordering (QS-2 · round 5). Each cluster is marked "nah" (premium, in the brief's own

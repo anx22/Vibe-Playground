@@ -3,7 +3,7 @@ import { persist } from "zustand/middleware";
 import type { VibeCard } from "../engine";
 import { generatePersonas, generateSynthese } from "../llm/client";
 import type { Cluster } from "../llm/schema";
-import { judgeRank, passesFloor, spreadByMix } from "../llm/select";
+import { judgeRank, passesGate, spreadByMix } from "../llm/select";
 
 /** Per method we generate a few extra and judge-select the strongest into the cluster (E-041). */
 const PER_METHOD = 5;
@@ -100,8 +100,8 @@ export function pushProduced(produced: string[], add: string[]): string[] {
 }
 
 /**
- * One source's pipeline: generate → judge-rank → quality FLOOR (+ in-source dedup). Thin stays thin —
- * if few cards clear the floor the cluster simply comes back small; there is no second pass (E-064,
+ * One source's pipeline: generate → judge-rank → quality GATE (+ in-source dedup). Thin stays thin —
+ * if few cards clear the gate the cluster simply comes back small; there is no second pass (E-064,
  * reversing E-063's regenerate-once). An honest, sometimes-sparse board beats a best-effort "best of
  * bad" refill — and it halves the worst-case latency/cost of a weak round. Survivors are then
  * re-threaded to span render/material registers (E-065) so the visible top-N doesn't collapse into
@@ -112,7 +112,7 @@ async function produceForSource(src: Source, briefing: string, steer: string): P
   const keep = (cards: VibeCard[]): VibeCard[] => {
     const out: VibeCard[] = [];
     for (const c of cards) {
-      if (!passesFloor(c)) continue;
+      if (!passesGate(c)) continue;
       const k = normLw(c.leitwert);
       if (seen.has(k)) continue;
       seen.add(k);

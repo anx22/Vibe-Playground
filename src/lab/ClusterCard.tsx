@@ -1,14 +1,15 @@
 import { useState } from "react";
 import type { ReactNode } from "react";
 import type { VibeCard } from "../engine";
-import { clusterText, groupText } from "../export";
+import { clusterText, groupText, worldPromptText } from "../export";
 import "./lab.css";
 
 /**
- * ClusterCard — the single result renderer (QS-2). A Denkanstoß-Cluster as a clean, readable list:
- * the Leitwert as title, a Welt-Satz that opens the world, then Metaphern / Materialien /
- * Bild-Vergleiche. Copy is DISCREET (a hover icon) but offered at three grains: a single line
- * (einzeln), one group (gruppiert) and the whole cluster (gesamt). No design is prescribed here.
+ * ClusterCard — the single result renderer. A Denkanstoß-Cluster as a clean, readable list: the
+ * Leitwert as title, the Welt-Satz (the headline/soul) right below, then Funde / Materialien /
+ * Bild-Referenzen. Copy is DISCREET (a hover icon) at three grains — a single line (einzeln), one
+ * group (gruppiert), the whole cluster (gesamt) — plus a composed Welt-Prompt (paste-ready for an
+ * image AI). No design is prescribed here.
  */
 
 const GROUPS: { key: "funde" | "materialien" | "bildReferenzen"; label: string }[] = [
@@ -67,6 +68,7 @@ export function ClusterCard({ card, framed = true }: { card: VibeCard; framed?: 
     <article className={`cluster${framed ? " cluster--card" : ""}`}>
       <header className="cluster-head">
         <h3 className="cluster-title">{card.leitwert}</h3>
+        {copyBtn(worldPromptText(card), "world", "Welt-Prompt kopieren — paste-ready für eine Bild-KI", "Welt-Prompt")}
         {copyBtn(clusterText(card), "all", "Ganzen Cluster kopieren", "Cluster")}
       </header>
 

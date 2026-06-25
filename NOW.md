@@ -5,7 +5,7 @@
 ## Where it stands
 
 Live on Vercel. Briefing → two engine panels (**Synthese** · **Persona**) → each result is an open
-**Denkanstoß-Cluster** (a vivid Welt-Satz + Leitwert + Metaphern / Materialien / Bild-Vergleiche) that
+**Denkanstoß-Cluster** (a vivid Welt-Satz + Leitwert + Funde / Materialien / Bild-Referenzen) that
 feeds a downstream design/image AI — the playground prescribes **no design itself**. Anchor up to 5 gold
 → „aus Ankern ableiten" → detail drawer with the full cluster, copyable. North star: speed to a credible,
 surprising **and** premium-when-wanted direction.
@@ -20,9 +20,10 @@ surprising **and** premium-when-wanted direction.
   sharing one cluster contract + `clusterToCard`: **Synthese** (collision) · **Persona** (fictional
   source). Plus `judge`, `health`. Each engine mixes **nah/premium** (best-in-class from the brief's own
   world, conventions OK) and **fern/surprising** per round — felt, never labeled.
-- **Judge-select + quality floor + mix-spread** (`llm/select.ts`) — over-generate, score
-  on-target × surprise × craft × **designValue** (a derivable world/material value, not a story), drop
-  everything under the floor; `spreadByMix` interleaves nah/fern so the field feels the mix. A persisted
+- **Judge-select + quality gate + mix-spread** (`llm/select.ts`) — over-generate, score on-target ×
+  surprise × craft × **formSubstanz** (drawable form across design axes, not a story); the two
+  non-negotiables (onTarget + formSubstanz) **gate**, surprise+craft rank the survivors; `spreadByMix`
+  interleaves nah/fern so the field feels the mix. A persisted
   **novelty memory** repels already-produced Leitwerte each round. A thin lane stays thin (no refill).
 - **Prompts in YAML** (`api/_lib/setup/*.yaml`) — the whole creative surface (engine roles, the shared
   `cluster` / `mix` / `diversity` / `compass` / `leitwert` / `register` / `render_probe` rules, the judge

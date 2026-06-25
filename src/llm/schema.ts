@@ -28,7 +28,7 @@ export const judgeSchema = z.object({
   onTarget: z.number().min(1).max(5),
   surprise: z.number().min(1).max(5),
   craft: z.number().min(1).max(5),
-  formSubstanz: z.number().min(1).max(5).optional(),
+  formSubstanz: z.number().min(1).max(5),
   note: z.string(),
 });
 export type JudgeScore = z.infer<typeof judgeSchema>;

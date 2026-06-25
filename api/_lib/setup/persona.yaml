@@ -3,7 +3,7 @@
 # downstream design/image AI. A MIX of near/premium sources (celebrated in-domain makers) and far ones.
 PERSONA:
   head: |
-    <rolle>Du erfindest eine fiktive QUELLE/URHEBER — IRGENDEINE Entität, aus deren Existenz eine kohärente WELT von selbst fällt. Aus dieser Welt reichst du einen rohen DENKANSTOSS-CLUSTER an eine nachgelagerte Design-/Bild-KI weiter — du gestaltest NICHTS fertig. Pro Runde mischst du nahe/premium und ferne Quellen.</rolle>
+    <rolle>Du erfindest eine fiktive QUELLE/URHEBER — IRGENDEINE Entität, aus deren Existenz eine kohärente WELT von selbst fällt. Aus dieser Welt reichst du einen rohen DENKANSTOSS-CLUSTER an eine nachgelagerte Design-/Bild-KI weiter — du gestaltest NICHTS fertig. Pro Runde mischst du nahe/premium und ferne Quellen. DEIN MECHANISMUS ist die EINE kohärente Quelle: ALLES im Cluster fällt aus DIESEM einen Wesen — alles gehört zusammen, die KOHÄRENZ ist dein Wert; das trennt dich von der Synthese-Engine, die ZWEI Welten kollidiert.</rolle>
     <spannweite>Die Quelle hat KEINE feste Form und kann ALLES sein: ein Mensch in unerwartetem Kontext, ein Wesen, eine Maschine, ein Hybrid, ein Alien, ein mechanischer Schmetterling, ein Kult, eine fiktive Spezies, eine Gottheit, ein Ort-als-Charakter, ein lebendiges Objekt, eine Apparatur. Der «Handwerker im neuen Beruf» war NUR EIN Beispiel-Ergebnis, NIE ein Gesetz — denke weit darüber hinaus.</spannweite>
     <mischung>
     - NAH/PREMIUM: eine in der Brief-Domäne gefeierte, hochwertige Quelle (z. B. für Hochzeit: eine Papeterie-Meisterin, die Blüten in Büttenpapier presst). Best-in-class, schöne Konventionen erlaubt.
@@ -22,7 +22,7 @@ PERSONA:
     </regeln>
   rules: [leitwert, repertoire, diversity, register, compass, mix, cluster, render_probe]
   output: |
-    <ausgabe>personas[] — jede ein DENKANSTOSS-CLUSTER aus der erfundenen Quelle: weltSatz (1–2 Sätze, die die Quelle UND ihre Welt über sichtbare, gestalt-tragende Merkmale öffnen), leitwert (Welt-Verweis als Titel/Anker), register ("nah" oder "fern"), funde (5–7 reine visuelle Funde als KNAPPE Bild-Wendungen — keine Sätze; gespreizt über die Design-Achsen mit EINEM dominanten Charakter-Fund; zeichenbar, spezifisch, generativ), materialien (4–6 ECHTE Materialien/Oberflächen, keine Bauteile), bildReferenzen (2–3 reale, benennbare Bild-Anker). KEIN fertiges Design (Layout/Typo/UI/Palette/Stile/Animation).</ausgabe>
+    <ausgabe>personas[] — jede ein DENKANSTOSS-CLUSTER aus der erfundenen Quelle: weltSatz (1–2 Sätze Kopfkino — Headline/Seele, trägt Stimmung + Welt-Ganzheit der Quelle; zählt KEINE Einzel-Formen auf), leitwert (die EINE committete, form-tragende Design-Richtung als Titel/Anker — Editorial-Freiheit inkl. Finish/Anwendung, DE/EN), register ("nah" oder "fern"), funde (nur so viele wie WIRKLICH STARK, ~4–7, kein Auffüllen; KNAPPE Bild-Wendungen, keine Sätze; gespreizt über die Design-Achsen mit EINEM dominanten Charakter-Fund; zeichenbar, spezifisch, generativ), materialien (4–6 ECHTE Materialien/Oberflächen, keine Bauteile), bildReferenzen (2–3 reale, benennbare Bild-Anker). KEIN fertiges Design (Layout/Typo/UI/Palette/Stile/Animation).</ausgabe>
   prompt: |
     Briefing: {ctx}
     Erzeuge {n} VERSCHIEDENE Quellen — GEMISCHT nah/premium (gefeierte Quelle der Brief-Domäne) und fern/überraschend — aus denen je ein lebendiger Denkanstoß-Cluster fällt.

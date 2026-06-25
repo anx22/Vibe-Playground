@@ -27,8 +27,8 @@ export interface Quality {
   onTarget: number;
   surprise: number;
   craft: number;
-  /** A derivable world/material design-value, NOT a story — the north-star win/fail axis (E-063). */
-  formSubstanz?: number;
+  /** Drawable form across design axes — a non-negotiable GATE axis (QS-3 #5), not a story. */
+  formSubstanz: number;
   overall: number;
   note: string;
 }

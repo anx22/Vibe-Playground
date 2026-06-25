@@ -1,8 +1,8 @@
 # Vibe Playground
 
 A **Denkanstoß generator** for designers/art directors. From a briefing it produces open **clusters** of
-raw world-material — a vivid Welt-Satz, a Leitwert anchor, and loose Metaphern / Materialien /
-Bild-Vergleiche — that a downstream design/image AI turns into something beautiful. It prescribes **no
+raw world-material — a vivid Welt-Satz, a Leitwert anchor, and loose Funde / Materialien /
+Bild-Referenzen — that a downstream design/image AI turns into something beautiful. It prescribes **no
 design itself**. Core job: zero → a credible, *surprising-yet-premium* direction, fast.
 
 ## Docs
@@ -36,8 +36,9 @@ into the Board field. Adding one = **1 endpoint + 1 client fn + 1 `Source` entry
 - **Synthese** (`api/synthese`) — collision: nah-premium + far-rhyming worlds → cluster.
 - **Persona** (`api/persona`) — a fictional originator → cluster.
 
-Each engine mixes nah/premium + fern/surprising per round. Quality via the **LLM-judge** (on-target ×
-surprise × craft × designValue): judge-select in the Studio, `--judge` in the eval. All prompts live in
+Each engine mixes nah/premium + fern/surprising per round (adaptive ratio, floor of one per pole). Quality
+via the **LLM-judge** (on-target × surprise × craft × formSubstanz; onTarget + formSubstanz gate, the rest
+rank): judge-select in the Studio, `--judge` in the eval. All prompts live in
 `api/_lib/setup/*.yaml` (`npm run setup` assembles them into `setup.generated.ts`).
 
 ## LLM layer — Vercel AI Gateway

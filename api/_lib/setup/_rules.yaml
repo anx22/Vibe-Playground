@@ -3,11 +3,12 @@
 
 leitwert: |
   <leitwert_format>
-  Ein Leitwert ist ein VERDICHTETER WELT-VERWEIS: ein Kompositum aus 2–4 KONKRETEN, sichtbaren Welt-/Handwerks-/Material-/Ort-Begriffen, mit Bindestrichen, das sofort eine VISUELLE Welt auslöst. Er ist der ANKER und TITEL des Clusters.
-  MATERIALITÄT (zentral): MINDESTENS ein Teil muss ANFASSBAR sein — ein Material, eine Oberfläche, ein Objekt oder eine charakteristische Form (Glasur, Wachs, Selvedge-Kante, Raster, Fassdaube), etwas das sofort KOPFKINO und fühlbare Materialität auslöst. Rein abstrakte System-Komposita sind ein „Substantiv-Schlachtfeld" — gemeint ist eine Welt zum Anfassen, kein Diagramm.
-  GUT: «Brennofen-Glasur» · «Selvedge-Webkante» · «Trafohaus-Kupfer» · «Tidenhub-Schlick» · «Letterpress-Seidenband».
+  Der Leitwert ist die EINE committete Design-RICHTUNG des Clusters — sein Anker und Titel. Er ist die KURATORISCHE VERDICHTUNG aller Funde auf GENAU EINE Richtung: du darfst entscheiden, gewichten, weglassen — es muss NICHT die ganze Welt hineinpassen. Leite ihn aus dem DOMINANTEN Charakter-Fund ab, damit Leitwert und Funde am selben Strang ziehen.
+  FORM: ein verdichteter, FORM-TRAGENDER Titel (Kompositum oder kurze Nominalphrase). MINDESTENS ein Teil muss sichtbare GESTALT/Materialität tragen (Material, Oberfläche, Objekt, charakteristische Form), sodass er sofort KOPFKINO auslöst. Rein abstrakte System-Komposita ohne anfassbaren Anker sind ein „Substantiv-Schlachtfeld".
+  EDITORIAL-FREIHEIT: du DARFST in echte Design-Sprache übersetzen — inklusive FINISH und ANWENDUNG (z. B. «Holographic Letterpress Cards», «Astro-Letterpress-Archive», «Tidenhub-Terminal»). DE oder EN — was die Richtung am besten benennt; je nachdem, WAS gefunden wurde und WAS am besten trägt.
+  GUT: «Brennofen-Glasur» · «Holographic Letterpress Cards» · «Selvedge-Webkante» · «Tidenhub-Terminal» · «Astro-Letterpress-Archive».
   VERBOTEN: ganze Sätze; Verb-/Imperativ-Phrasen («… sichtbar machen»); «X ist Y»/«X trägt Y»; abstrakte Aphorismen; Wert-/Tugend-/Gefühlswörter als Leitwert («Stille», «Mut», «Würde», «Vertrauen», «Risiko», «Messung ist Mut»); rein abstrakte System-Komposita ohne anfassbaren Anker («Fehlerkorrektur-Signalfeld», bloße «-Schnittstelle»/«-Index»/«-Frequenz»).
-  Der Leitwert benennt WELTEN, keine Botschaft — man muss ihn SEHEN UND ANFASSEN können.
+  Der Leitwert benennt eine WELT/Richtung zum Sehen UND Anfassen, keine Botschaft.
   </leitwert_format>
 
 diversity: |
@@ -35,7 +36,7 @@ compass: |
   <welt_kompass>
   Spüre die DOMÄNE des Briefings (z. B. Fintech, Luxus, KI, Hochzeit, Developer, Health, Editorial, Food, Fashion, Architektur, Legal …) und ihr Schwerefeld — die Welt, in der die Domäne natürlich lebt.
   Für NAHE/Premium-Ergebnisse ist genau diese Domäne der Brunnen: hol das SCHÖNSTE, Best-in-Class aus ihrer EIGENEN Welt (Material, Handwerk, Atmosphäre) — etablierte schöne Konventionen sind ausdrücklich erlaubt, solange hochwertig und nicht plump.
-  Für FERNE Ergebnisse zieht die Domäne nur LEICHT und magnetisch: die Überraschung kommt aus der fernen Welt/Kollision, die Domäne sorgt nur dafür, dass das Ergebnis noch im richtigen Gefühlsfeld landet.
+  Für FERNE Ergebnisse ist die Bindung ein STARKER Magnet, kein loser Tilt: die ferne Welt muss (1) strukturell mit der WIRKSTRUKTUR des Briefs REIMEN — ihre innere Logik/Beziehung ist dieselbe wie die des Themas (das macht sie treffsicher TROTZ Distanz) — UND (2) ihre Grund-STIMMUNG darf der Brief-Stimmung NICHT widersprechen (Stimmungs-VETO gegen Mood-Clash: keine grelle Welt für ein ruhiges Produkt). Die DISTANZ liefert die Überraschung, der REIM die Treffsicherheit. Das ist ein Kompass, KEIN harter Filter — der Judge fängt den Rest; aber zieh bewusst STARK, statt frei zu roamen.
   KEINE Übersetzung in Design-Parameter (kein Layout, keine Typo, keine Farbwerte, keine Komposition, keine Motion) — der Kompass tilt nur die WELT-/Material-/Metaphern-Wahl, nicht die Gestaltung.
   Bei blank slate oder unklarer Domäne: wähle die naheliegendste, ziehe nur ganz leicht.
   </welt_kompass>
@@ -45,14 +46,14 @@ mix: |
   Liefere pro Runde BEIDE Register GEMISCHT — KEINE Engine ist nur „wild", keine nur „brav". Spreize bewusst über zwei Pole, ohne sie nach außen zu labeln (der Nutzer spürt den Unterschied selbst):
   - NAH/PREMIUM: ein Teil der Ergebnisse bleibt in der EIGENEN Welt des Briefings und holt dort das SCHÖNSTE, Best-in-Class heraus (Hochzeit → Leinen, gepresste Blumen, Letterpress, Seidenband; SaaS → klares Glas, präziser Stahl). Etablierte schöne KONVENTIONEN sind hier ausdrücklich ERLAUBT — auch nah am Genre, solange hochwertig und nicht plump-abgedroschen.
   - FERN/ÜBERRASCHEND: ein anderer Teil kommt aus einer fernen, frischen Welt/Kollision — überraschend, anti-Klischee (siehe <diversität>).
-  Markiere jedes Ergebnis intern mit register: "nah" oder "fern". Strebe über den Batch ein echtes Nebeneinander an (grob halb/halb, nicht alles in einen Pol). Premium heißt nicht generisch, sondern: das BESTE seiner Klasse für GENAU dieses Briefing.
+  Markiere jedes Ergebnis intern mit register: "nah" oder "fern". Das Verhältnis ist ADAPTIV, nicht fix: SPÜRE am Briefing, wohin es kippt — eine kompromisslose Heritage-/Luxus-/Vertrauens-Welt verträgt SCHWERPUNKT nah; ein verspieltes, experimentelles, fantasievolles Briefing verträgt SCHWERPUNKT fern. ABER halte einen BODEN: mindestens EIN Ergebnis je Pol bleibt IMMER (nie alles in einen Pol), damit weder Premium noch Überraschung je ganz wegfällt. Premium heißt nicht generisch, sondern: das BESTE seiner Klasse für GENAU dieses Briefing.
   </register_mix>
 
 cluster: |
   <denkanstoss_cluster>
   Steht die Welt, dann ERNTE sie: hol konkrete, sichtbare GESTALT heraus, aus der eine nachgelagerte Bild-/Design-KI direkt etwas bauen kann. KEIN fertiges Design (kein Layout, keine Typo, keine UI-Komposition, keine verordnete Marken-Palette, keine benannten Stile/Künstler, keine Animation) — aber auch KEINE leere Atmosphäre. Der Cluster besteht aus:
-  - weltSatz: 1–2 Sätze, die die Welt über ihre SICHTBAREN, gestalt-tragenden Merkmale öffnen — was man SIEHT und wie es GEBAUT ist (Formen, Materialien, Licht auf Oberflächen, Aufbau). KEINE Stimmung, kein Gefühl, keine Abwesenheit („Stille", „Nichts", „Leere").
-  - funde: 5–7 reine VISUELLE FUNDE als DICHTE, KNAPPE Bild-Wendungen (Stichwort-/Phrasen-Länge, ~3–8 Wörter) — KEINE ganzen Sätze, KEINE erklärenden Nebensätze („…, die sich … zieht"), keine Narration. Benenne den FUND + seine prägnante visuelle Eigenschaft, fertig. Jeder ist ein konkretes, ZEICHENBARES Detail (Form · Struktur · Kante · Oberfläche · Licht), spezifisch für GENAU diese Welt und von sich aus move-reich; den gestalterischen Move formulierst du NICHT aus. Ernte gespreizt über das ganze Design-Universum, mit EINEM dominanten Charakter-Fund:
+  - weltSatz: 1–2 Sätze Kopfkino — die HEADLINE und SEELE des Clusters (das Erste, was Mensch UND Bild-KI lesen). Er trägt die STIMMUNG und die WELT-GANZHEIT: Atmosphäre, das Licht- und Material-Gefühl des Ortes, wie sich die ganze Welt anfühlt — das, was KEIN einzelner Fund tragen kann. Sinnlich und konkret in einer sichtbaren Welt verortet, aber er ZÄHLT NICHT die einzelnen Formen auf (das ist Aufgabe der funde) und ist KEINE Design-Anweisung.
+  - funde: so viele reine VISUELLE FUNDE wie WIRKLICH STARK sind — KEIN Auffüllen auf eine Zahl (lieber 4 zwingende als 7 mit Füllern), HÖCHSTENS 7, mindestens ~4. Als DICHTE, KNAPPE Bild-Wendungen (Stichwort-/Phrasen-Länge, ~3–8 Wörter) — KEINE ganzen Sätze, KEINE erklärenden Nebensätze („…, die sich … zieht"), keine Narration. Benenne den FUND + seine prägnante visuelle Eigenschaft, fertig. Jeder ist ein konkretes, ZEICHENBARES Detail (Form · Struktur · Kante · Oberfläche · Licht), spezifisch für GENAU diese Welt und von sich aus move-reich; den gestalterischen Move formulierst du NICHT aus. Ernte gespreizt über das ganze Design-Universum, mit EINEM dominanten Charakter-Fund:
       · Form & Geometrie (Silhouette, Bogen, Spirale, Wabe, Negativraum)
       · Struktur & Fügung (Raster, Schichtung, Naht, Knoten, Dichte, Proportion)
       · Linie & Kante (haarfein↔massiv, graviert/gestisch, Rand, Beschnitt)

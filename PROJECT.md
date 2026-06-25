@@ -5,8 +5,8 @@
 ## What this is
 
 A **Denkanstoß generator** for professional designers/art directors. From a briefing it produces open
-**clusters** of raw world-material — a vivid Welt-Satz, a Leitwert anchor, and loose Metaphern /
-Materialien / Bild-Vergleiche — that a downstream design/image AI turns into something beautiful. It
+**clusters** of raw world-material — a vivid Welt-Satz, a Leitwert anchor, and loose Funde /
+Materialien / Bild-Referenzen — that a downstream design/image AI turns into something beautiful. It
 prescribes **no design itself**. Core job: zero → a credible, *surprising-yet-premium* direction, fast.
 
 ## The core idea
@@ -35,8 +35,9 @@ gravitates the next wave.
 
 ## Quality measurement
 
-An **LLM-judge** scores each cluster (on-target × surprise × craft × **designValue**) and selects the
-strongest per panel; `spreadByMix` interleaves nah/fern. Headless eval: `npm run eval` compares engines on
+An **LLM-judge** scores each cluster (on-target × surprise × craft × **formSubstanz**); onTarget +
+formSubstanz are non-negotiable **gates**, surprise + craft rank the survivors per panel; `spreadByMix`
+interleaves nah/fern. Headless eval: `npm run eval` compares engines on
 the same briefings; Opus is the strict grader. Human verdict is primary.
 
 ## Tech
