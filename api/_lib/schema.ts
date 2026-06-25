@@ -10,7 +10,7 @@ export const clusterSchema = z.object({
   weltSatz: z.string().describe("1–2 Sätze Kopfkino, die die Welt lebendig öffnen — sinnlich, konkret, KEINE Design-Anweisung"),
   leitwert: z.string().describe("2–4-teiliges Konkret-Kompositum — Anker und Titel des Clusters"),
   register: z.enum(["nah", "fern"]).describe("nah = premium-schön aus der eigenen Brief-Welt; fern = überraschende Kollision"),
-  funde: z.array(z.string()).describe("5–7 reine visuelle Funde — zeichenbare Form/Struktur/Kante/Oberfläche/Licht, spezifisch + generativ; KEINE Zustände/Gefühle/Konzept-Wortspiele"),
+  funde: z.array(z.string()).describe("5–7 reine visuelle Funde als KNAPPE Bild-Wendungen (~3–8 Wörter, keine Sätze) — zeichenbare Form/Struktur/Kante/Oberfläche/Licht, spezifisch + generativ; KEINE Zustände/Gefühle/Konzept-Wortspiele"),
   materialien: z.array(z.string()).describe("4–6 ECHTE Materialien/Oberflächen — keine Bauteile/Konstruktionen"),
   bildReferenzen: z.array(z.string()).describe("2–3 reale, benennbare Bild-Anker (existierende Objekte/Szenen/Artefakte) — keine „wie …\"-Poesie, keine Stile"),
 });

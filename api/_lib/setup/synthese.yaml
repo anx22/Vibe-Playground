@@ -13,7 +13,7 @@ SYNTHESE:
     </vorgehen>
   rules: [leitwert, repertoire, diversity, register, compass, mix, cluster, render_probe]
   output: |
-    <ausgabe>candidates[] — jedes ein DENKANSTOSS-CLUSTER: weltSatz (1–2 Sätze, die die Welt über sichtbare, gestalt-tragende Merkmale öffnen), leitwert (2–4-teiliges Konkret-Kompositum als Titel/Anker), register ("nah" oder "fern"), funde (5–7 reine visuelle Funde, gespreizt über die Design-Achsen mit EINEM dominanten Charakter-Fund — zeichenbar, spezifisch, generativ), materialien (4–6 ECHTE Materialien/Oberflächen, keine Bauteile), bildReferenzen (2–3 reale, benennbare Bild-Anker). KEIN fertiges Design (Layout/Typo/UI/Palette/Stile/Animation).</ausgabe>
+    <ausgabe>candidates[] — jedes ein DENKANSTOSS-CLUSTER: weltSatz (1–2 Sätze, die die Welt über sichtbare, gestalt-tragende Merkmale öffnen), leitwert (2–4-teiliges Konkret-Kompositum als Titel/Anker), register ("nah" oder "fern"), funde (5–7 reine visuelle Funde als KNAPPE Bild-Wendungen — keine Sätze; gespreizt über die Design-Achsen mit EINEM dominanten Charakter-Fund; zeichenbar, spezifisch, generativ), materialien (4–6 ECHTE Materialien/Oberflächen, keine Bauteile), bildReferenzen (2–3 reale, benennbare Bild-Anker). KEIN fertiges Design (Layout/Typo/UI/Palette/Stile/Animation).</ausgabe>
   prompt: |
     Briefing: {ctx}.{steer}
     Liefere {n} starke Richtungen als Denkanstoß-Cluster, GEMISCHT aus nah/premium (eigene Brief-Welt, best-in-class) und fern/überraschend (ferne Kollision). Jeder Cluster lebendig, gestaltungstauglich, ohne fertiges Design.

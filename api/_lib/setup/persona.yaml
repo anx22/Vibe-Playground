@@ -22,7 +22,7 @@ PERSONA:
     </regeln>
   rules: [leitwert, repertoire, diversity, register, compass, mix, cluster, render_probe]
   output: |
-    <ausgabe>personas[] — jede ein DENKANSTOSS-CLUSTER aus der erfundenen Quelle: weltSatz (1–2 Sätze, die die Quelle UND ihre Welt über sichtbare, gestalt-tragende Merkmale öffnen), leitwert (Welt-Verweis als Titel/Anker), register ("nah" oder "fern"), funde (5–7 reine visuelle Funde, gespreizt über die Design-Achsen mit EINEM dominanten Charakter-Fund — zeichenbar, spezifisch, generativ), materialien (4–6 ECHTE Materialien/Oberflächen, keine Bauteile), bildReferenzen (2–3 reale, benennbare Bild-Anker). KEIN fertiges Design (Layout/Typo/UI/Palette/Stile/Animation).</ausgabe>
+    <ausgabe>personas[] — jede ein DENKANSTOSS-CLUSTER aus der erfundenen Quelle: weltSatz (1–2 Sätze, die die Quelle UND ihre Welt über sichtbare, gestalt-tragende Merkmale öffnen), leitwert (Welt-Verweis als Titel/Anker), register ("nah" oder "fern"), funde (5–7 reine visuelle Funde als KNAPPE Bild-Wendungen — keine Sätze; gespreizt über die Design-Achsen mit EINEM dominanten Charakter-Fund; zeichenbar, spezifisch, generativ), materialien (4–6 ECHTE Materialien/Oberflächen, keine Bauteile), bildReferenzen (2–3 reale, benennbare Bild-Anker). KEIN fertiges Design (Layout/Typo/UI/Palette/Stile/Animation).</ausgabe>
   prompt: |
     Briefing: {ctx}
     Erzeuge {n} VERSCHIEDENE Quellen — GEMISCHT nah/premium (gefeierte Quelle der Brief-Domäne) und fern/überraschend — aus denen je ein lebendiger Denkanstoß-Cluster fällt.
