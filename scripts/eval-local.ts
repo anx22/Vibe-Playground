@@ -31,18 +31,17 @@ const BRIEFINGS = [
   { id: "kosmetik", text: "Naturkosmetik-Marke, ehrlich und warm, ohne Greenwashing-Blätter-Optik" },
 ];
 
-type Card = { engine: string; leitwert: string; world: string; scene: string; mood: string; typo?: string; layout?: string };
-const worlds = (ws: { name: string }[]) => ws.map((w) => w.name).join(" × ");
+type Card = { engine: string; leitwert: string; weltSatz: string; register: string; context: string };
 
 async function runSynthese(ctx: string, n: number): Promise<Card[]> {
   const out = await genObject({ model: modelFor("strong"), schema: workbenchSchema, system: SYNTHESE_SYSTEM, noCache: true,
     prompt: fill(SYNTHESE_PROMPT, { ctx: ctx || SYNTHESE_BLANK, steer: "", n }) });
-  return out.candidates.map((b) => ({ engine: "synthese", leitwert: b.leitwert, world: worlds(b.worlds), scene: b.creativeDerivation, mood: b.mood, typo: b.typoDirection, layout: b.layoutMotion }));
+  return out.candidates.map((b) => ({ engine: "synthese", leitwert: b.leitwert, weltSatz: b.weltSatz, register: b.register, context: b.materialien.join(" · ") }));
 }
 async function runPersona(ctx: string, n: number): Promise<Card[]> {
   const out = await genObject({ model: modelFor("strong"), schema: personaListSchema, system: PERSONA_SYSTEM, noCache: true,
     prompt: fill(PERSONA_PROMPT, { ctx: ctx || PERSONA_BLANK, n }) });
-  return out.personas.map((p) => ({ engine: "persona", leitwert: p.leitwert, world: "Persona", scene: p.persona, mood: p.mood, typo: p.typoDirection, layout: p.layoutMotion }));
+  return out.personas.map((p) => ({ engine: "persona", leitwert: p.leitwert, weltSatz: p.weltSatz, register: p.register, context: p.materialien.join(" · ") }));
 }
 
 const mWorld = z.object({ worlds: z.array(z.object({ world: z.string(), domain: z.string(), innerLogic: z.string() })) });
@@ -53,12 +52,12 @@ async function runMaterialist(ctx: string, n: number): Promise<Card[]> {
   const list = w.worlds.map((x, i) => `${i + 1}. ${x.world} [${x.domain}] — innere Logik: ${x.innerLogic}`).join("\n");
   const e = await genObject({ model: modelFor("strong"), schema: mExtract, system: MATERIALIST_EXTRACT_SYSTEM, noCache: true,
     prompt: fill(MATERIALIST_EXTRACT_PROMPT, { ctx, count: w.worlds.length, list }) });
-  return e.results.map((r, i) => ({ engine: "materialist", leitwert: r.leitwert, world: (w.worlds[i]?.world ?? "—").slice(0, 90), scene: r.anchors.map((a) => `${a.layer}: ${a.anchor}`).join(" · "), mood: r.mood }));
+  return e.results.map((r, i) => ({ engine: "materialist", leitwert: r.leitwert, weltSatz: `${(w.worlds[i]?.world ?? "—").slice(0, 90)} — ${r.anchors.map((a) => `${a.layer}: ${a.anchor}`).join(" · ")}`, register: "—", context: r.mood }));
 }
 
 async function batchJudge(briefing: string, cards: Card[]): Promise<number[]> {
   if (!cards.length) return [];
-  const list = cards.map((c, i) => `${i + 1}. Leitwert «${c.leitwert}» — Szene: ${c.scene || "—"} — Mood: ${c.mood || "—"}`).join("\n");
+  const list = cards.map((c, i) => `${i + 1}. Leitwert «${c.leitwert}» — Welt: ${c.weltSatz || "—"}`).join("\n");
   try {
     const out = await genObject({ model: modelFor("cheap"), schema: judgeBatchSchema, system: JUDGE_SYSTEM, maxOutputTokens: 256 + cards.length * 140,
       prompt: fill(JUDGE_PROMPT, { briefing: briefing || JUDGE_BLANK, count: cards.length, list }) });
@@ -85,8 +84,8 @@ async function main() {
         (all[e.id] ??= []).push({ briefing: b.id, cards: scored });
         console.log(`  ✓ ${e.id.padEnd(12)} ${cards.length} cards`);
         for (const c of scored) {
-          console.log(`     [${(c.score || 0).toFixed(1)}] ${c.leitwert}  ⟨${c.world}⟩`);
-          if (c.typo || c.layout) console.log(`         typo: ${c.typo ?? "—"} | layout: ${c.layout ?? "—"}`);
+          console.log(`     [${(c.score || 0).toFixed(1)}] ${c.leitwert}  ⟨${c.register}⟩`);
+          if (c.weltSatz) console.log(`         ${c.weltSatz.slice(0, 100)}`);
         }
       } catch (err) {
         console.log(`  ✗ ${e.id.padEnd(12)} ${String(err).slice(0, 140)}`);

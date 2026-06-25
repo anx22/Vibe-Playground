@@ -29,7 +29,8 @@ import { ANTI_CORPUS } from "../api/_lib/corpus/anticorpus";
 import { antiCliche, antiCorpusTokens, concreteness, distinctness, leitwertFormat } from "../src/llm/metrics";
 
 type Tier = "cheap" | "strong" | "premium";
-type Card = { leitwert: string; world: string; scene: string; mood: string; briefing?: string };
+/** A scored eval row — the cluster's anchor + opener + its near/far register, plus material context for the anti-cliché metric. */
+type Card = { leitwert: string; weltSatz: string; register: string; context: string; briefing?: string };
 
 const BRIEFINGS = [
   { id: "synth", label: "Synth-Label", text: "Rebrand für ein Synthesizer-Label, das von Software auf modulare Hardware umstellt — technisch, aber mit Handschrift." },
@@ -40,10 +41,10 @@ const BRIEFINGS = [
   { id: "museum", label: "Museum", text: "Leitsystem für ein archäologisches Museum, das antike Funde mit zeitgenössischer Ausstellungsarchitektur kontrastiert." },
 ];
 
-const worldsOf = (ws: { name: string }[]) => ws.map((w) => w.name).join(" × ");
+const ctxOf = (materialien: string[], metaphern: string[]) => [...materialien, ...metaphern].join(" ");
 const ENGINES: { id: string; gen: (b: string, n: number) => Promise<Card[]> }[] = [
-  { id: "synthese", gen: async (b, n) => (await generateSynthese({ briefing: b, n })).map((x) => ({ leitwert: x.leitwert, world: worldsOf(x.worlds), scene: x.creativeDerivation, mood: x.mood })) },
-  { id: "persona", gen: async (b, n) => (await generatePersonas({ briefing: b, n, tier: "strong" })).map((p) => ({ leitwert: p.leitwert, world: "Persona", scene: p.persona, mood: p.mood })) },
+  { id: "synthese", gen: async (b, n) => (await generateSynthese({ briefing: b, n })).map((x) => ({ leitwert: x.leitwert, weltSatz: x.weltSatz, register: x.register, context: ctxOf(x.materialien, x.metaphern) })) },
+  { id: "persona", gen: async (b, n) => (await generatePersonas({ briefing: b, n, tier: "strong" })).map((p) => ({ leitwert: p.leitwert, weltSatz: p.weltSatz, register: p.register, context: ctxOf(p.materialien, p.metaphern) })) },
 ];
 
 // ── cli ──
@@ -119,7 +120,7 @@ async function main() {
           batches[e.id].push(r.value);
           timing[e.id].ms += r.ms; timing[e.id].tries += r.tries; timing[e.id].cells += 1;
           console.log(`   ${c.ok("✓")} ${e.id.padEnd(12)} ${String(r.value.length).padStart(2)} cards  ${c.dim(`${r.ms}ms${r.tries > 1 ? ` ·${r.tries}t` : ""}`)}`);
-          if (!quiet) for (const card of r.value) console.log(c.dim(`        ● ${card.leitwert}   [${card.world}]`));
+          if (!quiet) for (const card of r.value) console.log(c.dim(`        ● ${card.leitwert}   [${card.register}]`));
         } else {
           failures.push({ engine: e.id, briefing: b.id, error: r.error ?? "?", ms: r.ms });
           console.log(`   ${c.bad("✗")} ${e.id.padEnd(12)} ${c.bad(r.error ?? "fail")}  ${c.dim(`${r.ms}ms`)}`);
@@ -142,7 +143,7 @@ async function main() {
       if (!all.length) { console.log(`    ${e.id.padEnd(12)} ${c.bad("(no output)")}`); report.engines[e.id] = { overall: null, n: 0 }; continue; }
       const format = mean(all.map((x) => leitwertFormat(x.leitwert)));
       const conc = mean(all.map((x) => concreteness(x.leitwert)));
-      const cl = mean(all.map((x) => antiCliche(`${x.leitwert} ${x.world}`, anti)));
+      const cl = mean(all.map((x) => antiCliche(`${x.leitwert} ${x.context}`, anti)));
       const dist = mean(bs.map((b) => distinctness(b.map((x) => x.leitwert))));
       const overall = 0.3 * format + 0.2 * conc + 0.25 * cl + 0.25 * dist;
       const f = (x: number) => x.toFixed(2).padStart(5);
@@ -182,7 +183,7 @@ async function main() {
       if (!all.length) { console.log(`    ${e.id.padEnd(12)} ${c.bad("(no output)")}`); continue; }
       let tgt = 0, surp = 0, craft = 0, dv = 0, dvN = 0, nn = 0;
       for (const card of all) {
-        const r = await attempt(() => judge({ briefing: card.briefing ?? "", leitwert: card.leitwert, scene: card.scene, mood: card.mood }, judgeTier), retries);
+        const r = await attempt(() => judge({ briefing: card.briefing ?? "", leitwert: card.leitwert, weltSatz: card.weltSatz }, judgeTier), retries);
         if (r.ok && r.value) {
           tgt += r.value.onTarget; surp += r.value.surprise; craft += r.value.craft;
           if (typeof r.value.designValue === "number") { dv += r.value.designValue; dvN++; }

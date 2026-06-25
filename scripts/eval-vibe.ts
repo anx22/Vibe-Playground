@@ -1,7 +1,7 @@
 /**
  * eval-vibe — der ehrliche Test: gibt jedes Ergebnis einen FÜHLBAREN, DIREKT
- * ANWENDBAREN Design-Vibe? Läuft die echte Synthese + Persona auf diversen
- * Briefings, druckt den vollen Design-Payload (Elemente/Typo/Layout/Palette/Mood)
+ * ANWENDBAREN Welt-/Material-Trigger? Läuft die echte Synthese + Persona auf diversen
+ * Briefings, druckt den vollen Denkanstoß-Cluster (Welt-Satz/Metaphern/Materialien/Bild-Vergleiche)
  * und bewertet NUR Anwendbarkeit + Fühlbarkeit (nicht Cleverness).
  *   AI_GATEWAY_API_KEY=… npx tsx scripts/eval-vibe.ts
  */
@@ -21,10 +21,9 @@ const BRIEFINGS = [
 ];
 const N = 4;
 
-type Design = { title: string; description: string };
 type Res = {
-  engine: string; leitwert: string; worlds: string; mood: string;
-  palette: string[]; designs: Design[]; derivation: string;
+  engine: string; leitwert: string; weltSatz: string; register: string;
+  metaphern: string[]; materialien: string[]; bildVergleiche: string[];
 };
 
 async function runSynthese(ctx: string): Promise<Res[]> {
@@ -33,8 +32,8 @@ async function runSynthese(ctx: string): Promise<Res[]> {
     prompt: fill(SYNTHESE_PROMPT, { ctx: ctx || SYNTHESE_BLANK, steer: "", n: N }),
   });
   return out.candidates.map((b) => ({
-    engine: "synthese", leitwert: b.leitwert, worlds: b.worlds.map((w) => w.name).join(" × "),
-    mood: b.mood, palette: b.palette, designs: b.designs, derivation: b.creativeDerivation,
+    engine: "synthese", leitwert: b.leitwert, weltSatz: b.weltSatz, register: b.register,
+    metaphern: b.metaphern, materialien: b.materialien, bildVergleiche: b.bildVergleiche,
   }));
 }
 async function runPersona(ctx: string): Promise<Res[]> {
@@ -43,8 +42,8 @@ async function runPersona(ctx: string): Promise<Res[]> {
     prompt: fill(PERSONA_PROMPT, { ctx: ctx || PERSONA_BLANK, n: N }),
   });
   return out.personas.map((p) => ({
-    engine: "persona", leitwert: p.leitwert, worlds: `Persona: ${p.persona.slice(0, 70)}`,
-    mood: p.mood, palette: p.palette ?? [], designs: p.designs, derivation: p.persona,
+    engine: "persona", leitwert: p.leitwert, weltSatz: p.weltSatz, register: p.register,
+    metaphern: p.metaphern, materialien: p.materialien, bildVergleiche: p.bildVergleiche,
   }));
 }
 
@@ -57,15 +56,16 @@ const vibeJudge = z.object({
 });
 const JUDGE_SYS =
   "Du bist ein knallharter Senior Art Director. Bewerte NICHT, ob eine Idee clever ist — sondern NUR, " +
-  "ob sie einen FÜHLBAREN, DIREKT ANWENDBAREN Design-Vibe ergibt: konkrete Materialien/Formen/Farben/Typo/Bewegung, " +
-  "aus denen ein Designer oder Bildmodell SOFORT eine Designwelt bauen kann. Cleveres Wortspiel ohne anfassbare " +
-  "Designsprache = niedrig. 3 = mittelmäßig, sei streng.";
+  "ob der Denkanstoß-Cluster einen FÜHLBAREN, DIREKT ANWENDBAREN Welt-/Material-Trigger ergibt: ein lebendiger " +
+  "Welt-Satz plus konkrete Metaphern, Materialien und Bild-Vergleiche, aus denen eine nachgelagerte Bild-/Design-KI " +
+  "SOFORT eine Designwelt bauen kann. Cleveres Wortspiel ohne anfassbares Welt-/Material-Material = niedrig. " +
+  "3 = mittelmäßig, sei streng.";
 
 async function judge(briefing: string, rs: Res[]): Promise<{ anwendbar: number; fuehlbar: number; versagen: string }[]> {
   if (!rs.length) return [];
   const list = rs.map((r, i) =>
-    `${i + 1}. «${r.leitwert}» — Mood: ${r.mood} — Designs: ` +
-    `${r.designs.map((d) => `${d.title}: ${d.description}`).join("  |  ") || "—"}`).join("\n");
+    `${i + 1}. «${r.leitwert}» — Welt: ${r.weltSatz} — Material: ${r.materialien.join(", ") || "—"} — ` +
+    `Bilder: ${r.bildVergleiche.join(" | ") || "—"}`).join("\n");
   const out = await genObject({
     model: modelFor("cheap"), schema: vibeJudge, system: JUDGE_SYS, maxOutputTokens: 220 + rs.length * 130,
     prompt: `Briefing: ${briefing}\nBewerte JEDE der ${rs.length} Richtungen: anwendbar (1-5), fuehlbar (1-5), ` +
@@ -85,10 +85,11 @@ async function main() {
         rs.forEach((r, i) => {
           const j = js[i] ?? { anwendbar: NaN, fuehlbar: NaN, versagen: "—" };
           all.push({ briefing: b.id, ...r, ...j });
-          console.log(`\n  [${r.engine}] «${r.leitwert}»   anwendbar ${j.anwendbar}/5 · fuehlbar ${j.fuehlbar}/5`);
-          console.log(`     Welten: ${r.worlds}`);
-          console.log(`     Mood: ${r.mood} | Palette: ${r.palette.join(" ") || "(aus Vektor abgeleitet)"}`);
-          r.designs.forEach((d) => console.log(`     ▷ ${d.title} — ${d.description}`));
+          console.log(`\n  [${r.engine}·${r.register}] «${r.leitwert}»   anwendbar ${j.anwendbar}/5 · fuehlbar ${j.fuehlbar}/5`);
+          console.log(`     Welt: ${r.weltSatz}`);
+          console.log(`     Metaphern: ${r.metaphern.join(" · ") || "—"}`);
+          console.log(`     Materialien: ${r.materialien.join(" · ") || "—"}`);
+          console.log(`     Bilder: ${r.bildVergleiche.join(" · ") || "—"}`);
           console.log(`     ✗ ${j.versagen}`);
         });
       } catch (err) {
