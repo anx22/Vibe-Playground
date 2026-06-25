@@ -11,10 +11,10 @@ import "./lab.css";
  * (einzeln), one group (gruppiert) and the whole cluster (gesamt). No design is prescribed here.
  */
 
-const GROUPS: { key: "metaphern" | "materialien" | "bildVergleiche"; label: string }[] = [
-  { key: "metaphern", label: "Metaphern" },
+const GROUPS: { key: "funde" | "materialien" | "bildReferenzen"; label: string }[] = [
+  { key: "funde", label: "Funde" },
   { key: "materialien", label: "Materialien" },
-  { key: "bildVergleiche", label: "Bild-Vergleiche" },
+  { key: "bildReferenzen", label: "Bild-Referenzen" },
 ];
 
 const ClipGlyph = ({ done }: { done: boolean }) => (

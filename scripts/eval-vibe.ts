@@ -23,7 +23,7 @@ const N = 4;
 
 type Res = {
   engine: string; leitwert: string; weltSatz: string; register: string;
-  metaphern: string[]; materialien: string[]; bildVergleiche: string[];
+  funde: string[]; materialien: string[]; bildReferenzen: string[];
 };
 
 async function runSynthese(ctx: string): Promise<Res[]> {
@@ -33,7 +33,7 @@ async function runSynthese(ctx: string): Promise<Res[]> {
   });
   return out.candidates.map((b) => ({
     engine: "synthese", leitwert: b.leitwert, weltSatz: b.weltSatz, register: b.register,
-    metaphern: b.metaphern, materialien: b.materialien, bildVergleiche: b.bildVergleiche,
+    funde: b.funde, materialien: b.materialien, bildReferenzen: b.bildReferenzen,
   }));
 }
 async function runPersona(ctx: string): Promise<Res[]> {
@@ -43,7 +43,7 @@ async function runPersona(ctx: string): Promise<Res[]> {
   });
   return out.personas.map((p) => ({
     engine: "persona", leitwert: p.leitwert, weltSatz: p.weltSatz, register: p.register,
-    metaphern: p.metaphern, materialien: p.materialien, bildVergleiche: p.bildVergleiche,
+    funde: p.funde, materialien: p.materialien, bildReferenzen: p.bildReferenzen,
   }));
 }
 
@@ -65,7 +65,7 @@ async function judge(briefing: string, rs: Res[]): Promise<{ anwendbar: number; 
   if (!rs.length) return [];
   const list = rs.map((r, i) =>
     `${i + 1}. «${r.leitwert}» — Welt: ${r.weltSatz} — Material: ${r.materialien.join(", ") || "—"} — ` +
-    `Bilder: ${r.bildVergleiche.join(" | ") || "—"}`).join("\n");
+    `Bilder: ${r.bildReferenzen.join(" | ") || "—"}`).join("\n");
   const out = await genObject({
     model: modelFor("cheap"), schema: vibeJudge, system: JUDGE_SYS, maxOutputTokens: 220 + rs.length * 130,
     prompt: `Briefing: ${briefing}\nBewerte JEDE der ${rs.length} Richtungen: anwendbar (1-5), fuehlbar (1-5), ` +
@@ -87,9 +87,9 @@ async function main() {
           all.push({ briefing: b.id, ...r, ...j });
           console.log(`\n  [${r.engine}·${r.register}] «${r.leitwert}»   anwendbar ${j.anwendbar}/5 · fuehlbar ${j.fuehlbar}/5`);
           console.log(`     Welt: ${r.weltSatz}`);
-          console.log(`     Metaphern: ${r.metaphern.join(" · ") || "—"}`);
+          console.log(`     Funde: ${r.funde.join(" · ") || "—"}`);
           console.log(`     Materialien: ${r.materialien.join(" · ") || "—"}`);
-          console.log(`     Bilder: ${r.bildVergleiche.join(" · ") || "—"}`);
+          console.log(`     Bilder: ${r.bildReferenzen.join(" · ") || "—"}`);
           console.log(`     ✗ ${j.versagen}`);
         });
       } catch (err) {

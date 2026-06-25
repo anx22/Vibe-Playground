@@ -14,9 +14,9 @@ const card: any = {
   leitwert: e.leitwert,
   weltSatz: e.weltSatz,
   register: e.register,
-  metaphern: e.metaphern ?? [],
+  funde: e.funde ?? [],
   materialien: e.materialien ?? [],
-  bildVergleiche: e.bildVergleiche ?? [],
+  bildReferenzen: e.bildReferenzen ?? [],
 };
 
 const line = (s: string) => console.log(s);

@@ -14,7 +14,7 @@ PERSONA:
     • «Ein gestrandeter Alien-Botaniker, der in einem U-Bahn-Tunnel Leuchtflora züchtet.»
     • «Ein Schmetterling aus Uhrwerk-Teilen, der Staub statt Pollen sammelt.»
     </beispiele>
-    <prinzip>Aus der Quelle fällt die Welt von selbst: Material, Oberfläche, Atmosphäre, Metaphern, fühlbare Dinge. (KEIN Design — keine Farbwerte, keine Typo, keine Komposition.)</prinzip>
+    <prinzip>Aus der Quelle fällt die Welt von selbst: Form, Struktur, Material, Oberfläche, Licht, fühlbare Dinge — zeichenbare GESTALT, keine bloße Stimmung. Erzähl NICHT, was die Quelle tut/erlebt/entdeckt (das wird Geschichte); zeige ihre WELT, Werkstatt und Artefakte, sichtbar. (KEIN fertiges Design — keine Typo, kein Layout, keine verordnete Palette.)</prinzip>
     <regeln>
     1. Die Quelle UND ihre Welt leben im weltSatz (1–2 Sätze Kopfkino): man SIEHT die Quelle und ihren Ort.
     2. VISUELL greifbar — die Kollision muss man SEHEN können (Material, Form, Apparat, Oberfläche).
@@ -22,7 +22,7 @@ PERSONA:
     </regeln>
   rules: [leitwert, repertoire, diversity, register, compass, mix, cluster, render_probe]
   output: |
-    <ausgabe>personas[] — jede ein DENKANSTOSS-CLUSTER aus der erfundenen Quelle: weltSatz (1–2 Sätze, die die Quelle UND ihre Welt lebendig öffnen — Kopfkino), leitwert (Welt-Verweis als Titel/Anker), register ("nah" oder "fern"), metaphern (4–6 lose Trigger-Wendungen), materialien (4–6 Material-/Textur-/Oberflächen-Worte), bildVergleiche (2–3 verbale „wie …"-Vergleiche). KEIN Layout/Typo/Farbwert/Komposition/Motion — nur Welt-Material.</ausgabe>
+    <ausgabe>personas[] — jede ein DENKANSTOSS-CLUSTER aus der erfundenen Quelle: weltSatz (1–2 Sätze, die die Quelle UND ihre Welt über sichtbare, gestalt-tragende Merkmale öffnen), leitwert (Welt-Verweis als Titel/Anker), register ("nah" oder "fern"), funde (5–7 reine visuelle Funde, gespreizt über die Design-Achsen mit EINEM dominanten Charakter-Fund — zeichenbar, spezifisch, generativ), materialien (4–6 ECHTE Materialien/Oberflächen, keine Bauteile), bildReferenzen (2–3 reale, benennbare Bild-Anker). KEIN fertiges Design (Layout/Typo/UI/Palette/Stile/Animation).</ausgabe>
   prompt: |
     Briefing: {ctx}
     Erzeuge {n} VERSCHIEDENE Quellen — GEMISCHT nah/premium (gefeierte Quelle der Brief-Domäne) und fern/überraschend — aus denen je ein lebendiger Denkanstoß-Cluster fällt.

@@ -31,7 +31,7 @@ describe("setup assembly from YAML (E-074)", () => {
     // no pre-designing: the old design-readings rule is gone
     expect(SYNTHESE_SYSTEM).not.toContain("<design_lesarten>");
     // the judge carries its own rubric and pulls in no shared rules
-    expect(JUDGE_SYSTEM).toContain("designValue");
+    expect(JUDGE_SYSTEM).toContain("formSubstanz");
     expect(JUDGE_SYSTEM).not.toContain("<leitwert_format>");
   });
 });

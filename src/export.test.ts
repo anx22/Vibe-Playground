@@ -8,9 +8,9 @@ const card: VibeCard = {
   leitwert: "Letterpress-Seidenband",
   weltSatz: "Eine cremeweiße Karte, in die der Druck tiefe Mulden presst.",
   register: "nah",
-  metaphern: ["geprägte Initialen", "ein Band im Seewind"],
+  funde: ["geprägte Initialen", "ein Band im Seewind"],
   materialien: ["Büttenpapier", "Seidenband", "Siegelwachs"],
-  bildVergleiche: ["wie ein gepresstes Herbarium"],
+  bildReferenzen: ["wie ein gepresstes Herbarium"],
 };
 
 describe("groupText (gruppiert copy)", () => {
@@ -30,17 +30,17 @@ describe("clusterText (gesamt copy)", () => {
 
   it("includes every non-empty group with its bulleted items", () => {
     const out = clusterText(card);
-    expect(out).toContain("Metaphern:");
+    expect(out).toContain("Funde:");
     expect(out).toContain("– geprägte Initialen");
     expect(out).toContain("Materialien:");
-    expect(out).toContain("Bild-Vergleiche:");
+    expect(out).toContain("Bild-Referenzen:");
     expect(out).toContain("– wie ein gepresstes Herbarium");
   });
 
   it("omits empty groups entirely", () => {
-    const sparse: VibeCard = { ...card, metaphern: [], materialien: [], bildVergleiche: [] };
+    const sparse: VibeCard = { ...card, funde: [], materialien: [], bildReferenzen: [] };
     const out = clusterText(sparse);
-    expect(out).not.toContain("Metaphern:");
+    expect(out).not.toContain("Funde:");
     expect(out).toBe("Letterpress-Seidenband\nEine cremeweiße Karte, in die der Druck tiefe Mulden presst.");
   });
 });

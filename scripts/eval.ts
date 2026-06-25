@@ -41,10 +41,10 @@ const BRIEFINGS = [
   { id: "museum", label: "Museum", text: "Leitsystem für ein archäologisches Museum, das antike Funde mit zeitgenössischer Ausstellungsarchitektur kontrastiert." },
 ];
 
-const ctxOf = (materialien: string[], metaphern: string[]) => [...materialien, ...metaphern].join(" ");
+const ctxOf = (materialien: string[], funde: string[]) => [...materialien, ...funde].join(" ");
 const ENGINES: { id: string; gen: (b: string, n: number) => Promise<Card[]> }[] = [
-  { id: "synthese", gen: async (b, n) => (await generateSynthese({ briefing: b, n })).map((x) => ({ leitwert: x.leitwert, weltSatz: x.weltSatz, register: x.register, context: ctxOf(x.materialien, x.metaphern) })) },
-  { id: "persona", gen: async (b, n) => (await generatePersonas({ briefing: b, n, tier: "strong" })).map((p) => ({ leitwert: p.leitwert, weltSatz: p.weltSatz, register: p.register, context: ctxOf(p.materialien, p.metaphern) })) },
+  { id: "synthese", gen: async (b, n) => (await generateSynthese({ briefing: b, n })).map((x) => ({ leitwert: x.leitwert, weltSatz: x.weltSatz, register: x.register, context: ctxOf(x.materialien, x.funde) })) },
+  { id: "persona", gen: async (b, n) => (await generatePersonas({ briefing: b, n, tier: "strong" })).map((p) => ({ leitwert: p.leitwert, weltSatz: p.weltSatz, register: p.register, context: ctxOf(p.materialien, p.funde) })) },
 ];
 
 // ── cli ──
@@ -186,7 +186,7 @@ async function main() {
         const r = await attempt(() => judge({ briefing: card.briefing ?? "", leitwert: card.leitwert, weltSatz: card.weltSatz }, judgeTier), retries);
         if (r.ok && r.value) {
           tgt += r.value.onTarget; surp += r.value.surprise; craft += r.value.craft;
-          if (typeof r.value.designValue === "number") { dv += r.value.designValue; dvN++; }
+          if (typeof r.value.formSubstanz === "number") { dv += r.value.formSubstanz; dvN++; }
           nn++;
         } else failures.push({ engine: e.id, briefing: "judge", error: r.error ?? "?", ms: r.ms });
       }
@@ -196,7 +196,7 @@ async function main() {
       const f = (x: number) => x.toFixed(2).padStart(5);
       const dvStr = dvN ? f(dv / dvN) : "    —";
       console.log(`    ${e.id.padEnd(12)}${f(tgt / nn)}${f(surp / nn)}${f(craft / nn)}${dvStr}   ${bar(o / 5)} ${o.toFixed(2)}  ${nn}`);
-      report.engines[e.id] = { ...(report.engines[e.id] ?? { overall: null, n: nn }), judge: { onTarget: tgt / nn, surprise: surp / nn, craft: craft / nn, designValue: dvN ? dv / dvN : 0, overall: o, n: nn } };
+      report.engines[e.id] = { ...(report.engines[e.id] ?? { overall: null, n: nn }), judge: { onTarget: tgt / nn, surprise: surp / nn, craft: craft / nn, formSubstanz: dvN ? dv / dvN : 0, overall: o, n: nn } };
     }
   }
 

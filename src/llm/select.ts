@@ -24,7 +24,7 @@ export async function judgeRank(
   let scores: (JudgeScore | undefined)[] = [];
   try {
     const r = await judgeBatch(
-      { briefing, items: cards.map((c) => ({ leitwert: c.leitwert, weltSatz: c.weltSatz })) },
+      { briefing, items: cards.map((c) => ({ leitwert: c.leitwert, weltSatz: c.weltSatz, funde: c.funde })) },
       tier,
     );
     scores = r.scores;
@@ -34,7 +34,7 @@ export async function judgeRank(
   const scored = cards.map((c, i): VibeCard => {
     const s = scores[i];
     if (!s) return c; // unscored — sinks to the bottom
-    const axes = [s.onTarget, s.surprise, s.craft, s.designValue].filter((x): x is number => typeof x === "number");
+    const axes = [s.onTarget, s.surprise, s.craft, s.formSubstanz].filter((x): x is number => typeof x === "number");
     const overall = axes.reduce((a, b) => a + b, 0) / axes.length;
     return { ...c, quality: { ...s, overall } };
   });

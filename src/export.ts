@@ -15,9 +15,9 @@ export function groupText(label: string, items: string[]): string {
 /** The whole cluster as a clean text block — the "gesamt" copy. */
 export function clusterText(card: VibeCard): string {
   const groups: [string, string[]][] = [
-    ["Metaphern", card.metaphern],
+    ["Funde", card.funde],
     ["Materialien", card.materialien],
-    ["Bild-Vergleiche", card.bildVergleiche],
+    ["Bild-Referenzen", card.bildReferenzen],
   ];
   const out: string[] = [card.leitwert];
   if (card.weltSatz) out.push(card.weltSatz);

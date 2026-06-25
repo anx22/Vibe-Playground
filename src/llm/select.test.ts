@@ -9,20 +9,20 @@ const base: VibeCard = {
   leitwert: "x",
   weltSatz: "x",
   register: "nah",
-  metaphern: [],
+  funde: [],
   materialien: [],
-  bildVergleiche: [],
+  bildReferenzen: [],
 };
 const withScore = (overall: number): VibeCard => ({
   ...base,
-  quality: { onTarget: overall, surprise: overall, craft: overall, designValue: overall, overall, note: "" },
+  quality: { onTarget: overall, surprise: overall, craft: overall, formSubstanz: overall, overall, note: "" },
 });
 const withMix = (id: string, register: "nah" | "fern", overall: number): VibeCard => ({
   ...base,
   id,
   leitwert: id,
   register,
-  quality: { onTarget: overall, surprise: overall, craft: overall, designValue: overall, overall, note: "" },
+  quality: { onTarget: overall, surprise: overall, craft: overall, formSubstanz: overall, overall, note: "" },
 });
 
 describe("quality floor (E-063)", () => {

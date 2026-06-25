@@ -10,9 +10,9 @@ export const clusterSchema = z.object({
   weltSatz: z.string().describe("1–2 Sätze Kopfkino, die die Welt lebendig öffnen — sinnlich, konkret, KEINE Design-Anweisung"),
   leitwert: z.string().describe("2–4-teiliges Konkret-Kompositum — Anker und Titel des Clusters"),
   register: z.enum(["nah", "fern"]).describe("nah = premium-schön aus der eigenen Brief-Welt; fern = überraschende Kollision"),
-  metaphern: z.array(z.string()).describe("4–6 lose Trigger-Bilder/-Wendungen (kurze Wendungen, keine Sätze)"),
-  materialien: z.array(z.string()).describe("4–6 fühlbare Material-/Textur-/Oberflächen-Worte"),
-  bildVergleiche: z.array(z.string()).describe("2–3 verbale „wie …\"-Vergleiche zu realen Bildern/Szenen — keine benannten Stile/Künstler"),
+  funde: z.array(z.string()).describe("5–7 reine visuelle Funde — zeichenbare Form/Struktur/Kante/Oberfläche/Licht, spezifisch + generativ; KEINE Zustände/Gefühle/Konzept-Wortspiele"),
+  materialien: z.array(z.string()).describe("4–6 ECHTE Materialien/Oberflächen — keine Bauteile/Konstruktionen"),
+  bildReferenzen: z.array(z.string()).describe("2–3 reale, benennbare Bild-Anker (existierende Objekte/Szenen/Artefakte) — keine „wie …\"-Poesie, keine Stile"),
 });
 
 /** Persona engine — N clusters in one call. */
@@ -26,7 +26,7 @@ export const judgeSchema = z.object({
   onTarget: z.number().min(1).max(5).describe("Würde ein Senior-AD das DIESEM Kunden hinlegen? Trifft es den Kern? (nah ODER fern gültig)"),
   surprise: z.number().min(1).max(5).describe("Frisch und nicht-generisch — fern: überraschend, nah: premium-schön statt plump."),
   craft: z.number().min(1).max(5).describe("Ist der Welt-Satz konkret/sinnlich/evokativ statt generisch?"),
-  designValue: z.number().min(1).max(5).describe("Ableitbarer Welt-/Material-Wert, aus dem ein Bildmodell eine interessante Designwelt baut — KEINE Geschichte/Narrativ, keine nicht-ableitbare Abstraktion."),
+  formSubstanz: z.number().min(1).max(5).describe("Liefern die FUNDE zeichenbare Gestalt über mehrere Design-Achsen, aus der ein Bildmodell direkt baut? Stimmung/Abwesenheit/Wortspiel → 1–2."),
   note: z.string().describe("ein kurzer Satz Begründung"),
 });
 

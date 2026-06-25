@@ -12,9 +12,9 @@ export const clusterSchema = z.object({
   weltSatz: z.string(),
   leitwert: z.string(),
   register: z.enum(["nah", "fern"]),
-  metaphern: z.array(z.string()),
+  funde: z.array(z.string()),
   materialien: z.array(z.string()),
-  bildVergleiche: z.array(z.string()),
+  bildReferenzen: z.array(z.string()),
 });
 export type Cluster = z.infer<typeof clusterSchema>;
 
@@ -23,12 +23,12 @@ export const personaListSchema = z.object({ personas: z.array(clusterSchema) });
 /** Synthese engine — N clusters in one call. */
 export const workbenchSchema = z.object({ candidates: z.array(clusterSchema) });
 
-/** Quality judgement: on-target × surprise × craft × designValue (would a senior AD pitch it to THIS client?). */
+/** Quality judgement: on-target × surprise × craft × formSubstanz (would a senior AD pitch it to THIS client?). */
 export const judgeSchema = z.object({
   onTarget: z.number().min(1).max(5),
   surprise: z.number().min(1).max(5),
   craft: z.number().min(1).max(5),
-  designValue: z.number().min(1).max(5).optional(),
+  formSubstanz: z.number().min(1).max(5).optional(),
   note: z.string(),
 });
 export type JudgeScore = z.infer<typeof judgeSchema>;

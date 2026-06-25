@@ -8,19 +8,19 @@ const card = (
   register: "nah" | "fern",
   leitwert: string,
   weltSatz: string,
-  metaphern: string[],
+  funde: string[],
   materialien: string[],
-  bildVergleiche: string[],
+  bildReferenzen: string[],
 ): VibeCard => ({
   id: `${source}-mock-${n++}`,
   source,
   leitwert,
   weltSatz,
   register,
-  metaphern,
+  funde,
   materialien,
-  bildVergleiche,
-  quality: { onTarget: 4, surprise: 4, craft: 4, designValue: 4, overall: 4, note: "" },
+  bildReferenzen,
+  quality: { onTarget: 4, surprise: 4, craft: 4, formSubstanz: 4, overall: 4, note: "" },
 });
 
 export const MOCK_SEED = "Einladung & Webseite für eine Hochzeit am Meer";

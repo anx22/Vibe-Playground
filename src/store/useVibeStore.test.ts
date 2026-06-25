@@ -9,9 +9,9 @@ const fakeCard = (id: string): VibeCard => ({
   leitwert: id,
   weltSatz: "x",
   register: "nah",
-  metaphern: [],
+  funde: [],
   materialien: [],
-  bildVergleiche: [],
+  bildReferenzen: [],
 });
 
 describe("anchors", () => {

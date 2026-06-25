@@ -44,7 +44,7 @@ async function batchJudge(briefing: string, cards: Card[]): Promise<number[]> {
   try {
     const out = await genObject({ model: modelFor("cheap"), schema: judgeBatchSchema, system: JUDGE_SYSTEM, maxOutputTokens: 256 + cards.length * 140,
       prompt: fill(JUDGE_PROMPT, { briefing: briefing || JUDGE_BLANK, count: cards.length, list }) });
-    return out.scores.map((s) => { const ax = [s.onTarget, s.surprise, s.craft, s.designValue].filter((x): x is number => typeof x === "number"); return ax.reduce((a, b) => a + b, 0) / ax.length; });
+    return out.scores.map((s) => { const ax = [s.onTarget, s.surprise, s.craft, s.formSubstanz].filter((x): x is number => typeof x === "number"); return ax.reduce((a, b) => a + b, 0) / ax.length; });
   } catch { return cards.map(() => NaN); }
 }
 

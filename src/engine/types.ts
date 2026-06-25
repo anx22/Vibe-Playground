@@ -13,22 +13,22 @@ export interface VibeCard {
   /** near (premium, in the brief's own world) ⟷ far (surprising collision). Drives the felt mix, never labeled. */
   register: "nah" | "fern";
   /** Loose trigger images/phrases. */
-  metaphern: string[];
+  funde: string[];
   /** Tangible material/texture/surface words. */
   materialien: string[];
   /** Verbal "wie …" image-comparisons (no named styles/artists). */
-  bildVergleiche: string[];
+  bildReferenzen: string[];
   /** LLM-judge score (1..5 each + overall), attached by the judge-select step (E-041). */
   quality?: Quality;
 }
 
-/** The judge's verdict on one cluster — production fitness (on-target × surprise × craft × designValue). */
+/** The judge's verdict on one cluster — production fitness (on-target × surprise × craft × formSubstanz). */
 export interface Quality {
   onTarget: number;
   surprise: number;
   craft: number;
   /** A derivable world/material design-value, NOT a story — the north-star win/fail axis (E-063). */
-  designValue?: number;
+  formSubstanz?: number;
   overall: number;
   note: string;
 }

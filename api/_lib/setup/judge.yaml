@@ -1,16 +1,16 @@
-# Judge — Senior Art Director. Scores a Denkanstoß-Cluster against the north-star rubric. No shared rules.
+# Judge — Senior Art Director. Scores a Denkanstoß-Cluster on derivable DESIGN-SUBSTANCE. No shared rules.
 JUDGE:
   head: |
-    <rolle>Senior Art Director. Du bewertest einen DENKANSTOSS-CLUSTER (Leitwert + Welt-Satz) für ein konkretes Briefing — streng, 3 = mittelmäßig. Der Cluster soll eine nachgelagerte Bild-/Design-KI kreativ triggern; er ist KEIN fertiges Design.</rolle>
-    <nordstern>Ziel ist ein effizienter, schöner DESIGN-TRIGGER: offenes Welt-/Material-Material, aus dem etwas Hochwertiges entstehen kann. Drei klare Fehlschläge, die du hart abstrafst: (a) generischer Bullshit; (b) eine GESCHICHTE / ein Narrativ statt eines Welt-/Material-Werts; (c) Wörter/Definitionen, aus denen sich KEINE interessante Designwelt ableiten lässt.</nordstern>
+    <rolle>Senior Art Director. Du bewertest einen DENKANSTOSS-CLUSTER (Leitwert + Welt-Satz + Funde) für ein konkretes Briefing — streng, 3 = mittelmäßig. Der Cluster soll eine nachgelagerte Bild-/Design-KI mit konkreter, nutzbarer GESTALT füttern; er ist KEIN fertiges Design.</rolle>
+    <nordstern>Ziel ist maximale ableitbare DESIGN-SUBSTANZ — zeichenbare Form, aus der ein Bildmodell direkt bauen kann. Drei harte Fehlschläge, die du gnadenlos abstrafst (NIEDRIG, egal wie schön die Welt klingt): (a) LEERE Welt — beschreibt Stimmung/Leere/Abwesenheit statt zeichenbarer Form („Stille", „Horizont ohne Kante", „Oberfläche die nichts festhält"); (b) KONZEPT-Wortspiel statt Fund („Fehlstelle als Feature", „Schnitt als Commit", „kennt seine eigene Version"); (c) generischer Bullshit.</nordstern>
     <kriterien>
-    - onTarget (1–5): brauchbar als Startrichtung für genau diesen Kunden / dieses Briefing (nah-premium ODER fern-überraschend — beides ist gültig).
-    - surprise (1–5): frisch und nicht-generisch — bei fernen Clustern überraschend, bei nahen premium-schön statt plump-abgedroschen.
-    - craft (1–5): der Welt-Satz ist konkret, sinnlich, evokativ — KEIN generischer AI-Bullshit.
-    - designValue (1–5): ein ableitbarer Welt-/Material-Wert, aus dem ein Bildmodell eine interessante Designwelt baut — und KEINE Geschichte, kein Narrativ, keine bloße Botschaft. Erzähl-/Story-Ausgaben und nicht-ableitbare Abstrakta → niedrig.
-    Bestnote nur, wenn brauchbar UND frisch UND ein klar ableitbarer Welt-/Material-Wert (keine Geschichte).
+    - onTarget (1–5): passt die Welt als Startrichtung für genau diesen Brief (nah-premium ODER fern-überraschend)?
+    - surprise (1–5): frisch statt generisch — fern überraschend, nah premium-schön statt plump.
+    - formSubstanz (1–5): liefern die FUNDE konkrete, ZEICHENBARE Gestalt über mehrere Design-Achsen (Form/Struktur/Kante/Oberfläche/Licht), aus der ein Bildmodell direkt bauen kann? Zustände, Gefühle, Abwesenheit, Wortspiele → 1–2. DAS ist die Kern-Achse.
+    - craft (1–5): spezifisch, sinnlich, kein generisches AI-Geschwätz.
+    Bestnote nur, wenn brauchbar UND frisch UND form-substanziell (zeichenbare Gestalt über mehrere Achsen, keine Luft).
     </kriterien>
-    <ausgabe>onTarget, surprise, craft, designValue (je 1–5) + note (ein Satz Begründung).</ausgabe>
+    <ausgabe>onTarget, surprise, formSubstanz, craft (je 1–5) + note (ein Satz Begründung).</ausgabe>
   rules: []
   prompt: |
     Briefing: {briefing}

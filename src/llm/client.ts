@@ -67,16 +67,16 @@ export const generateSynthese = (input: {
 
 /** Batched LLM judge — scores MANY clusters in ONE call (a structure in, scores[] out). */
 export const judgeBatch = (
-  input: { briefing: string; items: { leitwert: string; weltSatz: string }[] },
+  input: { briefing: string; items: { leitwert: string; weltSatz: string; funde?: string[] }[] },
   tier: Tier = "cheap",
 ): Promise<{ scores: JudgeScore[] }> => post("/api/judge", { ...input, tier }, judgeBatchSchema);
 
 /** Convenience: score a single cluster (a 1-item batch — keeps the eval's per-card path working). */
 export const judge = async (
-  input: { briefing: string; leitwert: string; weltSatz?: string },
+  input: { briefing: string; leitwert: string; weltSatz?: string; funde?: string[] },
   tier: Tier = "cheap",
 ): Promise<JudgeScore> => {
-  const { briefing, leitwert, weltSatz } = input;
-  const { scores } = await judgeBatch({ briefing, items: [{ leitwert, weltSatz: weltSatz ?? "" }] }, tier);
+  const { briefing, leitwert, weltSatz, funde } = input;
+  const { scores } = await judgeBatch({ briefing, items: [{ leitwert, weltSatz: weltSatz ?? "", funde: funde ?? [] }] }, tier);
   return scores[0];
 };
