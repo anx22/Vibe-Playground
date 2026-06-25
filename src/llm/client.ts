@@ -66,19 +66,19 @@ export const generateSynthese = (input: {
 }): Promise<WorkbenchCandidate[]> =>
   post("/api/synthese", input, workbenchSchema).then((r) => r.candidates);
 
-/** Batched LLM judge — scores MANY directions in ONE call (a structure in, scores[] out). */
+/** Batched LLM judge — scores MANY clusters in ONE call (a structure in, scores[] out). */
 export const judgeBatch = (
-  input: { briefing: string; items: { leitwert: string; scene: string; mood: string }[] },
+  input: { briefing: string; items: { leitwert: string; weltSatz: string }[] },
   tier: Tier = "cheap",
 ): Promise<{ scores: JudgeScore[] }> => post("/api/judge", { ...input, tier }, judgeBatchSchema);
 
-/** Convenience: score a single direction (a 1-item batch — keeps the eval's per-card path working). */
+/** Convenience: score a single cluster (a 1-item batch — keeps the eval's per-card path working). */
 export const judge = async (
-  input: { briefing: string; leitwert: string; scene?: string; mood: string },
+  input: { briefing: string; leitwert: string; weltSatz?: string },
   tier: Tier = "cheap",
 ): Promise<JudgeScore> => {
-  const { briefing, leitwert, scene, mood } = input;
-  const { scores } = await judgeBatch({ briefing, items: [{ leitwert, scene: scene ?? "", mood }] }, tier);
+  const { briefing, leitwert, weltSatz } = input;
+  const { scores } = await judgeBatch({ briefing, items: [{ leitwert, weltSatz: weltSatz ?? "" }] }, tier);
   return scores[0];
 };
 

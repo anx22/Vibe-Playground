@@ -1,27 +1,19 @@
-import { useEffect, useState, type CSSProperties } from "react";
+import { useEffect, type CSSProperties } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { VibeCard } from "../engine";
 import { SOURCES, MAX_ANCHORS, useVibeStore } from "../store/useVibeStore";
+import { ClusterCard } from "../lab/ClusterCard";
 
 /**
- * Studio — a bento FIELD (E-067), not linear lanes. Each engine is a panel with a HERO tile (its
- * judge-#1) over smaller satellite tiles, so the strongest direction is visually dominant. Werkbank's
- * satellites sub-cluster by taste-direction (D12). A register chip (E-065) makes material variety
- * visible at a glance. Clicking a tile opens a detail drawer with progressive depth (E-066).
+ * Board — a bento FIELD (E-067). Each engine is a panel with a HERO tile (its judge-#1) over smaller
+ * satellite tiles, so the strongest direction is visually dominant. Clicking a tile opens a drawer
+ * with the full Denkanstoß-Cluster (Welt-Satz + Metaphern/Materialien/Bild-Vergleiche), each copyable.
  */
 
 const accentOf = (id?: string) => SOURCES.find((s) => s.id === id)?.accent ?? "#888";
 const labelOf = (id?: string) => SOURCES.find((s) => s.id === id)?.label ?? "";
 
-/** One-line teaser under a hero Leitwert, tuned per methodology. */
-function teaser(c: VibeCard): string {
-  const d = c.detail;
-  if (c.source === "persona") return d?.derivation ?? c.scene ?? "";
-  if (d?.worlds?.length) return d.worlds.map((w) => w.name).join("  ×  ");
-  return c.mood;
-}
-
-export function Board({ onExport }: { onExport: (c: VibeCard) => void }) {
+export function Board() {
   const cards = useVibeStore((s) => s.cards);
   const anchors = useVibeStore((s) => s.anchors);
   const seed = useVibeStore((s) => s.seed);
@@ -70,7 +62,7 @@ export function Board({ onExport }: { onExport: (c: VibeCard) => void }) {
         })}
       </div>
 
-      <DetailDrawer onExport={onExport} anchorIds={anchorIds} anchorsFull={anchorsFull} />
+      <DetailDrawer anchorIds={anchorIds} anchorsFull={anchorsFull} />
     </div>
   );
 }
@@ -114,7 +106,6 @@ function Tile({ card, hero, anchored }: { card: VibeCard; hero?: boolean; anchor
   const focusId = useVibeStore((s) => s.focusId);
   const focus = useVibeStore((s) => s.focus);
   const open = focusId === card.id;
-  const reg = card.quality?.register;
   return (
     <button
       type="button"
@@ -124,21 +115,15 @@ function Tile({ card, hero, anchored }: { card: VibeCard; hero?: boolean; anchor
     >
       {anchored && <span className="tile-star" aria-hidden>★</span>}
       <span className="tile-name">{card.leitwert}</span>
-      {hero && <span className="tile-teaser">{teaser(card)}</span>}
-      <span className="tile-foot">
-        <span className="tile-pal">{card.palette.map((c, i) => <span key={i} style={{ background: c }} />)}</span>
-        {reg && <span className="tile-reg" title={`Register: ${reg}`}>{reg}</span>}
-      </span>
+      {hero && <span className="tile-teaser">{card.weltSatz}</span>}
     </button>
   );
 }
 
 function DetailDrawer({
-  onExport,
   anchorIds,
   anchorsFull,
 }: {
-  onExport: (c: VibeCard) => void;
   anchorIds: Set<string>;
   anchorsFull: boolean;
 }) {
@@ -164,7 +149,6 @@ function DetailDrawer({
           anchorsFull={anchorsFull}
           onClose={() => focus(null)}
           onAnchor={() => useVibeStore.getState().toggleAnchor(card)}
-          onExport={() => onExport(card)}
         />
       )}
     </AnimatePresence>
@@ -177,20 +161,14 @@ function DrawerContent({
   anchorsFull,
   onClose,
   onAnchor,
-  onExport,
 }: {
   card: VibeCard;
   anchored: boolean;
   anchorsFull: boolean;
   onClose: () => void;
   onAnchor: () => void;
-  onExport: () => void;
 }) {
-  const [deep, setDeep] = useState(false);
-  const d = card.detail;
   const canAnchor = anchored || !anchorsFull;
-  const designs = d?.designs ?? [];
-  const hasDepth = !!(d?.worlds?.length || (d?.object && d.object !== "—") || d?.derivation || card.scene);
 
   return (
     <motion.aside
@@ -203,62 +181,13 @@ function DrawerContent({
     >
       <button className="flyout-x" onClick={onClose} aria-label="schließen">✕</button>
       <div className="flyout-src">{labelOf(card.source)}</div>
-      <h2 className="flyout-name">{card.leitwert}</h2>
-      <div className="flyout-mood">{card.mood}</div>
 
-      {card.quality?.register && (
-        <div className="flyout-tags"><span>Register: {card.quality.register}</span></div>
-      )}
-
-      <div className="flyout-palette">
-        {card.palette.map((c, i) => <span key={i} style={{ background: c }} title={c} />)}
-      </div>
-
-      {designs.length > 0 ? (
-        <div className="flyout-designs">
-          <h3>Denkbare Designs</h3>
-          {designs.map((dz, i) => (
-            <div className="fd-item" key={i}>
-              <div className="fd-title">{dz.title}</div>
-              <p className="fd-desc">{dz.description}</p>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="flyout-block"><h3>Herleitung</h3><p>{d?.derivation ?? card.scene}</p></div>
-      )}
-
-      {hasDepth && (
-        <>
-          <button className="rd-more" onClick={() => setDeep((v) => !v)} aria-expanded={deep}>
-            {deep ? "Welt ausblenden ▴" : "Welt & Herleitung ▾"}
-          </button>
-          <AnimatePresence initial={false}>
-            {deep && (
-              <motion.div className="rd-depth" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.16 }}>
-                {designs.length > 0 && (d?.derivation || card.scene) && (
-                  <div className="flyout-block"><h3>Warum es trägt</h3><p>{d?.derivation ?? card.scene}</p></div>
-                )}
-                {d?.worlds?.length ? (
-                  <div className="flyout-block">
-                    <h3>Verschränkung</h3>
-                    {d.worlds.map((w, i) => (
-                      <p key={i}><b>{w.name}</b> <span className="role">{w.role}</span><br /><span className="rhyme">reimt: {w.rhyme}</span></p>
-                    ))}
-                  </div>
-                ) : null}
-                {d?.object && d.object !== "—" && <div className="flyout-block"><h3>Objekt</h3><p>{d.object}</p></div>}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </>
-      )}
+      <ClusterCard card={card} framed={false} />
 
       <div className="flyout-actions">
         <button className={`btn btn-anchor${anchored ? " is-on" : ""}`} disabled={!canAnchor} onClick={onAnchor}>
           {anchored ? "★ Anker gesetzt" : canAnchor ? "☆ Als Anker setzen" : "Anker voll (5)"}
         </button>
-        <button className="btn btn-primary" onClick={onExport}>Inhalt kopieren ⤓</button>
       </div>
     </motion.aside>
   );

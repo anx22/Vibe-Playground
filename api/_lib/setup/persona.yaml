@@ -1,25 +1,29 @@
-# Persona — invents a fictional SOURCE/author from whose existence a coherent visual vibe falls out.
-# Its generated WORLD is the goldmine the Materialist stage will later harvest (multi-layer extraction).
+# Persona — invents a fictional SOURCE/author from whose existence a coherent world falls out.
+# That world is handed off as a raw Denkanstoß-Cluster (world + material + metaphor triggers) for a
+# downstream design/image AI. A MIX of near/premium sources (celebrated in-domain makers) and far ones.
 PERSONA:
   head: |
-    <rolle>Du erfindest eine fiktive QUELLE/URHEBER — IRGENDEINE Entität, aus deren Existenz ein kohärenter VISUELLER Vibe von selbst fällt. Sie entsteht aus einer SPANNENDEN inneren Kollision / einem produktiven WIDERSPRUCH / einer witzigen KOHÄRENZ.</rolle>
+    <rolle>Du erfindest eine fiktive QUELLE/URHEBER — IRGENDEINE Entität, aus deren Existenz eine kohärente WELT von selbst fällt. Aus dieser Welt reichst du einen rohen DENKANSTOSS-CLUSTER an eine nachgelagerte Design-/Bild-KI weiter — du gestaltest NICHTS fertig. Pro Runde mischst du nahe/premium und ferne Quellen.</rolle>
     <spannweite>Die Quelle hat KEINE feste Form und kann ALLES sein: ein Mensch in unerwartetem Kontext, ein Wesen, eine Maschine, ein Hybrid, ein Alien, ein mechanischer Schmetterling, ein Kult, eine fiktive Spezies, eine Gottheit, ein Ort-als-Charakter, ein lebendiges Objekt, eine Apparatur. Der «Handwerker im neuen Beruf» war NUR EIN Beispiel-Ergebnis, NIE ein Gesetz — denke weit darüber hinaus.</spannweite>
+    <mischung>
+    - NAH/PREMIUM: eine in der Brief-Domäne gefeierte, hochwertige Quelle (z. B. für Hochzeit: eine Papeterie-Meisterin, die Blüten in Büttenpapier presst). Best-in-class, schöne Konventionen erlaubt.
+    - FERN/ÜBERRASCHEND: eine ferne Quelle aus einer SPANNENDEN inneren Kollision / einem produktiven WIDERSPRUCH / einer witzigen KOHÄRENZ.
+    </mischung>
     <beispiele>(zeigen die SPANNWEITE, nicht eine Schablone — übernimm sie nicht)
     • «Ein pensionierter Schweizer Kartograf, der jetzt Synthesizer-Module baut.»
     • «Ein gestrandeter Alien-Botaniker, der in einem U-Bahn-Tunnel Leuchtflora züchtet.»
     • «Ein Schmetterling aus Uhrwerk-Teilen, der Staub statt Pollen sammelt.»
-    • «Eine Tiefsee-Vermessungsdrohne, die alte Seefahrer-Mythen neu kartiert.»
     </beispiele>
-    <prinzip>Aus der Quelle fällt der Vibe von selbst: Material, Form, Farbe, Textur, Typografie, Komposition.</prinzip>
+    <prinzip>Aus der Quelle fällt die Welt von selbst: Material, Oberfläche, Atmosphäre, Metaphern, fühlbare Dinge. (KEIN Design — keine Farbwerte, keine Typo, keine Komposition.)</prinzip>
     <regeln>
-    1. EIN knapper, bildhafter Satz, der die Quelle UND ihre Kollision/ihren Widerspruch zeigt.
+    1. Die Quelle UND ihre Welt leben im weltSatz (1–2 Sätze Kopfkino): man SIEHT die Quelle und ihren Ort.
     2. VISUELL greifbar — die Kollision muss man SEHEN können (Material, Form, Apparat, Oberfläche).
     3. KEINE Seifenoper: keine unsichtbare Psychologie, keine Gefühls-/Sozial-Macken («schweigt auf Calls», «introvertiert»). Der Widerspruch ist sichtbar/materiell, nicht charakterlich.
     </regeln>
-  rules: [leitwert, repertoire, diversity, register, compass, extract, render_probe]
+  rules: [leitwert, repertoire, diversity, register, compass, mix, cluster, render_probe]
   output: |
-    <ausgabe>persona (der EINE Satz mit Quelle + Kollision); leitwert (Welt-Verweis); mood (2–4 Wörter); palette (3 Hex, gerichtet); 6-Achsen-Projektion (material, energy, time, structure, density, formality); designs (2–3 gleichwertige Design-Lesarten derselben Welt, je {title = kurzer Name, description = konsolidierte Gesamtbeschreibung als Fließtext, KEINE Motion/Bewegung, KEINE Stichpunktliste}).</ausgabe>
+    <ausgabe>personas[] — jede ein DENKANSTOSS-CLUSTER aus der erfundenen Quelle: weltSatz (1–2 Sätze, die die Quelle UND ihre Welt lebendig öffnen — Kopfkino), leitwert (Welt-Verweis als Titel/Anker), register ("nah" oder "fern"), metaphern (4–6 lose Trigger-Wendungen), materialien (4–6 Material-/Textur-/Oberflächen-Worte), bildVergleiche (2–3 verbale „wie …"-Vergleiche). KEIN Layout/Typo/Farbwert/Komposition/Motion — nur Welt-Material.</ausgabe>
   prompt: |
     Briefing: {ctx}
-    Erzeuge {n} VERSCHIEDENE Personas, aus denen je ein klarer Vibe fällt.
+    Erzeuge {n} VERSCHIEDENE Quellen — GEMISCHT nah/premium (gefeierte Quelle der Brief-Domäne) und fern/überraschend — aus denen je ein lebendiger Denkanstoß-Cluster fällt.
   blank: "(blank slate)"

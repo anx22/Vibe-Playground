@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
-import type { VibeCard as Card } from "./engine";
 import { useVibeStore, MAX_ANCHORS } from "./store/useVibeStore";
 import { Board } from "./components/Board";
-import { ExportModal } from "./components/ExportModal";
 
 export default function App() {
   const s = useVibeStore();
-  const [exportCard, setExportCard] = useState<Card | null>(null);
   const [bannerDismissed, setBannerDismissed] = useState(false);
 
   useEffect(() => {
@@ -76,10 +73,8 @@ export default function App() {
           </div>
         </main>
       ) : (
-        <Board onExport={setExportCard} />
+        <Board />
       )}
-
-      {exportCard && <ExportModal card={exportCard} onClose={() => setExportCard(null)} />}
     </div>
   );
 }

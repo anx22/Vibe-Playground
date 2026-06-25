@@ -1,29 +1,28 @@
 import { describe, expect, it } from "vitest";
 import type { VibeCard } from "../engine";
-import { zero } from "../engine";
-import { QUALITY_FLOOR, passesFloor, spreadByRegister } from "./select";
+import { QUALITY_FLOOR, passesFloor, spreadByMix } from "./select";
 
 /** Quality floor (E-063): nothing under the bar reaches the board; a judge outage degrades to show-all. */
 const base: VibeCard = {
   id: "x",
+  source: "synthese",
   leitwert: "x",
-  mood: "x",
-  typography: { display: {} as never, body: {} as never, data: {} as never },
-  palette: ["#000", "#111", "#222"],
-  vector: zero(),
-  coherence: { sharedAxes: [], ok: true },
-  origin: { home: "—", intrusion: "—", object: "—", engineNote: "—" },
-  source: "entanglement",
+  weltSatz: "x",
+  register: "nah",
+  metaphern: [],
+  materialien: [],
+  bildVergleiche: [],
 };
 const withScore = (overall: number): VibeCard => ({
   ...base,
   quality: { onTarget: overall, surprise: overall, craft: overall, designValue: overall, overall, note: "" },
 });
-const withReg = (id: string, register: string | undefined, overall: number): VibeCard => ({
+const withMix = (id: string, register: "nah" | "fern", overall: number): VibeCard => ({
   ...base,
   id,
   leitwert: id,
-  quality: { onTarget: overall, surprise: overall, craft: overall, designValue: overall, overall, note: "", register },
+  register,
+  quality: { onTarget: overall, surprise: overall, craft: overall, designValue: overall, overall, note: "" },
 });
 
 describe("quality floor (E-063)", () => {
@@ -42,39 +41,26 @@ describe("quality floor (E-063)", () => {
   });
 });
 
-describe("register spread (E-065)", () => {
+describe("mix spread (round 5 — near/far interleave)", () => {
   it("keeps the single best card at position #1", () => {
-    const cards = [
-      withReg("a", "Papier-Archiv", 5),
-      withReg("b", "Papier-Archiv", 4.5),
-      withReg("c", "Metall-Industrie", 4),
-    ];
-    expect(spreadByRegister(cards)[0].id).toBe("a");
+    const cards = [withMix("a", "nah", 5), withMix("b", "nah", 4.5), withMix("c", "fern", 4)];
+    expect(spreadByMix(cards)[0].id).toBe("a");
   });
 
-  it("interleaves registers so the visible top spans material feels, not one register", () => {
+  it("interleaves nah/fern so the visible field alternates between the registers", () => {
     const cards = [
-      withReg("p1", "Papier-Archiv", 5),
-      withReg("p2", "Papier-Archiv", 4.8),
-      withReg("p3", "Papier-Archiv", 4.6),
-      withReg("m1", "Metall-Industrie", 4.4),
-      withReg("g1", "Glas-Flüssig", 4.2),
+      withMix("n1", "nah", 5),
+      withMix("n2", "nah", 4.8),
+      withMix("n3", "nah", 4.6),
+      withMix("f1", "fern", 4.4),
+      withMix("f2", "fern", 4.2),
     ];
-    const top3 = spreadByRegister(cards).slice(0, 3).map((c) => c.quality?.register);
-    expect(new Set(top3).size).toBe(3);
-  });
-
-  it("sinks unlabeled (judge-outage) cards below labeled ones, order-stable", () => {
-    const cards = [
-      withReg("u1", undefined, 4),
-      withReg("r1", "Stein-Keramik", 3.9),
-      withReg("u2", undefined, 3.8),
-    ];
-    expect(spreadByRegister(cards).map((c) => c.id)).toEqual(["r1", "u1", "u2"]);
+    expect(spreadByMix(cards).map((c) => c.register)).toEqual(["nah", "fern", "nah", "fern", "nah"]);
+    expect(spreadByMix(cards).map((c) => c.id)).toEqual(["n1", "f1", "n2", "f2", "n3"]);
   });
 
   it("preserves order when every card shares one register", () => {
-    const cards = [withReg("a", "Textil-Faser", 5), withReg("b", "Textil-Faser", 4)];
-    expect(spreadByRegister(cards).map((c) => c.id)).toEqual(["a", "b"]);
+    const cards = [withMix("a", "nah", 5), withMix("b", "nah", 4)];
+    expect(spreadByMix(cards).map((c) => c.id)).toEqual(["a", "b"]);
   });
 });

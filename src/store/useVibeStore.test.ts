@@ -1,20 +1,17 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import type { VibeCard } from "../engine";
-import { zero } from "../engine";
 import { MAX_ANCHORS, noveltyText, pushProduced, useVibeStore } from "./useVibeStore";
 
 /** Anchors are the gold-set primitive (E-047): toggle on/off, capped at MAX_ANCHORS. */
 const fakeCard = (id: string): VibeCard => ({
   id,
+  source: "synthese",
   leitwert: id,
-  mood: "x",
-  scene: "x",
-  typography: { display: {} as never, body: {} as never, data: {} as never },
-  palette: ["#000", "#111", "#222"],
-  vector: zero(),
-  coherence: { sharedAxes: [], ok: true },
-  origin: { home: "—", intrusion: "—", object: "—", engineNote: "—" },
-  source: "entanglement",
+  weltSatz: "x",
+  register: "nah",
+  metaphern: [],
+  materialien: [],
+  bildVergleiche: [],
 });
 
 describe("anchors", () => {

@@ -10,42 +10,37 @@ export interface Typography {
   family: string;
 }
 
+/**
+ * A result = an open "Denkanstoß-Cluster" (QS-2): a vivid world-opener + anchor + loose triggers
+ * that feed a downstream design/image AI. No pre-designing — no typography/palette/layout here.
+ */
 export interface VibeCard {
   id: string;
-  /** The compound word, e.g. "Editorial-Tech-Atlas". */
-  leitwert: string;
-  mood: string;
-  /** Optional evocative scene — the LLM render (E-028); absent in the offline template. */
-  scene?: string;
-  typography: { display: Typography; body: Typography; data: Typography };
-  palette: [string, string, string];
-  vector: AxisVector;
-  coherence: { sharedAxes: AxisKey[]; ok: boolean };
-  origin: { home: string; intrusion: string; object: string; engineNote: string };
-  /** Which methodology produced this block — drives the constellation clustering (E-047). */
+  /** Which methodology produced this block — drives the lane/panel grouping (E-047). */
   source?: string;
-  /** Rich expand detail (Engine D bridge: the worlds, their rhyme, object, derivation). */
-  detail?: {
-    worlds?: { name: string; role: string; rhyme: string }[];
-    object?: string;
-    derivation?: string;
-    /** 2–3 gleichwertige holistische Design-Lesarten derselben Welt — konsolidierte
-     *  Gesamtbeschreibungen statt atomisierter Pattern-Liste, ohne Motion (E-095). */
-    designs?: { title: string; description: string }[];
-  };
+  /** The compound word — anchor + title of the cluster, e.g. "Letterpress-Seidenband". */
+  leitwert: string;
+  /** 1–2 sentences of Kopfkino that open the world (sensory, concrete — not a design instruction). */
+  weltSatz: string;
+  /** near (premium, in the brief's own world) ⟷ far (surprising collision). Drives the felt mix, never labeled. */
+  register: "nah" | "fern";
+  /** Loose trigger images/phrases. */
+  metaphern: string[];
+  /** Tangible material/texture/surface words. */
+  materialien: string[];
+  /** Verbal "wie …" image-comparisons (no named styles/artists). */
+  bildVergleiche: string[];
   /** LLM-judge score (1..5 each + overall), attached by the judge-select step (E-041). */
   quality?: Quality;
 }
 
-/** The judge's verdict on one card — the production fitness signal (E-063: on-target × surprise × craft × designValue). */
+/** The judge's verdict on one cluster — the production fitness signal (on-target × surprise × craft × designValue). */
 export interface Quality {
   onTarget: number;
   surprise: number;
   craft: number;
-  /** A derivable design-value (world/material/style/mood), NOT a story — the north-star win/fail axis (E-063). Optional: an older/leaner judge may omit it. */
+  /** A derivable world/material design-value, NOT a story — the north-star win/fail axis (E-063). Optional: a leaner judge may omit it. */
   designValue?: number;
-  /** Render/material register the judge assigned — spreads a cluster across material feels (E-065). */
-  register?: string;
   overall: number;
   note: string;
 }

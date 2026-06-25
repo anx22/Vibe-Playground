@@ -1,10 +1,9 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { VibeCard } from "../engine";
-import { paletteFor, typoFor } from "../engine/derive";
 import { generatePersonas, generateSynthese } from "../llm/client";
-import type { Bridge, Persona, WorkbenchCandidate } from "../llm/schema";
-import { judgeRank, passesFloor, spreadByRegister } from "../llm/select";
+import type { Cluster } from "../llm/schema";
+import { judgeRank, passesFloor, spreadByMix } from "../llm/select";
 
 /** Per method we generate a few extra and judge-select the strongest into the cluster (E-041). */
 const PER_METHOD = 5;
@@ -19,59 +18,19 @@ const MAX_ANCHORS = 5;
 const SID = Math.random().toString(36).slice(2, 8);
 let idSeq = 0;
 const nextId = (source: string) => `${source}-${SID}-${idSeq++}`;
-const rng = () => Math.random();
 
-const HEX = /^#?[0-9a-fA-F]{3,8}$/;
-function palette3(p: string[] | undefined): [string, string, string] {
-  const ok = (p ?? []).filter((c) => HEX.test(c)).map((c) => (c.startsWith("#") ? c : `#${c}`));
-  return [ok[0] ?? "#1c1c1c", ok[1] ?? "#6b6b6b", ok[2] ?? "#d9d4cc"];
-}
-
-function bridgeToCard(b: Bridge, source: string): VibeCard {
+/** Both engines now emit the same open Denkanstoß-Cluster — one thin mapping into the card model. */
+function clusterToCard(c: Cluster, source: string): VibeCard {
   return {
     id: nextId(source),
-    leitwert: b.leitwert,
-    mood: b.mood,
-    scene: b.creativeDerivation,
-    typography: typoFor(b.vector, rng),
-    palette: palette3(b.palette),
-    vector: b.vector,
-    coherence: { sharedAxes: [], ok: true },
-    origin: {
-      home: b.worlds.map((w) => w.name).join(" × "),
-      intrusion: b.objectMetaphor,
-      object: b.objectMetaphor,
-      engineNote: b.creativeDerivation,
-    },
     source,
-    detail: {
-      worlds: b.worlds,
-      object: b.objectMetaphor,
-      derivation: b.creativeDerivation,
-      designs: b.designs,
-    },
+    leitwert: c.leitwert,
+    weltSatz: c.weltSatz,
+    register: c.register,
+    metaphern: c.metaphern ?? [],
+    materialien: c.materialien ?? [],
+    bildVergleiche: c.bildVergleiche ?? [],
   };
-}
-
-function personaToCard(p: Persona, source: string): VibeCard {
-  return {
-    id: nextId(source),
-    leitwert: p.leitwert,
-    mood: p.mood,
-    scene: p.persona,
-    typography: typoFor(p.vector, rng),
-    palette: p.palette?.length ? palette3(p.palette) : paletteFor(p.vector),
-    vector: p.vector,
-    coherence: { sharedAxes: [], ok: true },
-    origin: { home: "Persona", intrusion: "—", object: "—", engineNote: p.persona },
-    source,
-    detail: { derivation: p.persona, designs: p.designs },
-  };
-}
-
-/** WorkbenchCandidate === Bridge now (taste/operators/comfort trimmed, QS-5) — thin alias. */
-function candidateToCard(c: WorkbenchCandidate, source: string): VibeCard {
-  return bridgeToCard(c, source);
 }
 
 /** The creative derivations, each its own constellation cluster (E-047). Pluggable — add a source here. */
@@ -88,7 +47,7 @@ export const SOURCES: Source[] = [
     label: "Synthese",
     accent: "#CE82FF",
     gen: async (briefing, steer, n) =>
-      (await generateSynthese({ briefing, steer, n })).map((c) => candidateToCard(c, "synthese")),
+      (await generateSynthese({ briefing, steer, n })).map((c) => clusterToCard(c, "synthese")),
   },
   {
     id: "persona",
@@ -96,7 +55,7 @@ export const SOURCES: Source[] = [
     accent: "#1CB0F6",
     gen: async (briefing, steer, n) =>
       (await generatePersonas({ briefing: briefing + steer, n, tier: "strong" })).map((p) =>
-        personaToCard(p, "persona"),
+        clusterToCard(p, "persona"),
       ),
   },
 ];
@@ -162,7 +121,7 @@ async function produceForSource(src: Source, briefing: string, steer: string): P
     return out;
   };
   const ranked = await judgeRank(await src.gen(briefing, steer, OVERSCAN), briefing);
-  return spreadByRegister(keep(ranked));
+  return spreadByMix(keep(ranked));
 }
 
 /** Monotonic round id so late results from a superseded round are dropped. */

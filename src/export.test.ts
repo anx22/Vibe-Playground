@@ -1,83 +1,46 @@
 import { describe, expect, it } from "vitest";
 import type { VibeCard } from "./engine";
-import { buildExportPrompt, buildTrigger } from "./export";
+import { clusterText, groupText } from "./export";
 
-const base = {
-  mood: "kühl, wachsam",
-  typography: { display: {} as never, body: {} as never, data: {} as never },
-  palette: ["#101010", "#606060", "#d0d0d0"] as [string, string, string],
-  vector: { material: 0, energy: 0, time: 0, structure: 0, density: 0, formality: 0 },
-  coherence: { sharedAxes: [], ok: true },
+const card: VibeCard = {
+  id: "synthese-x-0",
+  source: "synthese",
+  leitwert: "Letterpress-Seidenband",
+  weltSatz: "Eine cremeweiße Karte, in die der Druck tiefe Mulden presst.",
+  register: "nah",
+  metaphern: ["geprägte Initialen", "ein Band im Seewind"],
+  materialien: ["Büttenpapier", "Seidenband", "Siegelwachs"],
+  bildVergleiche: ["wie ein gepresstes Herbarium"],
 };
 
-const bridgeCard: VibeCard = {
-  ...base,
-  id: "entanglement-x-0",
-  leitwert: "Black-Box-Vigilanz",
-  scene: "warum es trägt",
-  source: "entanglement",
-  origin: { home: "Flugschreiber × OP-Saal", intrusion: "Logbuch", object: "Logbuch", engineNote: "x" },
-  detail: {
-    worlds: [{ name: "Flugschreiber", role: "Spender", rhyme: "lückenlose Protokollierung" }],
-    object: "Logbuch",
-    derivation: "Beide protokollieren lückenlos.",
-    designs: [
-      { title: "Logbuch-Strenge", description: "Enges Datenraster, Messziffern in Monospace, ein einzelner Signalakzent auf mattem Anthrazit." },
-    ],
-  },
-};
-
-const personaCard: VibeCard = {
-  ...base,
-  id: "persona-x-0",
-  leitwert: "Stille Würde",
-  scene: "Ein obsessiver Uhrmacher …",
-  source: "persona",
-  origin: { home: "Persona", intrusion: "—", object: "—", engineNote: "Ein obsessiver Uhrmacher …" },
-  detail: { derivation: "Ein obsessiver Uhrmacher …" },
-};
-
-describe("buildExportPrompt (compact style trigger)", () => {
-  it("is a tight layered style trigger for a bridge card (world + designs + palette, no essay)", () => {
-    const out = buildExportPrompt(bridgeCard);
-    expect(out).toContain("Stil-Trigger: «Black-Box-Vigilanz»");
-    expect(out).toContain("Welt: Flugschreiber");
-    expect(out).toContain("Denkbare Designs");
-    expect(out).toContain("Logbuch-Strenge");
-    expect(out).toContain("#101010");
-    expect(out.split("\n").length).toBeLessThan(12); // few lines (one per reading), not a Riesenbuch
-  });
-
-  it("uses the person as the source for a persona card (no worlds)", () => {
-    const out = buildExportPrompt(personaCard);
-    expect(out).toContain("Stil-Trigger: «Stille Würde»");
-    expect(out).toContain("Quelle:");
-    expect(out).not.toContain("Welt:");
+describe("groupText (gruppiert copy)", () => {
+  it("formats a labeled bullet list", () => {
+    expect(groupText("Materialien", ["Büttenpapier", "Seidenband"])).toBe(
+      "Materialien:\n– Büttenpapier\n– Seidenband",
+    );
   });
 });
 
-describe("buildTrigger + target tabs (C9)", () => {
-  it("packs the whole vibe into a single line", () => {
-    const out = buildTrigger(bridgeCard, "brandboard");
-    expect(out.split("\n")).toHaveLength(1);
-    expect(out).toContain("«Black-Box-Vigilanz»");
-    expect(out).toContain("#101010");
+describe("clusterText (gesamt copy)", () => {
+  it("leads with the Leitwert and the Welt-Satz", () => {
+    const out = clusterText(card);
+    expect(out.startsWith("Letterpress-Seidenband\n")).toBe(true);
+    expect(out).toContain("Eine cremeweiße Karte");
   });
 
-  it("flavours Midjourney as an English image prompt with params", () => {
-    const out = buildExportPrompt(bridgeCard, "midjourney");
-    expect(out).toContain("--ar");
-    expect(out).toMatch(/aesthetic|surfaces/);
-    expect(out).not.toContain("Stil-Trigger");
+  it("includes every non-empty group with its bulleted items", () => {
+    const out = clusterText(card);
+    expect(out).toContain("Metaphern:");
+    expect(out).toContain("– geprägte Initialen");
+    expect(out).toContain("Materialien:");
+    expect(out).toContain("Bild-Vergleiche:");
+    expect(out).toContain("– wie ein gepresstes Herbarium");
   });
 
-  it("frames ChatGPT as an art-director instruction", () => {
-    const out = buildExportPrompt(bridgeCard, "chatgpt");
-    expect(out).toContain("Art Director");
-    expect(out).toContain("Black-Box-Vigilanz");
-  });
-
-  it("keeps brandboard as the default layered spec", () => {
-    expect(buildExportPrompt(bridgeCard)).toBe(buildExportPrompt(bridgeCard, "brandboard"));
+  it("omits empty groups entirely", () => {
+    const sparse: VibeCard = { ...card, metaphern: [], materialien: [], bildVergleiche: [] };
+    const out = clusterText(sparse);
+    expect(out).not.toContain("Metaphern:");
+    expect(out).toBe("Letterpress-Seidenband\nEine cremeweiße Karte, in die der Druck tiefe Mulden presst.");
   });
 });

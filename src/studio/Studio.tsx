@@ -2,14 +2,11 @@ import "./studio.css";
 import "../lab/lab.css";
 import type { CSSProperties } from "react";
 import { SOURCES, useVibeStore } from "../store/useVibeStore";
-import { CollisionCard } from "../lab/CollisionCard";
-import { PersonaChip } from "../lab/PersonaChip";
-import { cardToCollision, cardToPersona } from "./adapters";
+import { ClusterCard } from "../lab/ClusterCard";
 
 /**
- * Studio — the methodology-derived board: one parallel lane per engine, each
- * rendering its OWN component language (Synthese → Kollisions-Karten,
- * Persona → Persona-Medaillons). Fed by the real store.
+ * Studio — the methodology board: one parallel lane per engine, each rendering its
+ * Denkanstoß-Cluster as a clean, copyable card. Fed by the real store.
  */
 export function Studio() {
   const cards = useVibeStore((s) => s.cards);
@@ -29,13 +26,9 @@ export function Studio() {
             </header>
             <div className="lane-cards">
               {group.length === 0 && !loading && <div className="lane-empty">— diese Runde dünn</div>}
-              {group.map((c) =>
-                src.id === "persona" ? (
-                  <PersonaChip key={c.id} p={cardToPersona(c)} />
-                ) : (
-                  <CollisionCard key={c.id} c={cardToCollision(c)} />
-                ),
-              )}
+              {group.map((c) => (
+                <ClusterCard key={c.id} card={c} />
+              ))}
             </div>
           </section>
         );

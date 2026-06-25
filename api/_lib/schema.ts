@@ -2,77 +2,33 @@ import { z } from "zod";
 
 /** Server-side copy of the LLM contracts (kept here so functions don't import across ../src). */
 
-export const axisVectorSchema = z.object({
-  material: z.number().min(-1).max(1),
-  energy: z.number().min(-1).max(1),
-  time: z.number().min(-1).max(1),
-  structure: z.number().min(-1).max(1),
-  density: z.number().min(-1).max(1),
-  formality: z.number().min(-1).max(1),
+/**
+ * One result = an open "Denkanstoß-Cluster": a vivid world-opener + anchor + loose triggers.
+ * NO pre-designing — this raw world-material feeds a downstream design/image AI.
+ */
+export const clusterSchema = z.object({
+  weltSatz: z.string().describe("1–2 Sätze Kopfkino, die die Welt lebendig öffnen — sinnlich, konkret, KEINE Design-Anweisung"),
+  leitwert: z.string().describe("2–4-teiliges Konkret-Kompositum — Anker und Titel des Clusters"),
+  register: z.enum(["nah", "fern"]).describe("nah = premium-schön aus der eigenen Brief-Welt; fern = überraschende Kollision"),
+  metaphern: z.array(z.string()).describe("4–6 lose Trigger-Bilder/-Wendungen (kurze Wendungen, keine Sätze)"),
+  materialien: z.array(z.string()).describe("4–6 fühlbare Material-/Textur-/Oberflächen-Worte"),
+  bildVergleiche: z.array(z.string()).describe("2–3 verbale „wie …\"-Vergleiche zu realen Bildern/Szenen — keine benannten Stile/Künstler"),
 });
 
-/** One holistic, applicable design reading of the result's world — a consolidated
- *  Gesamtbeschreibung (NOT an atomized pattern list, NO motion). Several equivalent
- *  readings of the SAME world are offered per result. */
-export const designReading = z.object({
-  title: z.string().describe("kurzer Name dieser Design-Lesart, z. B. «Plakat-Takelage»"),
-  description: z
-    .string()
-    .describe(
-      "2–4 Sätze, konkrete aber als Fließtext gewobene Gesamtbeschreibung: Komposition/Layout, Typo-Geste, Farb-Einsatz, Oberfläche/Textur, Dichte. KEINE Bewegung/Motion, KEINE Stichpunkt-Aufzählung, kein Vorbauen durch Auflisten.",
-    ),
-});
+/** Persona engine — N clusters in one call. */
+export const personaListSchema = z.object({ personas: z.array(clusterSchema) });
 
-export const personaSchema = z.object({
-  persona: z.string().describe("a fictional source: person/studio/workshop in one sentence, with a Macke"),
-  leitwert: z.string(),
-  mood: z.string(),
-  palette: z.array(z.string()).describe("3 hex colors, directional"),
-  vector: axisVectorSchema,
-  designs: z.array(designReading).describe("2–3 gleichwertige Design-Lesarten derselben Welt"),
-});
-/** Batched personas — N distinct sources in one call. */
-export const personaListSchema = z.object({ personas: z.array(personaSchema) });
+/** Synthese engine — N clusters in one call. */
+export const workbenchSchema = z.object({ candidates: z.array(clusterSchema) });
 
-/** A single bridge — the shared output unit of Engine D and Engine E. */
-export const bridgeShape = z.object({
-  leitwert: z.string().describe("2–4 token compound — the design directive"),
-  worlds: z.array(
-    z.object({
-      name: z.string(),
-      role: z.string().describe("what this world donates"),
-      rhyme: z.string().describe("how its inner logic rhymes with the essence"),
-    }),
-  ),
-  objectMetaphor: z.string().describe("the vessel object grounding the bridge"),
-  creativeDerivation: z.string().describe("1–2 sentences: WHY the rhyme holds — not a scene, not a design instruction"),
-  mood: z.string(),
-  palette: z.array(z.string()).describe("3 hex colors, directional"),
-  vector: axisVectorSchema.describe("6-Achsen-Projektion des Ergebnisses (für Typo/Regler)"),
-  designs: z.array(designReading).describe("2–3 gleichwertige Design-Lesarten derselben Welt"),
-});
-
-/** Engine F — Technique Workbench. Curated survivors of the synthesis pass. */
-export const workbenchSchema = z.object({
-  candidates: z.array(bridgeShape),
-});
-
-/** Engine D — Structural Entanglement. One batch: distilled essence, burnt clichés, and bridges. */
-export const entangleSchema = z.object({
-  essence: z.string().describe("Wirkstruktur — the topic's relational core, abstract, no surface-domain words"),
-  forbidden: z.array(z.string()).describe("the burnt cliché list — hard-excluded design reflexes"),
-  bridges: z.array(bridgeShape),
-});
-
-/** Quality judgement of one direction against the briefing (on-target × non-obvious). */
+/** Quality judgement of one cluster against the briefing (on-target × non-obvious × derivable design-value). */
 export const judgeSchema = z.object({
-  onTarget: z.number().min(1).max(5).describe("Würde ein Senior-AD das DIESEM Kunden hinlegen? Trifft es den Kern?"),
-  surprise: z.number().min(1).max(5).describe("Nicht-naheliegend — überrascht statt Branchen-Klischee?"),
-  craft: z.number().min(1).max(5).describe("Ist die Szene konkret/evokativ statt generisch?"),
-  designValue: z.number().min(1).max(5).describe("Ableitbarer DESIGN-Wert (Welt/Material/Stil/Stimmung), aus dem ein Bildmodell eine interessante Designwelt baut — KEINE Geschichte/Narrativ, keine nicht-ableitbare Abstraktion."),
-  register: z.string().describe("Render-/Material-Register — nächstliegendes aus Metall-Industrie, Organisch-Weich, Digital-Leuchtend, Papier-Archiv, Stein-Keramik, Textil-Faser, Glas-Flüssig, Roh-Elementar (für Register-Vielfalt im Cluster)"),
+  onTarget: z.number().min(1).max(5).describe("Würde ein Senior-AD das DIESEM Kunden hinlegen? Trifft es den Kern? (nah ODER fern gültig)"),
+  surprise: z.number().min(1).max(5).describe("Frisch und nicht-generisch — fern: überraschend, nah: premium-schön statt plump."),
+  craft: z.number().min(1).max(5).describe("Ist der Welt-Satz konkret/sinnlich/evokativ statt generisch?"),
+  designValue: z.number().min(1).max(5).describe("Ableitbarer Welt-/Material-Wert, aus dem ein Bildmodell eine interessante Designwelt baut — KEINE Geschichte/Narrativ, keine nicht-ableitbare Abstraktion."),
   note: z.string().describe("ein kurzer Satz Begründung"),
 });
 
-/** Batched judge — score MANY directions in ONE call; scores[] aligns to the input order. */
+/** Batched judge — score MANY clusters in ONE call; scores[] aligns to the input order. */
 export const judgeBatchSchema = z.object({ scores: z.array(judgeSchema) });

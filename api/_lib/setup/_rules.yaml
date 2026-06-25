@@ -3,18 +3,19 @@
 
 leitwert: |
   <leitwert_format>
-  Ein Leitwert ist ein VERDICHTETER WELT-VERWEIS: ein Kompositum aus 2–4 KONKRETEN, sichtbaren Welt-/Handwerks-/Material-/Ort-Begriffen, mit Bindestrichen, das sofort eine VISUELLE Designwelt auslöst.
+  Ein Leitwert ist ein VERDICHTETER WELT-VERWEIS: ein Kompositum aus 2–4 KONKRETEN, sichtbaren Welt-/Handwerks-/Material-/Ort-Begriffen, mit Bindestrichen, das sofort eine VISUELLE Welt auslöst. Er ist der ANKER und TITEL des Clusters.
   MATERIALITÄT (zentral): MINDESTENS ein Teil muss ANFASSBAR sein — ein Material, eine Oberfläche, ein Objekt oder eine charakteristische Form (Glasur, Wachs, Selvedge-Kante, Raster, Fassdaube), etwas das sofort KOPFKINO und fühlbare Materialität auslöst. Rein abstrakte System-Komposita sind ein „Substantiv-Schlachtfeld" — gemeint ist eine Welt zum Anfassen, kein Diagramm.
-  GUT: «Brennofen-Glasur» · «Selvedge-Webkante» · «Trafohaus-Kupfer» · «Tidenhub-Schlick».
+  GUT: «Brennofen-Glasur» · «Selvedge-Webkante» · «Trafohaus-Kupfer» · «Tidenhub-Schlick» · «Letterpress-Seidenband».
   VERBOTEN: ganze Sätze; Verb-/Imperativ-Phrasen («… sichtbar machen»); «X ist Y»/«X trägt Y»; abstrakte Aphorismen; Wert-/Tugend-/Gefühlswörter als Leitwert («Stille», «Mut», «Würde», «Vertrauen», «Risiko», «Messung ist Mut»); rein abstrakte System-Komposita ohne anfassbaren Anker («Fehlerkorrektur-Signalfeld», bloße «-Schnittstelle»/«-Index»/«-Frequenz»).
   Der Leitwert benennt WELTEN, keine Botschaft — man muss ihn SEHEN UND ANFASSEN können.
   </leitwert_format>
 
 diversity: |
   <diversität>
+  Diese Anti-Klischee-Regeln gelten für die FERNEN/überraschenden Ergebnisse (register "fern"). NAHE/Premium-Ergebnisse (register "nah") dürfen bewusst in der eigenen Brief-Welt bleiben und etablierte schöne Konventionen nutzen — dort NICHT zwanghaft fremde Domänen suchen.
   Beispiele in diesem Prompt zeigen NUR Form und Methode, NIE den Inhalt — übernimm KEINE ihrer Welten, Berufe, Domänen oder Wörter.
   MEIDE deine Gewohnheits-Spender, die durch Übergebrauch selbst zum Klischee wurden: Tiefsee/Hydrothermalquellen, Vulkanologie/Geologie, Buchbinderei/Bleisatz, Uhrmacherei, Kartografie, Damaststahl, Nō-Theater, Quipu, Leuchtturm/Leuchtfeuer, Imkerei, Alchemie, Fermentation/Miso/Koji/Kombucha. Nutze sie NUR, wenn der Reim wirklich einzigartig ist — sonst FRISCHE, ungenutzte Domänen.
-  Scanne das GESAMTE menschliche Wissen aus ALLEN Epochen — historisch BIS gegenwärtig, digital, futuristisch, spekulativ; NICHT nur historisch/vintage — und ALLEN Kulturen, Wissenschaften, Berufen, Alltag, Subkulturen, Sport, Recht, Logistik, Landwirtschaft, Medizin, Spiel, Musik. Jede der N Richtungen aus einer KOMPLETT anderen Wissensregion — keine zwei aus derselben Familie.
+  Für die fernen Ergebnisse: scanne das GESAMTE menschliche Wissen aus ALLEN Epochen — historisch BIS gegenwärtig, digital, futuristisch, spekulativ; NICHT nur historisch/vintage — und ALLEN Kulturen, Wissenschaften, Berufen, Alltag, Subkulturen, Sport, Recht, Logistik, Landwirtschaft, Medizin, Spiel, Musik. Die fernen Richtungen je aus einer KOMPLETT anderen Wissensregion — keine zwei aus derselben Familie.
   Variiere Wortform UND Objekt-Metapher stark: KEINE zwei Leitwerte im Batch mit DERSELBEN Endung, und die übernutzten Endungen -Protokoll/-Membran/-Logbuch/-Almanach/-Raster/-Kodex möglichst GANZ meiden (nur wenn der Reim sie zwingend verlangt). NICHT immer Buch-/Archiv-Objekte. Das verdichtende Objekt kann ALLES sein — Werkzeug, Maschine, Kleidung, Speise, Instrument, Fahrzeug, Software, Körper, Gebäude.
   In jeder Antwort echte Überraschung statt der naheliegenden 'kreativen' Standardwelten.
   </diversität>
@@ -22,33 +23,43 @@ diversity: |
 repertoire: |
   <repertoire>
   Das eigentliche Ziel ist NICHT eine feste Bauform, sondern eine SPANNENDE METAPHER / ein produktiver WIDERSPRUCH / eine witzige KOHÄRENZ / ein goldener Schnitt über Metaphern hinweg. Strukturen und Beispiele in diesem Prompt sind WERKZEUG, KEIN Käfig — denke ohne Scheuklappen.
-  Dein Material ist ALLES: Domänen, Phänomene, Materialien, Systeme, Wesen, Epochen — UND das gesamte etablierte Design-/Kunst-/Illustrations-/Zeichentechnik-Vokabular (Stile, Bewegungen, Medien, Druck-/Mal-/Zeichen-/Render-Techniken, Künstler-Handschriften). Nutze es als FRISCHE, SPEZIFISCHE Zutat einer Kollision — niemals als faule generische Einzelstil-Antwort.
+  Dein Material ist ALLES: Domänen, Phänomene, Materialien, Systeme, Wesen, Epochen, Handwerke, Orte, Rituale. Nutze es als FRISCHE, SPEZIFISCHE Zutat — niemals als faule generische Antwort. (Beachte: du beschreibst WELTEN und MATERIAL, nicht fertiges Design — kein Stil-/Layout-/Typo-Vokabular.)
   </repertoire>
 
 register: |
-  <render_register>
-  Variiere nicht nur die DOMÄNE, sondern das RENDER-/MATERIAL-REGISTER: das Material-, Oberflächen-, Licht- und Gewichts-Gefühl, das der Leitwert in einem Bildmodell auslöst (z. B. Metall/Industrie · organisch/weich · digital/leuchtend · Papier/Archiv · Stein/Keramik · Textil/Faser · Glas/Flüssig · roh/elementar). Die N Ergebnisse müssen VERSCHIEDENE Register treffen — KEINE zwei im selben Material-/Render-Register, auch wenn ihre Domänen verschieden sind (zwei ferne Welten, die beide als «verwittertes Vintage-Messing-Papier» rendern, sind ein Register-Klon).
-  </render_register>
+  <material_register>
+  Variiere nicht nur die DOMÄNE, sondern das MATERIAL-REGISTER: das Material-, Oberflächen- und Gewichts-Gefühl, das der Cluster auslöst (z. B. Metall/Industrie · organisch/weich · Papier/Archiv · Stein/Keramik · Textil/Faser · Glas/flüssig · roh/elementar). Die N Ergebnisse müssen VERSCHIEDENE Material-Register treffen — KEINE zwei im selben Register, auch wenn ihre Domänen verschieden sind (zwei ferne Welten, die beide nur als «verwittertes Vintage-Messing-Papier» fühlbar sind, sind ein Register-Klon).
+  </material_register>
 
 compass: |
-  <design_kompass>
-  Spüre die DESIGN-DOMÄNE des Briefings (z. B. Fintech, Luxus, KI, Developer, Health, SaaS, Editorial, Architektur, Food, Fashion, Automotive, Legal …) und ihr gestalterisches Schwerefeld — das Register, in dem die Domäne natürlich lebt (Palette · Typo · Layout/Motion).
-  Diese Domäne wirkt MAGNETISCH und LEICHT: ein sanfter Sog, der deine KONKRETEN Design-Parameter in die Resonanz der Domäne zieht. KEINE Schablone zum Abschreiben (kein harter Ref), KEIN Klischee, das gebrochen werden muss — nur eine Orientierung, damit das Ergebnis im richtigen Feld landet.
-  Die ÜBERRASCHUNG kommt aus der fernen Kollision (dem Leitwert), NICHT aus der Domäne. Der Kompass macht die Übersetzung nur DESIGN-ANWENDBAR und domänen-stimmig — er ersetzt nie die kreative Idee und glättet sie nie zur Branchen-Norm.
-  Lass die Domäne deine Design-Lesarten (siehe unten) sanft magnetisieren: Palette, Schrift-Charakter, Raster/Komposition, Oberfläche und Dichte ziehen leicht in die Resonanz der Domäne — als Orientierung, nicht als Schablone. KEINE Bewegung/Motion/Animation (bleibt außen vor).
-  Optional und FREIWILLIG: passt eine STIL-EPOCHE natürlich zum Ergebnis (z. B. Swiss, Bauhaus, Mid-Century, Editorial-Revival, 90er-Rave …), darf sie die Komposition leicht prägen — nie erzwungen, kein Klischee, jederzeit ignorierbar, sobald sie einengt. Die Idee bleibt frei.
+  <welt_kompass>
+  Spüre die DOMÄNE des Briefings (z. B. Fintech, Luxus, KI, Hochzeit, Developer, Health, Editorial, Food, Fashion, Architektur, Legal …) und ihr Schwerefeld — die Welt, in der die Domäne natürlich lebt.
+  Für NAHE/Premium-Ergebnisse ist genau diese Domäne der Brunnen: hol das SCHÖNSTE, Best-in-Class aus ihrer EIGENEN Welt (Material, Handwerk, Atmosphäre) — etablierte schöne Konventionen sind ausdrücklich erlaubt, solange hochwertig und nicht plump.
+  Für FERNE Ergebnisse zieht die Domäne nur LEICHT und magnetisch: die Überraschung kommt aus der fernen Welt/Kollision, die Domäne sorgt nur dafür, dass das Ergebnis noch im richtigen Gefühlsfeld landet.
+  KEINE Übersetzung in Design-Parameter (kein Layout, keine Typo, keine Farbwerte, keine Komposition, keine Motion) — der Kompass tilt nur die WELT-/Material-/Metaphern-Wahl, nicht die Gestaltung.
   Bei blank slate oder unklarer Domäne: wähle die naheliegendste, ziehe nur ganz leicht.
-  </design_kompass>
+  </welt_kompass>
 
-extract: |
-  <design_lesarten>
-  Steht die Idee/Kollision, dann LIES die Welt deines Ergebnisses als DESIGN — aber NICHT als Stückliste. Erzeuge 2–3 GLEICHWERTIGE, in sich GESCHLOSSENE Design-Lesarten DERSELBEN Welt: verschiedene, klar voneinander unterscheidbare Arten, wie diese Welt zu einem digitalen Design (Web/App/Brand) werden kann. Jede Lesart ist ein eigener kohärenter Vorschlag, nicht Variante derselben Sache — sie dürfen sich in Komposition, Schrift-Geste, Farb-Einsatz und Dichte deutlich unterscheiden, bleiben aber alle aus DIESER Welt abgeleitet.
-  Jede Lesart ist eine KONSOLIDIERTE GESAMTBESCHREIBUNG als Fließtext (2–4 Sätze), die Komposition/Layout, Schrift-Charakter, Farb-Logik, Oberfläche/Textur und Dichte ZU EINEM Bild verwebt. KEINE Stichpunktliste, KEINE „Dimension: Pattern"-Aufzählung, KEIN Vorbauen durch Aufzählen einzelner Elemente. KEINE Bewegung/Motion/Animation — Bewegung wird weggelassen.
-  KONKRET UND ANWENDBAR: ein Designer ODER ein Bildmodell muss jede Lesart direkt umsetzen können — benenne reale gestalterische Mittel (Rasterart, Schrift-Charakter, Farb-Logik, Oberflächen-Gefühl, Dichte), aber gewoben, nicht zerlegt. Übersetze Welt-Funde ins Digitale statt sie physisch/wörtlich abzubilden (eine Flaschen-Silhouette → „am Rand beschnittene, asymmetrische Hero-Komposition"; eine Bruchkante → „bewusster Grid-Break als Sektions-Trenner"). Die ÜBERRASCHUNG kommt aus der Welt/Kollision, die ANWENDBARKEIT aus der konkreten Übersetzung. Selbsttest: zögen 5 andere Tools dieselbe Lesart → schärfen.
-  Pro Lesart: title (kurzer, treffender Name) und description (die Gesamtbeschreibung). Ändere NICHT die Idee/den Leitwert.
-  </design_lesarten>
+mix: |
+  <register_mix>
+  Liefere pro Runde BEIDE Register GEMISCHT — KEINE Engine ist nur „wild", keine nur „brav". Spreize bewusst über zwei Pole, ohne sie nach außen zu labeln (der Nutzer spürt den Unterschied selbst):
+  - NAH/PREMIUM: ein Teil der Ergebnisse bleibt in der EIGENEN Welt des Briefings und holt dort das SCHÖNSTE, Best-in-Class heraus (Hochzeit → Leinen, gepresste Blumen, Letterpress, Seidenband; SaaS → klares Glas, präziser Stahl). Etablierte schöne KONVENTIONEN sind hier ausdrücklich ERLAUBT — auch nah am Genre, solange hochwertig und nicht plump-abgedroschen.
+  - FERN/ÜBERRASCHEND: ein anderer Teil kommt aus einer fernen, frischen Welt/Kollision — überraschend, anti-Klischee (siehe <diversität>).
+  Markiere jedes Ergebnis intern mit register: "nah" oder "fern". Strebe über den Batch ein echtes Nebeneinander an (grob halb/halb, nicht alles in einen Pol). Premium heißt nicht generisch, sondern: das BESTE seiner Klasse für GENAU dieses Briefing.
+  </register_mix>
+
+cluster: |
+  <denkanstoss_cluster>
+  Steht die Welt/Idee, dann liefere KEIN Design — sondern einen rohen DENKANSTOSS-CLUSTER, aus dem eine NACHGELAGERTE Bild-/Design-KI selbst etwas Schönes baut. Du übersetzt NICHTS in Layout, Typografie, Komposition, Raster oder konkrete Farbwerte. Du öffnest Welt und Material, die nächste KI gestaltet.
+  Der Cluster besteht aus:
+  - weltSatz: 1–2 Sätze KOPFKINO, die die Welt lebendig ÖFFNEN — man betritt den Ort und SIEHT/RIECHT/HÖRT ihn. Konkret und sinnlich, ein atmosphärischer Einstieg, KEIN Konzept, KEINE Design-Anweisung, keine Botschaft.
+  - metaphern: 4–6 lose Trigger-Bilder/-Wendungen — kurze Bild-Wendungen, keine ganzen Sätze.
+  - materialien: 4–6 fühlbare Material-/Textur-/Oberflächen-Worte (z. B. Leinen, Patina, Riffelglas, Büttenpapier, Wachstuch, Selvedge-Kante).
+  - bildVergleiche: 2–3 verbale „wie …"-Vergleiche zu realen Bildern/Szenen/Objekten (z. B. „wie ein gepresstes Herbarium", „wie eine Trafohaus-Wand nach Regen"). KEINE benannten Stile/Künstler/Marken, kein echtes Bild — nur ein verbaler Bild-Anker.
+  VERBOTEN im Cluster: Layout, Komposition, Raster, Schrift/Typo, Farb-/Hex-Werte, Lichtführung, Bewegung/Motion, sowie Wörter wie „Hero/CTA/Grid/Scroll/Sektion" und jede Design-Anweisung. NUR Welt-Material zum Weiterdenken — offen, inspirierend, gestaltungstauglich.
+  </denkanstoss_cluster>
 
 render_probe: |
   <render_probe>
-  Selbst-Render-Probe je Leitwert: stell dir vor, NUR der Leitwert (ohne Szene/Begründung) geht an ein Bildmodell. Entsteht eine VIVIDE, SPEZIFISCHE Welt — oder etwas Generisches/Vages? Wenn vage: schärfe ihn mit einem KONKRETEREN Welt-/Material-Begriff, bis er von selbst eine spezifische Designwelt zieht. Schärfe NUR die vagen — bereits konkrete Leitwerte NICHT überschärfen/verflachen. Er bleibt ein 2–4-teiliges Konkret-Kompositum, NIE eine Szene oder Anweisung.
+  Selbst-Probe je Leitwert: stell dir vor, NUR der Leitwert (ohne weltSatz/Begründung) geht an ein Bildmodell. Entsteht eine VIVIDE, SPEZIFISCHE Welt — oder etwas Generisches/Vages? Wenn vage: schärfe ihn mit einem KONKRETEREN Welt-/Material-Begriff, bis er von selbst eine spezifische Welt zieht. Schärfe NUR die vagen — bereits konkrete Leitwerte NICHT überschärfen/verflachen. Er bleibt ein 2–4-teiliges Konkret-Kompositum, NIE eine Szene oder Anweisung.
   </render_probe>

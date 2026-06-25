@@ -18,11 +18,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const raw: unknown = Array.isArray(req.body?.items) ? req.body.items : [req.body];
     const items = (raw as Array<Record<string, unknown>>).slice(0, 64).map((it) => ({
       leitwert: clampStr(it?.leitwert, 200),
-      scene: clampStr(it?.scene, 600),
-      mood: clampStr(it?.mood, 200),
+      weltSatz: clampStr(it?.weltSatz, 600),
     }));
     const list = items
-      .map((it, i) => `${i + 1}. Leitwert «${it.leitwert}» — Szene: ${it.scene || "—"} — Mood: ${it.mood || "—"}`)
+      .map((it, i) => `${i + 1}. Leitwert «${it.leitwert}» — Welt: ${it.weltSatz || "—"}`)
       .join("\n");
     const out = await genObject({
       model: modelFor(tier),
