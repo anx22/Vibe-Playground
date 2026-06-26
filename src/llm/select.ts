@@ -34,8 +34,7 @@ export async function judgeRank(
   const scored = cards.map((c, i): VibeCard => {
     const s = scores[i];
     if (!s) return c; // unscored — never gated out, but sinks to the bottom
-    const axes = [s.onTarget, s.surprise, s.craft, s.formSubstanz].filter((x): x is number => typeof x === "number");
-    const overall = axes.reduce((a, b) => a + b, 0) / axes.length; // holistic readout (display/eval)
+    const overall = (s.onTarget + s.surprise + s.craft + s.formSubstanz) / 4; // holistic readout (display/eval)
     return { ...c, quality: { ...s, overall } };
   });
   // Gate-then-rank (QS-3 #5): the two non-negotiables (onTarget, formSubstanz) gate first; among the

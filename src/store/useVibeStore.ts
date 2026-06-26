@@ -27,9 +27,9 @@ function clusterToCard(c: Cluster, source: string): VibeCard {
     leitwert: c.leitwert,
     weltSatz: c.weltSatz,
     register: c.register,
-    funde: c.funde ?? [],
-    materialien: c.materialien ?? [],
-    bildReferenzen: c.bildReferenzen ?? [],
+    funde: c.funde,
+    materialien: c.materialien,
+    bildReferenzen: c.bildReferenzen,
   };
 }
 
