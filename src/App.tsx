@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useVibeStore, MAX_ANCHORS } from "./store/useVibeStore";
 import { Board } from "./components/Board";
+import { VibeShaker } from "./components/VibeShaker";
 
 export default function App() {
   const s = useVibeStore();
@@ -14,8 +15,8 @@ export default function App() {
   useEffect(() => {
     if (typeof location !== "undefined" && location.hash.includes("preview")) {
       void Promise.all([import("./store/useVibeStore"), import("./preview")]).then(
-        ([{ useVibeStore: store }, { MOCK_CARDS, MOCK_SEED }]) =>
-          store.setState({ phase: "studio", seed: MOCK_SEED, cards: MOCK_CARDS, generation: 1, loading: false }),
+        ([{ useVibeStore: store }, { MOCK_CARDS, MOCK_SEED, MOCK_SHAKER }]) =>
+          store.setState({ phase: "studio", seed: MOCK_SEED, cards: MOCK_CARDS, generation: 1, loading: false, shaker: MOCK_SHAKER }),
       );
     }
   }, []);
@@ -73,7 +74,10 @@ export default function App() {
           </div>
         </main>
       ) : (
-        <Board />
+        <>
+          <Board />
+          <VibeShaker />
+        </>
       )}
     </div>
   );

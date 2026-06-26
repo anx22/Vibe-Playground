@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { VibeCard } from "../engine";
+import type { ShakerToken, VibeCard } from "../engine";
 import { generatePersonas, generateSynthese } from "../llm/client";
 import type { Cluster } from "../llm/schema";
 import { judgeRank, passesGate, spreadByMix } from "../llm/select";
@@ -132,7 +132,6 @@ interface VibeState {
   seed: string;
   cards: VibeCard[];
   anchors: VibeCard[];
-  focusId: string | null;
   generation: number;
   loading: boolean;
   llmFallback: boolean;
@@ -142,12 +141,16 @@ interface VibeState {
   pendingSources: string[];
   /** Cross-round novelty memory — Leitwerte already produced, repelled in later rounds (E-063). */
   produced: string[];
+  /** Vibe-Shaker — morsels clicked out of cards, mixed into one paste-ready Modifikator. Survives Wellen. */
+  shaker: ShakerToken[];
 
   setSeed: (w: string) => void;
   explore: () => Promise<void>;
   iterate: () => Promise<void>;
   toggleAnchor: (c: VibeCard) => void;
-  focus: (id: string | null) => void;
+  toggleToken: (t: ShakerToken) => void;
+  removeToken: (id: string) => void;
+  clearShaker: () => void;
   reset: () => void;
 }
 
@@ -166,7 +169,6 @@ export const useVibeStore = create<VibeState>()(
         set({
           loading: true,
           cards: [],
-          focusId: null,
           failedSources: [],
           pendingSources: SOURCES.map((s) => s.id),
         });
@@ -216,19 +218,20 @@ export const useVibeStore = create<VibeState>()(
       seed: "",
       cards: [],
       anchors: [],
-      focusId: null,
       generation: 0,
       loading: false,
       llmFallback: false,
       failedSources: [],
       pendingSources: [],
       produced: [],
+      shaker: [],
 
       setSeed: (w) => set({ seed: w }),
 
       explore: async () => {
         const briefing = get().seed;
-        set({ phase: "studio", cards: [], anchors: [], focusId: null, generation: 1 });
+        // Fresh exploration → fresh harvest: clear the Shaker (iterate keeps it).
+        set({ phase: "studio", cards: [], anchors: [], shaker: [], generation: 1 });
         runRound(briefing, "");
       },
 
@@ -245,11 +248,18 @@ export const useVibeStore = create<VibeState>()(
         else if (anchors.length < MAX_ANCHORS) set({ anchors: [...anchors, c] });
       },
 
-      focus: (id) => set({ focusId: id }),
+      // Vibe-Shaker: one array keyed by token id is the single source of truth; a card chip and its
+      // tray entry share the id, so add/remove here updates BOTH surfaces (bidirectional, no extra wiring).
+      toggleToken: (t) =>
+        set((s) => ({
+          shaker: s.shaker.some((x) => x.id === t.id) ? s.shaker.filter((x) => x.id !== t.id) : [...s.shaker, t],
+        })),
+      removeToken: (id) => set((s) => ({ shaker: s.shaker.filter((x) => x.id !== id) })),
+      clearShaker: () => set({ shaker: [] }),
 
       reset: () => {
         roundSeq++; // cancel any in-flight round
-        set({ phase: "blank", seed: "", cards: [], anchors: [], focusId: null, generation: 0, loading: false, failedSources: [], pendingSources: [], produced: [] });
+        set({ phase: "blank", seed: "", cards: [], anchors: [], shaker: [], generation: 0, loading: false, failedSources: [], pendingSources: [], produced: [] });
       },
       };
     },
@@ -263,6 +273,7 @@ export const useVibeStore = create<VibeState>()(
         anchors: s.anchors,
         generation: s.generation,
         produced: s.produced,
+        shaker: s.shaker,
       }),
     },
   ),

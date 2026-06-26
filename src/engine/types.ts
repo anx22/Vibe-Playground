@@ -32,3 +32,18 @@ export interface Quality {
   overall: number;
   note: string;
 }
+
+/** Which part of a card a collected morsel came from — drives grouping in the Vibe-Shaker + copy-out. */
+export type TokenKind = "leitwert" | "weltSatz" | "funde" | "materialien" | "bildReferenzen";
+
+/** A single morsel the user clicked out of a card into the Vibe-Shaker tray. */
+export interface ShakerToken {
+  /** Stable identity (see `tokenId`): a card chip and its tray entry share it ⇒ automatic two-way bind. */
+  id: string;
+  cardId: string;
+  kind: TokenKind;
+  text: string;
+}
+
+/** The one place the token id is shaped, so card chips, the tray and the store always agree. */
+export const tokenId = (cardId: string, kind: TokenKind, text: string): string => `${cardId}::${kind}::${text}`;

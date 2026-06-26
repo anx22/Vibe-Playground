@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { VibeCard } from "./engine";
-import { clusterText, groupText, worldPromptText } from "./export";
+import type { ShakerToken, TokenKind, VibeCard } from "./engine";
+import { clusterText, groupText, shakerText, worldPromptText } from "./export";
 
 const card: VibeCard = {
   id: "synthese-x-0",
@@ -60,5 +60,43 @@ describe("worldPromptText (composed world-prompt, #7)", () => {
     expect(worldPromptText(sparse)).toBe(
       "Letterpress-Seidenband — Eine cremeweiße Karte, in die der Druck tiefe Mulden presst.",
     );
+  });
+});
+
+describe("shakerText (Vibe-Shaker copy-out)", () => {
+  const tok = (kind: TokenKind, text: string, cardId = "c1"): ShakerToken => ({ id: `${cardId}::${kind}::${text}`, cardId, kind, text });
+
+  it("returns an empty string for no tokens", () => {
+    expect(shakerText([])).toBe("");
+  });
+
+  it("groups by kind in fixed order — Richtung/Welt as lead lines, the rest bulleted", () => {
+    const out = shakerText([
+      tok("materialien", "Büttenpapier"),
+      tok("leitwert", "Letterpress-Seidenband"),
+      tok("funde", "geprägte Initialen"),
+      tok("weltSatz", "Eine cremeweiße Karte."),
+    ]);
+    const iR = out.indexOf("Richtung:"), iW = out.indexOf("Welt:"), iF = out.indexOf("Funde:"), iM = out.indexOf("Materialien:");
+    expect(iR).toBeGreaterThanOrEqual(0);
+    expect(iR).toBeLessThan(iW);
+    expect(iW).toBeLessThan(iF);
+    expect(iF).toBeLessThan(iM);
+    expect(out).toContain("Richtung: Letterpress-Seidenband");
+    expect(out).toContain("Welt: Eine cremeweiße Karte.");
+    expect(out).toContain("Funde:\n– geprägte Initialen");
+  });
+
+  it("dedupes identical text within a kind (same material harvested from two cards)", () => {
+    const out = shakerText([
+      tok("materialien", "Leinen", "c1"),
+      tok("materialien", "Leinen", "c2"),
+      tok("materialien", "Seide", "c1"),
+    ]);
+    expect(out).toBe("Materialien:\n– Leinen\n– Seide");
+  });
+
+  it("joins multiple Richtung morsels with a middot", () => {
+    expect(shakerText([tok("leitwert", "A"), tok("leitwert", "B")])).toBe("Richtung: A · B");
   });
 });

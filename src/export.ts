@@ -1,4 +1,15 @@
-import type { VibeCard } from "./engine";
+import type { ShakerToken, TokenKind, VibeCard } from "./engine";
+
+/** Display label per token kind — shared by the card chips, the Vibe-Shaker tray and the copy-out so they never drift. */
+export const KIND_LABELS: Record<TokenKind, string> = {
+  leitwert: "Richtung",
+  weltSatz: "Welt",
+  funde: "Funde",
+  materialien: "Materialien",
+  bildReferenzen: "Bild-Referenzen",
+};
+/** Fixed compose/display order for collected morsels. */
+export const KIND_ORDER: TokenKind[] = ["leitwert", "weltSatz", "funde", "materialien", "bildReferenzen"];
 
 /**
  * Copy targets for a Denkanstoß-Cluster. The cluster is raw world-material that feeds a downstream
@@ -42,4 +53,24 @@ export function worldPromptText(card: VibeCard): string {
   if (card.materialien.length) parts.push(`Materialien: ${card.materialien.join(", ")}.`);
   if (card.bildReferenzen.length) parts.push(`Bild-Anker: ${card.bildReferenzen.join("; ")}.`);
   return parts.join(" ");
+}
+
+/**
+ * The Vibe-Shaker tray folded into ONE clean, paste-ready Modifikator — the morsels the user clicked
+ * out of (possibly several) cards, grouped by kind in a fixed order and deduped per group. Richtung /
+ * Welt lead as single labeled lines; the rest reuse `groupText`. Composes the WORLD, prescribes no
+ * design (no layout/typography/UI/palette) — same discipline as `worldPromptText`.
+ */
+export function shakerText(tokens: ShakerToken[]): string {
+  const blocks: string[] = [];
+  for (const kind of KIND_ORDER) {
+    const items = [...new Set(tokens.filter((t) => t.kind === kind).map((t) => t.text))];
+    if (!items.length) continue;
+    blocks.push(
+      kind === "leitwert" || kind === "weltSatz"
+        ? `${KIND_LABELS[kind]}: ${items.join(" · ")}`
+        : groupText(KIND_LABELS[kind], items),
+    );
+  }
+  return blocks.join("\n\n").trim();
 }

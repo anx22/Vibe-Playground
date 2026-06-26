@@ -1,4 +1,4 @@
-import type { VibeCard } from "./engine";
+import { tokenId, type ShakerToken, type VibeCard } from "./engine";
 
 /** Mock cluster cards so the canvas can be rendered + screenshotted without the live LLM (dev preview only). */
 
@@ -83,4 +83,19 @@ export const MOCK_CARDS: VibeCard[] = [
     ["schweres Segeltuch", "geteertes Tau", "Messing-Ösen", "Bienenwachs-Garn"],
     ["wie ein zusammengelegtes Großsegel", "wie eine Werkbank voller Spleißwerkzeug"],
   ),
+];
+
+/** A pre-filled Vibe-Shaker (morsels from a few mock cards) so the dev preview shows the full tray. */
+const seed = (c: VibeCard, kind: ShakerToken["kind"], text: string): ShakerToken => ({
+  id: tokenId(c.id, kind, text),
+  cardId: c.id,
+  kind,
+  text,
+});
+export const MOCK_SHAKER: ShakerToken[] = [
+  seed(MOCK_CARDS[0], "leitwert", MOCK_CARDS[0].leitwert),
+  seed(MOCK_CARDS[0], "materialien", MOCK_CARDS[0].materialien[0]),
+  seed(MOCK_CARDS[1], "funde", MOCK_CARDS[1].funde[0]),
+  seed(MOCK_CARDS[3], "materialien", MOCK_CARDS[3].materialien[0]),
+  seed(MOCK_CARDS[3], "bildReferenzen", MOCK_CARDS[3].bildReferenzen[0]),
 ];

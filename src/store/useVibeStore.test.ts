@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import type { VibeCard } from "../engine";
+import type { ShakerToken, VibeCard } from "../engine";
 import { MAX_ANCHORS, noveltyText, pushProduced, useVibeStore } from "./useVibeStore";
 
 /** Anchors are the gold-set primitive (E-047): toggle on/off, capped at MAX_ANCHORS. */
@@ -53,5 +53,35 @@ describe("novelty memory", () => {
     expect(useVibeStore.getState().produced).toEqual([]);
     useVibeStore.getState().reset();
     expect(useVibeStore.getState().produced).toEqual([]);
+  });
+});
+
+/** Vibe-Shaker: collected morsels, keyed by token id, the single source of truth for both surfaces. */
+describe("vibe-shaker", () => {
+  beforeEach(() => useVibeStore.getState().reset());
+  const tok = (id: string): ShakerToken => ({ id, cardId: "c", kind: "funde", text: id });
+
+  it("toggles a token in and out by id", () => {
+    const t = tok("c::funde::x");
+    useVibeStore.getState().toggleToken(t);
+    expect(useVibeStore.getState().shaker.map((x) => x.id)).toEqual(["c::funde::x"]);
+    useVibeStore.getState().toggleToken(t); // same id → removes (bidirectional)
+    expect(useVibeStore.getState().shaker).toHaveLength(0);
+  });
+
+  it("removeToken drops only the matching id", () => {
+    useVibeStore.getState().toggleToken(tok("a"));
+    useVibeStore.getState().toggleToken(tok("b"));
+    useVibeStore.getState().removeToken("a");
+    expect(useVibeStore.getState().shaker.map((x) => x.id)).toEqual(["b"]);
+  });
+
+  it("clearShaker empties the tray, and reset clears it too", () => {
+    useVibeStore.getState().toggleToken(tok("a"));
+    useVibeStore.getState().clearShaker();
+    expect(useVibeStore.getState().shaker).toEqual([]);
+    useVibeStore.getState().toggleToken(tok("a"));
+    useVibeStore.getState().reset();
+    expect(useVibeStore.getState().shaker).toEqual([]);
   });
 });

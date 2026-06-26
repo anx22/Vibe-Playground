@@ -1,21 +1,22 @@
 import { useState } from "react";
 import type { ReactNode } from "react";
-import type { VibeCard } from "../engine";
-import { clusterText, groupText, worldPromptText } from "../export";
+import { tokenId, type TokenKind, type VibeCard } from "../engine";
+import { clusterText, KIND_LABELS, worldPromptText } from "../export";
+import { useVibeStore } from "../store/useVibeStore";
 import "./lab.css";
 
 /**
- * ClusterCard — the single result renderer. A Denkanstoß-Cluster as a clean, readable list: the
- * Leitwert as title, the Welt-Satz (the headline/soul) right below, then Funde / Materialien /
- * Bild-Referenzen. Copy is DISCREET (a hover icon) at three grains — a single line (einzeln), one
- * group (gruppiert), the whole cluster (gesamt) — plus a composed Welt-Prompt (paste-ready for an
- * image AI). No design is prescribed here.
+ * ClusterCard — the single result renderer, fully visible and INTERACTIVE. The Leitwert (Richtung) is
+ * the title, the Welt-Satz (Welt/soul) sits below, then Funde / Materialien / Bild-Referenzen. EVERY
+ * part is a click-to-collect chip that drops into the Vibe-Shaker (bottom tray); the selected morsels
+ * mix into one paste-ready Modifikator. Two whole-cluster copy buttons (Welt-Prompt, Cluster) stay for
+ * the quick complete grab, and a ★ marks an Anker that steers the next Welle. No design is prescribed.
  */
 
-const GROUPS: { key: "funde" | "materialien" | "bildReferenzen"; label: string }[] = [
-  { key: "funde", label: "Funde" },
-  { key: "materialien", label: "Materialien" },
-  { key: "bildReferenzen", label: "Bild-Referenzen" },
+const GROUPS: { key: "funde" | "materialien" | "bildReferenzen" }[] = [
+  { key: "funde" },
+  { key: "materialien" },
+  { key: "bildReferenzen" },
 ];
 
 const ClipGlyph = ({ done }: { done: boolean }) => (
@@ -33,6 +34,16 @@ const ClipGlyph = ({ done }: { done: boolean }) => (
 
 export function ClusterCard({ card, framed = true }: { card: VibeCard; framed?: boolean }) {
   const [copied, setCopied] = useState("");
+  const shaker = useVibeStore((s) => s.shaker);
+  const toggleToken = useVibeStore((s) => s.toggleToken);
+  const anchored = useVibeStore((s) => s.anchors.some((a) => a.id === card.id));
+  const toggleAnchor = useVibeStore((s) => s.toggleAnchor);
+
+  // One Set per render is cheap; a chip and its tray entry share the token id ⇒ collected-state is live.
+  const collected = new Set(shaker.map((t) => t.id));
+  const isOn = (kind: TokenKind, text: string) => collected.has(tokenId(card.id, kind, text));
+  const toggle = (kind: TokenKind, text: string) =>
+    toggleToken({ id: tokenId(card.id, kind, text), cardId: card.id, kind, text });
 
   const copy = (text: string, token: string) => {
     if (typeof navigator === "undefined" || !navigator.clipboard) return;
@@ -45,12 +56,12 @@ export function ClusterCard({ card, framed = true }: { card: VibeCard; framed?: 
     );
   };
 
-  const copyBtn = (text: string, token: string, title: string, label?: string): ReactNode => {
+  const copyBtn = (text: string, token: string, title: string, label: string): ReactNode => {
     const done = copied === token;
     return (
       <button
         type="button"
-        className={`copy-btn${label ? " copy-btn--labeled" : ""}${done ? " is-done" : ""}`}
+        className={`copy-btn copy-btn--labeled${done ? " is-done" : ""}`}
         title={title}
         aria-label={title}
         onClick={(e) => {
@@ -59,7 +70,26 @@ export function ClusterCard({ card, framed = true }: { card: VibeCard; framed?: 
         }}
       >
         <ClipGlyph done={done} />
-        {label && <span className="copy-btn-label">{done ? "Kopiert" : label}</span>}
+        <span className="copy-btn-label">{done ? "Kopiert" : label}</span>
+      </button>
+    );
+  };
+
+  const chip = (kind: TokenKind, text: string, cls = "chip"): ReactNode => {
+    const on = isOn(kind, text);
+    return (
+      <button
+        type="button"
+        key={`${kind}:${text}`}
+        className={cls}
+        data-on={on}
+        onClick={(e) => {
+          e.stopPropagation();
+          toggle(kind, text);
+        }}
+        title={on ? "Aus dem Vibe-Shaker nehmen" : "In den Vibe-Shaker"}
+      >
+        {text}
       </button>
     );
   };
@@ -67,30 +97,35 @@ export function ClusterCard({ card, framed = true }: { card: VibeCard; framed?: 
   return (
     <article className={`cluster${framed ? " cluster--card" : ""}`}>
       <header className="cluster-head">
-        <h3 className="cluster-title">{card.leitwert}</h3>
-        {copyBtn(worldPromptText(card), "world", "Welt-Prompt kopieren — paste-ready für eine Bild-KI", "Welt-Prompt")}
-        {copyBtn(clusterText(card), "all", "Ganzen Cluster kopieren", "Cluster")}
+        {chip("leitwert", card.leitwert, "chip chip--title")}
+        <div className="cluster-tools">
+          <button
+            type="button"
+            className="star-btn"
+            data-on={anchored}
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleAnchor(card);
+            }}
+            title={anchored ? "Anker entfernen" : "Als Anker setzen — formt die nächste Welle"}
+            aria-label="Anker"
+          >
+            ★
+          </button>
+          {copyBtn(worldPromptText(card), "world", "Welt-Prompt kopieren — paste-ready für eine Bild-KI", "Welt-Prompt")}
+          {copyBtn(clusterText(card), "all", "Ganzen Cluster kopieren", "Cluster")}
+        </div>
       </header>
 
-      {card.weltSatz && <p className="cluster-welt">{card.weltSatz}</p>}
+      {card.weltSatz && chip("weltSatz", card.weltSatz, "chip chip--welt")}
 
-      {GROUPS.map(({ key, label }) => {
+      {GROUPS.map(({ key }) => {
         const items = card[key];
         if (!items?.length) return null;
         return (
           <section className="cluster-group" key={key}>
-            <div className="cluster-group-head">
-              <span className="cluster-group-label">{label}</span>
-              {copyBtn(groupText(label, items), `g:${key}`, `${label} kopieren`)}
-            </div>
-            <ul className="cluster-list">
-              {items.map((it, i) => (
-                <li className="cluster-item" key={i}>
-                  <span className="cluster-item-text">{it}</span>
-                  {copyBtn(it, `i:${key}:${i}`, "Zeile kopieren")}
-                </li>
-              ))}
-            </ul>
+            <span className="cluster-group-label">{KIND_LABELS[key]}</span>
+            <div className="chip-row">{items.map((it) => chip(key, it))}</div>
           </section>
         );
       })}
